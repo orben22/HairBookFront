@@ -15,4 +15,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "HairBook Front"
 include(":app")
- 
+include(":utilities")

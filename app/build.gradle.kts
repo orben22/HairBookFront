@@ -1,6 +1,9 @@
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
+    kotlin("kapt")
+    id("com.google.dagger.hilt.android")
+
 }
 
 android {
@@ -51,19 +54,49 @@ android {
 
 dependencies {
 
-    implementation("androidx.core:core-ktx:1.10.1")
-    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.1")
-    implementation("androidx.activity:activity-compose:1.7.0")
-    implementation(platform("androidx.compose:compose-bom:2023.08.00"))
-    implementation("androidx.compose.ui:ui")
-    implementation("androidx.compose.ui:ui-graphics")
-    implementation("androidx.compose.ui:ui-tooling-preview")
-    implementation("androidx.compose.material3:material3")
-    testImplementation("junit:junit:4.13.2")
-    androidTestImplementation("androidx.test.ext:junit:1.1.5")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
-    androidTestImplementation(platform("androidx.compose:compose-bom:2023.08.00"))
-    androidTestImplementation("androidx.compose.ui:ui-test-junit4")
-    debugImplementation("androidx.compose.ui:ui-tooling")
-    debugImplementation("androidx.compose.ui:ui-test-manifest")
+
+    implementation(Dependencies.coreKts)
+    implementation(Dependencies.lifecycleRuntimeKtx)
+    implementation(Dependencies.activityCompose)
+
+    implementation(Dependencies.composeUi)
+    implementation(Dependencies.composeUiGraphics)
+    implementation(Dependencies.composeUiToolingPreview)
+    implementation(Dependencies.composeMaterial3)
+    implementation(Dependencies.navigationCompose)
+    implementation(Dependencies.composeUiTooling)
+    implementation(Dependencies.composeUiTestManifest)
+    implementation(Dependencies.lifecycleViewmodelKtx)
+    androidTestImplementation(platform(Dependencies.composeBom))
+    androidTestImplementation(Dependencies.composeTestJunit4)
+
+    //Dagger Hilt
+    implementation(Dependencies.hiltAndroid)
+    kapt(Dependencies.hiltCompiler)
+    kapt(Dependencies.hiltAndroidCompiler)
+    implementation(Dependencies.hiltNavigationCompose)
+
+    //Retrofit
+    implementation(Dependencies.retrofit)
+    implementation(Dependencies.okhttp3)
+    implementation(Dependencies.gsonConverter)
+    implementation(Dependencies.moshi)
+    implementation(Dependencies.moshiConverter)
+    implementation(Dependencies.loggingInterceptor)
+    //Coroutines
+    implementation(Dependencies.coroutinesCore)
+    implementation(Dependencies.coroutinesAndroid)
+    //SplashScreen
+    implementation(Dependencies.splashScreen)
+
+    //Coil
+    implementation(Dependencies.coil)
+
+    implementation(project(Modules.utilities))
+
+
+}
+
+kapt {
+    correctErrorTypes = true
 }
