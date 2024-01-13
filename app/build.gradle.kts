@@ -83,6 +83,7 @@ dependencies {
     implementation(Dependencies.moshi)
     implementation(Dependencies.moshiConverter)
     implementation(Dependencies.loggingInterceptor)
+
     //Coroutines
     implementation(Dependencies.coroutinesCore)
     implementation(Dependencies.coroutinesAndroid)
@@ -92,7 +93,22 @@ dependencies {
     //Coil
     implementation(Dependencies.coil)
 
+    //Datastore
+    implementation(Dependencies.dataStore)
+
+    //Paging
+    implementation(Dependencies.paging)
+    implementation(Dependencies.pagingCompose)
+
+    //Accompanist
+    implementation(Dependencies.accompanist)
+
+    //Room
+    implementation(Dependencies.room)
     implementation(project(Modules.utilities))
+
+
+
 
 
 }

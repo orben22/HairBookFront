@@ -34,6 +34,17 @@ object Dependencies {
     val splashScreen by lazy { "androidx.core:core-splashscreen:${Versions.splashScreen}" }
 
     val coil by lazy { "io.coil-kt:coil-compose:${Versions.coil}" }
+
+    val dataStore by lazy { "androidx.datastore:datastore-preferences:${Versions.dataStore}" }
+
+    val accompanist by lazy { "com.google.accompanist:accompanist-systemuicontroller:${Versions.accompanist}" }
+
+    val paging by lazy { "androidx.paging:paging-runtime:${Versions.paging_version}" }
+
+    val pagingCompose by lazy { "androidx.paging:paging-compose:${Versions.paging_version}" }
+
+    val room by lazy { "androidx.room:room-runtime:${Versions.room_version}" }
+
 }
 
 object Modules {

@@ -1,5 +1,7 @@
 object Versions {
 
+
+
     const val coreKts = "1.12.0"
     const val appcompact = "1.6.1"
     const val material = "1.11.0"
@@ -16,23 +18,21 @@ object Versions {
     const val composeTestJunit4 = "1.5.4"
     const val composeUiTooling = "1.5.4"
     const val composeUiTestManifest = "1.5.4"
-
     const val hiltAndroid = "2.48"
     const val hiltCompiler = "1.0.0"
     const val hiltNavigationCompose = "1.1.0"
-
     const val retrofit = "2.9.0"
     const val okhttp3 = "4.12.0"
     const val gsonConverter = "2.9.0"
     const val moshi = "1.15.0"
     const val moshiConverter = "2.9.0"
     const val loggingInterceptor = "4.12.0"
-
     const val coroutinesCore = "1.7.3"
-
     const val splashScreen = "1.0.1"
-
     const val coil = "2.5.0"
-
+    const val dataStore = "1.0.0"
+    const val accompanist = "0.32.0"
+    const val paging_version = "3.2.1"
+    const val room_version = "2.6.1"
 
 }
