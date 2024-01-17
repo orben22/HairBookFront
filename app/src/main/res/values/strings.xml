@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">HairBook Front</string>
+    <string name="my_reviews">My Reviews</string>
+    <string name="booking_history">Booking History</string>
 </resources>
