@@ -1,21 +1,17 @@
-package com.example.hairbookfront.presentation.signUpUser
+package com.example.hairbookfront.presentation.signUpBarber
 
 import android.content.res.Configuration
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Share
 import androidx.compose.material.icons.outlined.Call
 import androidx.compose.material.icons.outlined.Close
 import androidx.compose.material.icons.outlined.Email
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -24,33 +20,18 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.VerticalAlignmentLine
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
-import androidx.constraintlayout.compose.Visibility
-import com.example.hairbookfront.R
 import com.example.hairbookfront.presentation.Dimens
-import com.example.hairbookfront.presentation.Dimens.mediumPadding1
 import com.example.hairbookfront.presentation.common.SubmitButton
 import com.example.hairbookfront.theme.HairBookFrontTheme
-fun isValidText(text: String): Boolean {
-    // Add your custom validation rules here
-    return text.matches(Regex("/^([a-zA-Z0-9._%-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,})\$/"))
-}
 
 @Composable
-fun SignUpUser() {
+fun SignUpBarber() {
     Surface(color = MaterialTheme.colorScheme.surface) {
 
 
@@ -58,7 +39,7 @@ fun SignUpUser() {
         val lastName = remember { mutableStateOf("") }
         val phoneNumber = remember { mutableStateOf("") }
         val email = remember { mutableStateOf("") }
-        val age = remember { mutableStateOf("") }
+        val years_of_experience = remember { mutableStateOf("") }
         var isValid by remember { mutableStateOf(false) }
 
         // Compose UI components
@@ -70,7 +51,7 @@ fun SignUpUser() {
             TextField(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(mediumPadding1),
+                    .padding(Dimens.mediumPadding1),
                 value = firstName.value,
                 onValueChange = { firstName.value = it },
                 placeholder = { Text(text = "First Name") }
@@ -78,7 +59,7 @@ fun SignUpUser() {
             TextField(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(mediumPadding1),
+                    .padding(Dimens.mediumPadding1),
                 value = lastName.value,
                 onValueChange = { lastName.value = it },
                 placeholder = { Text(text = "Last Name") }
@@ -86,34 +67,36 @@ fun SignUpUser() {
             TextField(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(mediumPadding1),
-                value = age.value,
-                onValueChange = { age.value = it },
-                placeholder = { Text(text = "Age") }
+                    .padding(Dimens.mediumPadding1),
+                value = years_of_experience.value,
+                onValueChange = { years_of_experience.value = it },
+                placeholder = { Text(text = "Years of Experience") }
             )
             TextField(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(mediumPadding1),
+                    .padding(Dimens.mediumPadding1),
                 value = phoneNumber.value,
                 onValueChange = { phoneNumber.value = it },
                 placeholder = { Text(text = "Phone Number") },
-                trailingIcon ={ Icon(Icons.Outlined.Call,
+                trailingIcon ={ Icon(
+                    Icons.Outlined.Call,
                     contentDescription = null) }
             )
             TextField(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(mediumPadding1),
+                    .padding(Dimens.mediumPadding1),
                 value = email.value,
                 onValueChange = {
                     email.value = it
                 },
                 placeholder = { Text(text = "Email") },
-                trailingIcon ={ Icon(Icons.Outlined.Email,
+                trailingIcon ={ Icon(
+                    Icons.Outlined.Email,
                     contentDescription = null) }
             )
-            var password by remember { mutableStateOf("")}
+            var password by remember { mutableStateOf("") }
             TextField(value = password,
                 onValueChange = {password = it},
                 placeholder = { Text("Password") },
@@ -121,22 +104,22 @@ fun SignUpUser() {
                 visualTransformation = PasswordVisualTransformation(),
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(mediumPadding1),
-                trailingIcon ={ Icon(Icons.Outlined.Close,
+                    .padding(Dimens.mediumPadding1),
+                trailingIcon ={ Icon(
+                    Icons.Outlined.Close,
                     contentDescription = null) }
-               )
+            )
             SubmitButton ()
         }
     }
 }
-
 @Preview(showBackground = true, showSystemUi = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 fun myReviewDark() {
     HairBookFrontTheme {
 
 
-        SignUpUser()
+        SignUpBarber()
     }
 }
 
@@ -144,6 +127,6 @@ fun myReviewDark() {
 @Composable
 fun myReview() {
     HairBookFrontTheme {
-        SignUpUser()
+        SignUpBarber()
     }
 }
