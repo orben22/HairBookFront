@@ -3,8 +3,6 @@ package com.example.hairbookfront.presentation.common
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Close
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -17,7 +15,7 @@ import com.example.hairbookfront.presentation.Dimens
 import com.example.hairbookfront.R
 
 @Composable
-fun TextFieldSignUpPassword(password: String,  onValueChange: (String) -> Unit) {
+fun TextFieldPassword(password: String, onValueChange: (String) -> Unit) {
     TextField(value = password,
         onValueChange = onValueChange ,
         placeholder = { Text("Password") },

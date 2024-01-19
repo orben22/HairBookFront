@@ -23,7 +23,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.example.hairbookfront.presentation.common.SubmitButton
 import com.example.hairbookfront.presentation.common.AppTextField
 import com.example.hairbookfront.theme.HairBookFrontTheme
-import com.example.hairbookfront.presentation.common.TextFieldSignUpPassword
+import com.example.hairbookfront.presentation.common.TextFieldPassword
 @Composable
 fun SignUpBarber() {
     Surface(color = MaterialTheme.colorScheme.surface) {
@@ -48,7 +48,7 @@ fun SignUpBarber() {
             AppTextField(value = years_of_experience.value, placeholderText = "Years of Experience", icon =Icons.Outlined.Build , onValueChange = { years_of_experience.value = it })
             AppTextField(value = phoneNumber.value, placeholderText ="Phone Number", icon = Icons.Outlined.Call , onValueChange ={ phoneNumber.value = it } )
             AppTextField(value= email.value,placeholderText="Email",icon =Icons.Outlined.Email,onValueChange ={email.value=it})
-            TextFieldSignUpPassword(password = password.value,onValueChange ={password.value=it})
+            TextFieldPassword(password = password.value,onValueChange ={password.value=it})
             SubmitButton ()
             Text(text = "Already have an account ? Sign In")
         }
