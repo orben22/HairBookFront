@@ -24,6 +24,8 @@ import com.example.hairbookfront.presentation.common.SubmitButton
 import com.example.hairbookfront.presentation.common.AppTextField
 import com.example.hairbookfront.theme.HairBookFrontTheme
 import com.example.hairbookfront.presentation.common.TextFieldPassword
+import com.example.hairbookfront.presentation.common.TopAppBarHairBook
+
 @Composable
 fun SignUpBarber() {
     Surface(color = MaterialTheme.colorScheme.surface) {
@@ -43,6 +45,7 @@ fun SignUpBarber() {
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            TopAppBarHairBook(text = "Barber Sign Up")
             AppTextField(value =firstName.value , placeholderText ="First Name" , icon =Icons.Outlined.AccountCircle , onValueChange = { firstName.value = it })
             AppTextField(value = lastName.value, placeholderText = "Last Name", icon =Icons.Outlined.AccountCircle , onValueChange = { lastName.value = it })
             AppTextField(value = years_of_experience.value, placeholderText = "Years of Experience", icon =Icons.Outlined.Build , onValueChange = { years_of_experience.value = it })

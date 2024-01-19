@@ -22,6 +22,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.example.hairbookfront.presentation.common.SubmitButton
 import com.example.hairbookfront.presentation.common.AppTextField
 import com.example.hairbookfront.presentation.common.TextFieldPassword
+import com.example.hairbookfront.presentation.common.TopAppBarHairBook
 import com.example.hairbookfront.theme.HairBookFrontTheme
 fun isValidText(text: String): Boolean {
     // Add your custom validation rules here
@@ -47,6 +48,7 @@ fun SignUpUser() {
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            TopAppBarHairBook(text = "User Sign Up")
             AppTextField(value =firstName.value , placeholderText ="First Name" , icon =Icons.Outlined.AccountCircle , onValueChange = { firstName.value = it })
             AppTextField(value = lastName.value, placeholderText = "Last Name", icon =Icons.Outlined.AccountCircle , onValueChange = { lastName.value = it })
             AppTextField(value = age.value, placeholderText = "Age", icon =null , onValueChange = { age.value = it })

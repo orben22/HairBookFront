@@ -4,6 +4,7 @@ import android.content.res.Configuration
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material3.MaterialTheme
@@ -17,6 +18,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.hairbookfront.presentation.common.AppTextField
+import com.example.hairbookfront.presentation.common.BarberShopList
+import com.example.hairbookfront.presentation.common.TopAppBarHairBook
 import com.example.hairbookfront.theme.HairBookFrontTheme
 
 @Composable
@@ -25,20 +28,15 @@ fun SearchShop() {
 
 
         val search = remember { mutableStateOf("") }
-        val lastName = remember { mutableStateOf("") }
-        val phoneNumber = remember { mutableStateOf("") }
-        val email = remember { mutableStateOf("") }
-        val years_of_experience = remember { mutableStateOf("") }
-        val password = remember { mutableStateOf("") }
-        var isValid by remember { mutableStateOf(false) }
 
         // Compose UI components
         Column(
             modifier = Modifier.fillMaxSize(),
-            verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            TopAppBarHairBook(text = "Search Shop")
             AppTextField(value =search.value , placeholderText ="Search BarberShop..." , icon = Icons.Outlined.Search , onValueChange = { search.value = it })
+            BarberShopList()
         }
     }
 }
