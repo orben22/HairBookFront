@@ -43,6 +43,9 @@ class WelcomeViewModel @Inject constructor(
     private val _toastMessage = MutableSharedFlow<String>()
     val toastMessage = _toastMessage.asSharedFlow()
 
+    private val _loggedIn = MutableStateFlow(false)
+    val loggedIn: StateFlow<Boolean>
+        get() = _loggedIn
 
     fun sendMessage(message: String) {
         viewModelScope.launch {
@@ -77,13 +80,13 @@ class WelcomeViewModel @Inject constructor(
     }
 
 
-    suspend fun login(): Boolean {
-        var loginSuccess = false
+    suspend fun login() {
         viewModelScope.launch(Dispatchers.IO) {
             if (isValidEmail() && isValidPassword()) {
                 _emailError.value = false
                 _passwordError.value = false
-                loginSuccess = true
+                Timber.d("email: ${email.value}, password: ${password.value}")
+                _loggedIn.value = true
             } else {
                 if (!isValidEmail()) {
                     sendMessage("Invalid Email")
@@ -95,7 +98,6 @@ class WelcomeViewModel @Inject constructor(
                 }
             }
         }
-        return loginSuccess  // Return the result
     }
 
 }

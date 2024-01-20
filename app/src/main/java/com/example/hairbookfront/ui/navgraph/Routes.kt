@@ -6,7 +6,7 @@ sealed class Routes(val route: String) {
     // Destinations
     object WelcomeScreen : Routes("welcomeScreen")
 
-    object SignupUserScreen : Routes("signupUserScreen")
+    object SignupCustomerScreen : Routes("signupCustomerScreen")
 
     object SignupBarberScreen : Routes("signupBarberScreen")
 

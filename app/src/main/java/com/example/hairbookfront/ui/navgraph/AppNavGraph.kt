@@ -33,7 +33,7 @@ fun AppNavGraph(
                 val viewModel = it.sharedViewModel<WelcomeViewModel>(navController = navController)
                 WelcomePageScreen(navController = navController)
             }
-            composable(route = Routes.SignupUserScreen.route) {
+            composable(route = Routes.SignupCustomerScreen.route) {
                 SignUpUserScreen()
             }
             composable(route = Routes.SignupBarberScreen.route) {

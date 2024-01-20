@@ -33,6 +33,7 @@ import com.example.hairbookfront.ui.common.ClickableText
 import com.example.hairbookfront.ui.auth.welcome.WelcomeViewModel
 import com.example.hairbookfront.ui.navgraph.Routes
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 
 @Composable
@@ -46,6 +47,10 @@ fun WelcomePageScreen(
     val emailError = welcomeViewModel.emailError.collectAsState()
     val passwordError = welcomeViewModel.passwordError.collectAsState()
     val showOrHidePassword = welcomeViewModel.showOrHidePassword.collectAsState()
+    val loggedIn = welcomeViewModel.loggedIn.collectAsState()
+    if (loggedIn.value) {
+        navController?.navigate(Routes.CustomerHomeScreen.route)
+    }
     LaunchedEffect(Unit) {
         welcomeViewModel
             .toastMessage
@@ -103,10 +108,10 @@ fun WelcomePageScreen(
                     passwordVisibility = showOrHidePassword.value
                 )
                 CustomButton(text = "Sign In", onClick = {
+                    Timber.d("Sign In button clicked ${loggedIn.value}")
+
                     welcomeViewModel.viewModelScope.launch {
-                        if (welcomeViewModel.login()) {
-                            navController?.navigate(Routes.CustomerGraph.route)
-                        }
+                        welcomeViewModel.login()
                     }
                 }, icon = null)
                 Row {
@@ -117,7 +122,7 @@ fun WelcomePageScreen(
                     )
                     ClickableText(
                         text = " Sign Up",
-                        onClick = { /*TODO*/ },
+                        onClick = { navController?.navigate(Routes.SignupCustomerScreen.route) },
                         color = Color.Cyan,
                         fontSize = 20
                     )
@@ -128,7 +133,11 @@ fun WelcomePageScreen(
 }
 
 
-@Preview(showBackground = true, showSystemUi = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Preview(
+    showBackground = true,
+    showSystemUi = true,
+    uiMode = Configuration.UI_MODE_NIGHT_YES
+)
 @Composable
 fun WelcomePagePreviewDark() {
     HairBookFrontTheme {
@@ -136,7 +145,11 @@ fun WelcomePagePreviewDark() {
     }
 }
 
-@Preview(showBackground = true, showSystemUi = true, uiMode = Configuration.UI_MODE_NIGHT_NO)
+@Preview(
+    showBackground = true,
+    showSystemUi = true,
+    uiMode = Configuration.UI_MODE_NIGHT_NO
+)
 @Composable
 fun WelcomePagePreviewLight() {
     HairBookFrontTheme {
