@@ -18,6 +18,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.hairbookfront.R
 import com.example.hairbookfront.theme.HairBookFrontTheme
+import com.example.hairbookfront.ui.common.CustomButton
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -47,11 +48,12 @@ fun UserDetailsScreen() {
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
             ) {
-                // User Information (You can use your own user data here if available)
                 // User Information
                 Spacer(modifier = Modifier.height(100.dp))
                 Text(
-                    modifier = Modifier.padding(bottom = 10.dp).align(Alignment.Start),
+                    modifier = Modifier
+                        .padding(bottom = 10.dp)
+                        .align(Alignment.Start),
 
                     text = "Full Name: ",
                     style = MaterialTheme.typography.bodyMedium,
@@ -162,28 +164,9 @@ fun UpcomingBookingCard() {
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 // Edit Button
-                IconButton(
-                    onClick = {
-                        // Handle edit button click
-                    },
-                    modifier = Modifier
-                        .weight(1f)
-                        .padding(end = 4.dp)
-                ) {
-                    Icon(imageVector = Icons.Default.Edit, contentDescription = "Edit")
-                }
-
+                CustomButton(text = "", onClick = { /*TODO*/ }, icon = Icons.Filled.Edit)
                 // Cancel Button
-                IconButton(
-                    onClick = {
-                        // Handle cancel button click
-                    },
-                    modifier = Modifier
-                        .weight(1f)
-                        .padding(start = 4.dp)
-                ) {
-                    Icon(imageVector = Icons.Default.Close, contentDescription = "Cancel")
-                }
+                CustomButton(text = "", onClick = { /*TODO*/ }, icon = Icons.Filled.Close)
             }
         }
     }
