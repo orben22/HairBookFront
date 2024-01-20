@@ -4,15 +4,25 @@ sealed class Routes(val route: String) {
 
 
     // Destinations
-    object OnBoardingScreen : Routes("onBoardingScreen")
-    object HomeScreen : Routes("homeScreen")
-    object SearchScreen : Routes("searchScreen")
-    object BookMarkScreen : Routes("bookMarkScreen")
-    object DetailScreen : Routes("detailScreen")
+    object WelcomeScreen : Routes("welcomeScreen")
+
+    object SignupUserScreen : Routes("signupUserScreen")
+
+    object SignupBarberScreen : Routes("signupBarberScreen")
+
+    object CustomerHomeScreen : Routes("customerHomeScreen")
+
+    object CustomerDetailsScreen : Routes("customerDetailsScreen")
+
     object NewsNavigationScreen : Routes("newsNavigationScreen")
 
     // Sub graphs
-    object AppStartNavigation : Routes("appStartNavigation")
+    object AuthGraph : Routes("authGraph")
+
+    object CustomerGraph : Routes("customerGraph")
+
+    object BarberGraph : Routes("barberGraph")
+
     object NewsNavigation : Routes("newsNavigation")
 
 

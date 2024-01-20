@@ -1,4 +1,4 @@
-package com.example.hairbookfront.ui.signUpBarber
+package com.example.hairbookfront.ui.auth.signUpBarber
 
 import android.content.res.Configuration
 import androidx.compose.foundation.layout.Arrangement
@@ -42,13 +42,39 @@ fun SignUpBarberScreen() {
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             TopAppBarHairBook(text = "Barber Sign Up")
-            AppTextField(value =firstName.value , placeholderText ="First Name" , icon =Icons.Outlined.AccountCircle , onValueChange = { firstName.value = it })
-            AppTextField(value = lastName.value, placeholderText = "Last Name", icon =Icons.Outlined.AccountCircle , onValueChange = { lastName.value = it })
-            AppTextField(value = years_of_experience.value, placeholderText = "Years of Experience", icon =Icons.Outlined.Build , onValueChange = { years_of_experience.value = it })
-            AppTextField(value = phoneNumber.value, placeholderText ="Phone Number", icon = Icons.Outlined.Call , onValueChange ={ phoneNumber.value = it } )
-            AppTextField(value= email.value,placeholderText="Email",icon =Icons.Outlined.Email,onValueChange ={email.value=it})
-            TextFieldPassword(password = password.value,onValueChange ={password.value=it})
-            SubmitButton ()
+            AppTextField(
+                value = firstName.value,
+                placeholderText = "First Name",
+                icon = Icons.Outlined.AccountCircle,
+                onValueChange = { firstName.value = it })
+            AppTextField(
+                value = lastName.value,
+                placeholderText = "Last Name",
+                icon = Icons.Outlined.AccountCircle,
+                onValueChange = { lastName.value = it })
+            AppTextField(
+                value = years_of_experience.value,
+                placeholderText = "Years of Experience",
+                icon = Icons.Outlined.Build,
+                onValueChange = { years_of_experience.value = it })
+            AppTextField(
+                value = phoneNumber.value,
+                placeholderText = "Phone Number",
+                icon = Icons.Outlined.Call,
+                onValueChange = { phoneNumber.value = it })
+            AppTextField(
+                value = email.value,
+                placeholderText = "Email",
+                icon = Icons.Outlined.Email,
+                onValueChange = { email.value = it })
+            TextFieldPassword(
+                password = password.value,
+                onValueChange = { },
+                isError = false,
+                onIconClicked = { },
+                passwordVisibility = false
+            )
+            SubmitButton()
             Text(text = "Already have an account ? Sign In")
         }
     }

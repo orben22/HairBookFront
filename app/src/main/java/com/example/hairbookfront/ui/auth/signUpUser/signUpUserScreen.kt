@@ -1,4 +1,4 @@
-package com.example.hairbookfront.ui.signUpUser
+package com.example.hairbookfront.ui.auth.signUpUser
 
 import android.content.res.Configuration
 import androidx.compose.foundation.layout.Arrangement
@@ -24,6 +24,7 @@ import com.example.hairbookfront.ui.common.AppTextField
 import com.example.hairbookfront.ui.common.TextFieldPassword
 import com.example.hairbookfront.ui.common.TopAppBarHairBook
 import com.example.hairbookfront.theme.HairBookFrontTheme
+
 fun isValidText(text: String): Boolean {
     // Add your custom validation rules here
     return text.matches(Regex("/^([a-zA-Z0-9._%-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,})\$/"))
@@ -47,13 +48,39 @@ fun SignUpUserScreen() {
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             TopAppBarHairBook(text = "User Sign Up")
-            AppTextField(value =firstName.value , placeholderText ="First Name" , icon =Icons.Outlined.AccountCircle , onValueChange = { firstName.value = it })
-            AppTextField(value = lastName.value, placeholderText = "Last Name", icon =Icons.Outlined.AccountCircle , onValueChange = { lastName.value = it })
-            AppTextField(value = age.value, placeholderText = "Age", icon =null , onValueChange = { age.value = it })
-            AppTextField(value = phoneNumber.value, placeholderText ="Phone Number", icon = Icons.Outlined.Call , onValueChange ={ phoneNumber.value = it } )
-            AppTextField(value= email.value,placeholderText="Email",icon =Icons.Outlined.Email,onValueChange ={email.value=it})
-            TextFieldPassword(password = password.value,onValueChange ={password.value=it})
-            SubmitButton ()
+            AppTextField(
+                value = firstName.value,
+                placeholderText = "First Name",
+                icon = Icons.Outlined.AccountCircle,
+                onValueChange = { firstName.value = it })
+            AppTextField(
+                value = lastName.value,
+                placeholderText = "Last Name",
+                icon = Icons.Outlined.AccountCircle,
+                onValueChange = { lastName.value = it })
+            AppTextField(
+                value = age.value,
+                placeholderText = "Age",
+                icon = null,
+                onValueChange = { age.value = it })
+            AppTextField(
+                value = phoneNumber.value,
+                placeholderText = "Phone Number",
+                icon = Icons.Outlined.Call,
+                onValueChange = { phoneNumber.value = it })
+            AppTextField(
+                value = email.value,
+                placeholderText = "Email",
+                icon = Icons.Outlined.Email,
+                onValueChange = { email.value = it })
+            TextFieldPassword(
+                password = password.value,
+                onValueChange = { },
+                isError = false,
+                onIconClicked = { },
+                passwordVisibility = false
+            )
+            SubmitButton()
             Text(text = "Already have an account ? Sign In")
         }
     }

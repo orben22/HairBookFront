@@ -23,7 +23,6 @@ import com.example.hairbookfront.util.ResourceState
 fun HomeScreen(hairBookViewModel: HomeViewModel = hiltViewModel()) {
     val newsResponse = hairBookViewModel.news.collectAsState()
 
-
     val pagerState = rememberPagerState(
         initialPage = 0,
         initialPageOffsetFraction = 0f

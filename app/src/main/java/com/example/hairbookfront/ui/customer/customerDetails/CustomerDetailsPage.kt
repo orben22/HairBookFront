@@ -1,4 +1,4 @@
-package com.example.hairbookfront.ui.userDetails
+package com.example.hairbookfront.ui.customer.customerDetails
 
 import android.content.res.Configuration
 import androidx.compose.foundation.layout.*
@@ -15,9 +15,8 @@ import com.example.hairbookfront.ui.common.CustomButton
 import com.example.hairbookfront.ui.common.TopAppBarHairBook
 import com.example.hairbookfront.ui.common.BookingCard
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun UserDetailsScreen() {
+fun CustomerDetailsScreen() {
     Scaffold(
         topBar = {
             TopAppBarHairBook("User Details")
@@ -88,16 +87,16 @@ fun UserDetailsScreen() {
 
 @Preview(showBackground = true, showSystemUi = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
-fun UserDetailsPagePreviewDark() {
+fun CustomerDetailsPagePreviewDark() {
     HairBookFrontTheme {
-        UserDetailsScreen()
+        CustomerDetailsScreen()
     }
 }
 
 @Preview(showBackground = true, showSystemUi = true, uiMode = Configuration.UI_MODE_NIGHT_NO)
 @Composable
-fun UserDetailsPagePreviewLight() {
+fun CustomerDetailsPagePreviewLight() {
     HairBookFrontTheme {
-        UserDetailsScreen()
+        CustomerDetailsScreen()
     }
 }

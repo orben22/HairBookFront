@@ -14,9 +14,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.WindowCompat
-import com.example.hairbookfront.ui.navgraph.NavGraph
+import androidx.navigation.NavGraph
 import com.example.hairbookfront.theme.HairBookFrontTheme
-import com.example.hairbookfront.util.Constants.MAIN_ACTIVITY_TAG
+import com.example.hairbookfront.ui.navgraph.AppNavGraph
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -29,14 +29,12 @@ class MainActivity : ComponentActivity() {
         WindowCompat.setDecorFitsSystemWindows(window, false)
         installSplashScreen().apply {
             setKeepOnScreenCondition { mainViewModel.splashCondition.value }
-            Log.d(MAIN_ACTIVITY_TAG, "Read value: ${mainViewModel.splashCondition.value} ")
         }
 
         setContent {
             HairBookFrontTheme(dynamicColor = false) {
                 val isSystemInDarkTheme = isSystemInDarkTheme()
                 val systemController = rememberSystemUiController()
-
                 SideEffect {
                     systemController.setSystemBarsColor(
                         color = Color.Transparent,
@@ -44,7 +42,7 @@ class MainActivity : ComponentActivity() {
                     )
                 }
                 Box(modifier = Modifier.background(MaterialTheme.colorScheme.background)) {
-                    NavGraph(startDestination = mainViewModel.startDestination)
+                    AppNavGraph(startDestination = mainViewModel.startDestination)
                 }
             }
         }

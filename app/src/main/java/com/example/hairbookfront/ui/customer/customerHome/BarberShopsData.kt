@@ -1,4 +1,4 @@
-package com.example.hairbookfront.ui.searchShop
+package com.example.hairbookfront.ui.customer.customerHome
 
 data class BarberShopsData(
     val barbershopName: String,

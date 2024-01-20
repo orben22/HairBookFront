@@ -1,4 +1,4 @@
-package com.example.hairbookfront.ui.userDetails
+package com.example.hairbookfront.ui.customer.customerDetails
 
 data class BookingData(
     val bookingId:String?,
@@ -17,7 +17,7 @@ data class ServiceData(
     val duration:String
 )
 
-val bookingData=BookingData(
+val bookingData= BookingData(
     bookingId = "1",
     barberShopName = "XYZ",
     service = ServiceData("1","masturbation","100 bat","depends on you"),
