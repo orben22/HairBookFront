@@ -14,6 +14,8 @@ object Constants {
 
     const val ONBOARDING_SCREEN_TAG = "OnBoardingScreen"
 
+    const val WELCOME_PAGE_TAG = "WelcomePageScreen"
+
     const val HOME_SCREEN_TAG = "HomeScreen"
 
     const val ONBOARDING_VIEW_MODEL_TAG = "OnBoardingViewModel"
