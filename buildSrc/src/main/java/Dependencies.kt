@@ -45,6 +45,8 @@ object Dependencies {
 
     val room by lazy { "androidx.room:room-runtime:${Versions.room_version}" }
 
+    val timber by lazy { "com.jakewharton.timber:timber:${Versions.timber}" }
+
 }
 
 object Modules {
