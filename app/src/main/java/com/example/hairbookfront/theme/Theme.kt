@@ -11,13 +11,14 @@ import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
 
 private val DarkColorScheme = darkColorScheme(
-    primary = Blue,
+    primary = White,
     background = Black,
     error = DarkRed,
     surface = LightBlack,
@@ -25,11 +26,11 @@ private val DarkColorScheme = darkColorScheme(
 )
 
 private val LightColorScheme = lightColorScheme(
-    primary = Blue,
-    background = Color.White,
+    primary = Black,
+    background = White,
     error = LightRed,
-    surface = Color.White,
-    onPrimaryContainer = LightBlack
+    surface = White,
+    onPrimaryContainer = LightBlack,
 )
 
 @Composable
