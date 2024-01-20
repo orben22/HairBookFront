@@ -3,47 +3,28 @@ package com.example.hairbookfront.ui.userDetails
 import android.content.res.Configuration
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.hairbookfront.R
 import com.example.hairbookfront.theme.HairBookFrontTheme
 import com.example.hairbookfront.ui.common.CustomButton
-
+import com.example.hairbookfront.ui.common.TopAppBarHairBook
+import com.example.hairbookfront.ui.common.BookingCard
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun UserDetailsScreen() {
     Scaffold(
         topBar = {
-            TopAppBar(
-                title = {
-                    Text(text = "User Details")
-                },
-                navigationIcon = {
-                    IconButton(onClick = { /* Handle navigation back */ }) {
-                        Icon(imageVector = Icons.Default.ArrowBack, contentDescription = null)
-                    }
-                },
-                actions = {
-                    // Add any additional actions if needed
-                }
-            )
+            TopAppBarHairBook("User Details")
         },
         content = { innerPadding ->
             Column(
                 modifier = Modifier
-                    .fillMaxSize()
                     .padding(innerPadding),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
@@ -52,68 +33,51 @@ fun UserDetailsScreen() {
                 Spacer(modifier = Modifier.height(100.dp))
                 Text(
                     modifier = Modifier
-                        .padding(bottom = 10.dp)
+                        .padding(start = 10.dp)
                         .align(Alignment.Start),
 
-                    text = "Full Name: ",
+                    text = "Full Name: Or Ben Ami ",
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onPrimary
                 )
                 Text(
-                    modifier = Modifier.padding(bottom = 10.dp),
-                    text = "Email: ",
+                    modifier = Modifier
+                        .padding(start = 10.dp)
+                        .align(Alignment.Start),
+                    text = "Email: or123@gmail.com",
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onPrimary
 
                 )
 
                 Text(
-                    text = "Age: ",
+                    modifier = Modifier
+                        .padding(start = 10.dp)
+                        .align(Alignment.Start),
+                    text = "Age: 26",
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onPrimary
                 )
-                Spacer(modifier = Modifier.height(150.dp))
+                Spacer(modifier = Modifier.height(50.dp))
 
                 // Card: Upcoming Booking
-                UpcomingBookingCard()
+                BookingCard(true, bookingData)
 
                 Column(modifier = Modifier.weight(1f)) {
 
                     // Button: Show My Reviews
-                    Button(
-                        onClick = {
-                            // Handle "Show My Reviews" button click
-                        },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(vertical = 16.dp)
-                    ) {
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.Center
-                        ) {
-                            Icon(imageVector = Icons.Default.Star, contentDescription = null)
-                            Spacer(modifier = Modifier.width(8.dp))
-                            Text(text = stringResource(R.string.my_reviews))
-                        }
-                    }
+                    CustomButton(
+                        text = "Show My Reviews",
+                        onClick = { /*TODO*/ },
+                        icon = Icons.Filled.Star
+                    )
 
                     // Button: Show Booking History
-                    Button(
-                        onClick = {
-                            // Handle "Show Booking History" button click
-                        },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(bottom = 16.dp)
-                    ) {
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.Center
-                        ) {
-                            Text(text = stringResource(R.string.booking_history))
-                        }
-                    }
+                    CustomButton(
+                        text = "Show Booking History",
+                        onClick = { /*TODO*/ },
+                        icon = null
+                    )
                 }
 
             }
@@ -121,56 +85,6 @@ fun UserDetailsScreen() {
     )
 }
 
-@Composable
-fun UpcomingBookingCard() {
-    Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clip(MaterialTheme.shapes.medium)
-            .padding(16.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.onPrimaryContainer,
-        ),
-
-
-        ) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
-        ) {
-            Text(
-                text = "Upcoming Booking",
-                style = MaterialTheme.typography.bodySmall,
-                color = Color.Black
-            )
-
-            Spacer(modifier = Modifier.height(8.dp))
-
-            Text(
-                text = "Booking Details: ",
-                style = MaterialTheme.typography.bodySmall,
-                color = Color.Black
-            )
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 8.dp),
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                // Edit Button
-                CustomButton(text = "", onClick = { /*TODO*/ }, icon = Icons.Filled.Edit)
-                // Cancel Button
-                CustomButton(text = "", onClick = { /*TODO*/ }, icon = Icons.Filled.Close)
-            }
-        }
-    }
-}
 
 @Preview(showBackground = true, showSystemUi = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
