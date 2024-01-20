@@ -61,7 +61,7 @@ fun UserDetailsScreen() {
                 Spacer(modifier = Modifier.height(50.dp))
 
                 // Card: Upcoming Booking
-                BookingCard(true, bookingData)
+                BookingCard( true,bookingData)
 
                 Column(modifier = Modifier.weight(1f)) {
 
