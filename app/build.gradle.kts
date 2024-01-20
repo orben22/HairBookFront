@@ -107,10 +107,8 @@ dependencies {
     implementation(Dependencies.room)
     implementation(project(Modules.utilities))
 
-
-
-
-
+    //Timber
+    implementation(Dependencies.timber)
 }
 
 kapt {

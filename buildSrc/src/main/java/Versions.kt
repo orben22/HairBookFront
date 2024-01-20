@@ -34,5 +34,6 @@ object Versions {
     const val accompanist = "0.32.0"
     const val paging_version = "3.2.1"
     const val room_version = "2.6.1"
+    const val timber = "5.0.1"
 
 }
