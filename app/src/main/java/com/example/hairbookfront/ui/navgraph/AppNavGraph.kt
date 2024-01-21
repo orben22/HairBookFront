@@ -30,7 +30,6 @@ fun AppNavGraph(
             startDestination = Routes.WelcomeScreen.route
         ) {
             composable(route = Routes.WelcomeScreen.route) {
-                val viewModel = it.sharedViewModel<WelcomeViewModel>(navController = navController)
                 WelcomePageScreen(navController = navController)
             }
             composable(route = Routes.SignupCustomerScreen.route) {

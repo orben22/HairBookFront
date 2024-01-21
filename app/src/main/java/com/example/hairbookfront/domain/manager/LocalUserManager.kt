@@ -8,4 +8,10 @@ interface LocalUserManager {
 
     fun readAppEntry(): Flow<Boolean>
 
+//    suspend fun saveToken(token: String)
+//
+//    fun readToken(): Flow<String>
+
+
+
 }

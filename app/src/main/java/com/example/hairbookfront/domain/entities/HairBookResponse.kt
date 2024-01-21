@@ -1,6 +1,6 @@
 package com.example.hairbookfront.domain.entities
 
-class Response(
+class HairBookResponse(
     val message: String,
     val data: Any?,
     val state: Int

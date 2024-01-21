@@ -1,4 +1,4 @@
-package com.example.hairbookfront.ui.barberDetails
+package com.example.hairbookfront.ui.barber.barberDetails
 
 import android.content.res.Configuration
 import androidx.compose.foundation.layout.Arrangement

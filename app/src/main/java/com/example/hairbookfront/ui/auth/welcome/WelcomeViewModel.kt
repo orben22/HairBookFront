@@ -3,14 +3,17 @@ package com.example.hairbookfront.ui.auth.welcome
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavHostController
+import com.example.hairbookfront.domain.entities.HairBookResponse
 import com.example.hairbookfront.domain.repository.ApiRepository
 import com.example.hairbookfront.ui.navgraph.Routes
+import com.example.hairbookfront.util.ResourceState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.util.regex.Pattern
@@ -21,10 +24,10 @@ class WelcomeViewModel @Inject constructor(
     private val hairBookRepository: ApiRepository
 ) : ViewModel() {
 
-    private val _email = MutableStateFlow("chen24201@gmail.com")
+    private val _email = MutableStateFlow("customer@customer.com")
     val email: StateFlow<String>
         get() = _email
-    private val _password = MutableStateFlow("12345678")
+    private val _password = MutableStateFlow("customer_password")
     val password: StateFlow<String>
         get() = _password
 
@@ -47,6 +50,11 @@ class WelcomeViewModel @Inject constructor(
     val loggedIn: StateFlow<Boolean>
         get() = _loggedIn
 
+    private val _userDetails: MutableStateFlow<ResourceState<HairBookResponse>> =
+        MutableStateFlow(ResourceState.LOADING())
+    val userDetails: StateFlow<ResourceState<HairBookResponse>>
+        get() = _userDetails
+
     fun sendMessage(message: String) {
         viewModelScope.launch {
             _toastMessage.emit(message)
@@ -66,16 +74,16 @@ class WelcomeViewModel @Inject constructor(
     }
 
     private fun isValidEmail(): Boolean {
-        val emailRegex = "^[A-Za-z](.*)([@]{1})(.{1,})(\\.)(.{1,})"
+        val emailRegex = "^[A-Za-z](.*)(@)(.+)(\\.)(.+)"
         val pattern = Pattern.compile(emailRegex)
-        val matcher = pattern.matcher(email.value)
+        val matcher = pattern.matcher(_email.value)
         return matcher.matches()
     }
 
     private fun isValidPassword(): Boolean {
         val passwordRegex = "^.{8,}$"
         val pattern = Pattern.compile(passwordRegex)
-        val matcher = pattern.matcher(password.value)
+        val matcher = pattern.matcher(_password.value)
         return matcher.matches()
     }
 
@@ -86,7 +94,9 @@ class WelcomeViewModel @Inject constructor(
                 _emailError.value = false
                 _passwordError.value = false
                 Timber.d("email: ${email.value}, password: ${password.value}")
-                _loggedIn.value = true
+                hairBookRepository.login(email.value, password.value).collectLatest { response ->
+                    _userDetails.value = response
+                }
             } else {
                 if (!isValidEmail()) {
                     sendMessage("Invalid Email")

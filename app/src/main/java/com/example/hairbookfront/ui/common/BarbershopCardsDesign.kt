@@ -1,4 +1,4 @@
-package com.example.hairbookfront.presentation.common
+package com.example.hairbookfront.ui.common
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size

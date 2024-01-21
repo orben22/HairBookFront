@@ -1,4 +1,5 @@
 import android.content.res.Configuration
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
@@ -32,9 +33,11 @@ import com.example.hairbookfront.ui.common.CustomButton
 import com.example.hairbookfront.ui.common.ClickableText
 import com.example.hairbookfront.ui.auth.welcome.WelcomeViewModel
 import com.example.hairbookfront.ui.navgraph.Routes
+import com.example.hairbookfront.util.ResourceState
 import kotlinx.coroutines.launch
 import timber.log.Timber
-
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.example.hairbookfront.ui.common.Loader
 
 @Composable
 fun WelcomePageScreen(
@@ -42,14 +45,26 @@ fun WelcomePageScreen(
     navController: NavHostController?
 ) {
     val context = LocalContext.current
-    val email = welcomeViewModel.email.collectAsState()
-    val password = welcomeViewModel.password.collectAsState()
-    val emailError = welcomeViewModel.emailError.collectAsState()
-    val passwordError = welcomeViewModel.passwordError.collectAsState()
-    val showOrHidePassword = welcomeViewModel.showOrHidePassword.collectAsState()
-    val loggedIn = welcomeViewModel.loggedIn.collectAsState()
-    if (loggedIn.value) {
-        navController?.navigate(Routes.CustomerHomeScreen.route)
+    val email = welcomeViewModel.email.collectAsStateWithLifecycle()
+    val password = welcomeViewModel.password.collectAsStateWithLifecycle()
+    val emailError = welcomeViewModel.emailError.collectAsStateWithLifecycle()
+    val passwordError = welcomeViewModel.passwordError.collectAsStateWithLifecycle()
+    val showOrHidePassword = welcomeViewModel.showOrHidePassword.collectAsStateWithLifecycle()
+    val loggedIn = welcomeViewModel.loggedIn.collectAsStateWithLifecycle()
+    val userDetails = welcomeViewModel.userDetails.collectAsStateWithLifecycle()
+    when (userDetails.value) {
+        is ResourceState.LOADING -> {
+            Loader()
+        }
+        is ResourceState.SUCCESS -> {
+            val response = (userDetails.value as ResourceState.SUCCESS).data
+            Timber.d("State:" + response.state + " Result data:" + response.data)
+            navController?.navigate(Routes.CustomerHomeScreen.route)
+        }
+        is ResourceState.ERROR -> {
+            val error = (userDetails.value as ResourceState.ERROR)
+            Timber.d("ERROR Logging in user $error")
+        }
     }
     LaunchedEffect(Unit) {
         welcomeViewModel
@@ -109,7 +124,6 @@ fun WelcomePageScreen(
                 )
                 CustomButton(text = "Sign In", onClick = {
                     Timber.d("Sign In button clicked ${loggedIn.value}")
-
                     welcomeViewModel.viewModelScope.launch {
                         welcomeViewModel.login()
                     }

@@ -3,8 +3,8 @@ package com.example.hairbookfront.di
 import android.app.Application
 import com.example.hairbookfront.data.manager.LocalUserManagerImpl
 import com.example.hairbookfront.data.remote.ApiService
-import com.example.hairbookfront.data.remote.NewsDataSource
-import com.example.hairbookfront.data.remote.NewsDataSourceImpl
+import com.example.hairbookfront.data.remote.HairBookDataSource
+import com.example.hairbookfront.data.remote.HairBookDataSourceImpl
 import com.example.hairbookfront.domain.manager.LocalUserManager
 import com.example.hairbookfront.domain.repository.ApiRepository
 import com.example.hairbookfront.domain.usecases.app_entry.AppEntryUseCases
@@ -76,13 +76,13 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun providesDataSource(apiService: ApiService): NewsDataSource {
-        return NewsDataSourceImpl(apiService)
+    fun providesDataSource(apiService: ApiService): HairBookDataSource {
+        return HairBookDataSourceImpl(apiService)
     }
 
     @Provides
     @Singleton
-    fun providesRepository(newsDataSource: NewsDataSource): ApiRepository {
+    fun providesRepository(newsDataSource: HairBookDataSource): ApiRepository {
         return ApiRepository(newsDataSource)
     }
 }

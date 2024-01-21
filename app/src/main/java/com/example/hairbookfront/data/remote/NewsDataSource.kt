@@ -1,9 +1,10 @@
 package com.example.hairbookfront.data.remote
 
-import com.example.hairbookfront.domain.model.NewsResponse
+import com.example.hairbookfront.domain.entities.HairBookResponse
 import retrofit2.Response
 
-interface NewsDataSource {
+interface HairBookDataSource {
+    suspend fun login(email: String, password: String): Response<HairBookResponse>
 
-    suspend fun getNewsHeadline(country: String): Response<NewsResponse>
+    suspend fun signUp(str: String): Response<HairBookResponse>
 }

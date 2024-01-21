@@ -1,15 +1,22 @@
 package com.example.hairbookfront.data.remote
 
-import com.example.hairbookfront.domain.model.NewsResponse
+import com.example.hairbookfront.domain.entities.HairBookResponse
+import com.example.hairbookfront.domain.entities.LoginRequest
 import retrofit2.Response
 import javax.inject.Inject
 
-class NewsDataSourceImpl @Inject constructor(
+class HairBookDataSourceImpl @Inject constructor(
     private val apiService: ApiService
-) : NewsDataSource {
+) : HairBookDataSource {
 
-    override suspend fun getNewsHeadline(country: String): Response<NewsResponse> {
-        return apiService.getNewsHeadline(country)
+    override suspend fun login(email: String, password: String): Response<HairBookResponse> {
+        val loginRequest = LoginRequest(email, password)
+        return apiService.login(loginRequest)
     }
+
+    override suspend fun signUp(str: String): Response<HairBookResponse> {
+        return apiService.signUp(str)
+    }
+
 
 }

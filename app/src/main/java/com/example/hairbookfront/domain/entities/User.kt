@@ -22,3 +22,8 @@ class User(
     val role: String,
     val details: UserDetails
 )
+
+class LoginRequest(
+    val email: String,
+    val password: String
+)

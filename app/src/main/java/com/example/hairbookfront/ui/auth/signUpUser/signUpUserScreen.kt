@@ -25,10 +25,6 @@ import com.example.hairbookfront.ui.common.TextFieldPassword
 import com.example.hairbookfront.ui.common.TopAppBarHairBook
 import com.example.hairbookfront.theme.HairBookFrontTheme
 
-fun isValidText(text: String): Boolean {
-    // Add your custom validation rules here
-    return text.matches(Regex("/^([a-zA-Z0-9._%-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,})\$/"))
-}
 
 @Composable
 fun SignUpUserScreen() {

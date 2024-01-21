@@ -58,7 +58,6 @@ dependencies {
     implementation(Dependencies.coreKts)
     implementation(Dependencies.lifecycleRuntimeKtx)
     implementation(Dependencies.activityCompose)
-
     implementation(Dependencies.composeUi)
     implementation(Dependencies.composeUiGraphics)
     implementation(Dependencies.composeUiToolingPreview)
@@ -109,6 +108,16 @@ dependencies {
 
     //Timber
     implementation(Dependencies.timber)
+
+    //Lifecycle compose
+    implementation(Dependencies.lifecycleViewmodelCompose)
+    implementation(Dependencies.lifecycleRuntimeCompose)
+
+    //Datastore
+    implementation(Dependencies.datastore)
+    implementation(Dependencies.datastorePreferences)
+//    implementation(Dependencies.kotlinxCollectionImmutable)
+    implementation(Dependencies.json)
 }
 
 kapt {
