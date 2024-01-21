@@ -2,11 +2,13 @@ package com.example.hairbookfront.ui.auth.welcome
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.navigation.NavHostController
+import com.example.hairbookfront.di.DataStorePreferences
 import com.example.hairbookfront.domain.entities.HairBookResponse
+import com.example.hairbookfront.domain.entities.User
 import com.example.hairbookfront.domain.repository.ApiRepository
 import com.example.hairbookfront.ui.navgraph.Routes
 import com.example.hairbookfront.util.ResourceState
+import com.squareup.moshi.Moshi
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -15,13 +17,14 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import timber.log.Timber
 import java.util.regex.Pattern
 import javax.inject.Inject
 
 @HiltViewModel
 class WelcomeViewModel @Inject constructor(
-    private val hairBookRepository: ApiRepository
+    private val hairBookRepository: ApiRepository,
+    private val dataStorePreferences: DataStorePreferences,
+    private val moshi: Moshi
 ) : ViewModel() {
 
     private val _email = MutableStateFlow("customer@customer.com")
@@ -121,9 +124,9 @@ class WelcomeViewModel @Inject constructor(
             if (isValidEmail() && isValidPassword()) {
                 _emailError.value = false
                 _passwordError.value = false
-                Timber.d("email: ${email.value}, password: ${password.value}")
                 hairBookRepository.login(email.value, password.value).collectLatest { response ->
                     _userDetails.value = response
+                    storeUserDetails(response)
                 }
             } else {
                 if (!isValidEmail()) {
@@ -138,4 +141,22 @@ class WelcomeViewModel @Inject constructor(
         }
     }
 
+    private suspend fun storeUserDetails(response: ResourceState<HairBookResponse>) {
+        when (response) {
+            is ResourceState.SUCCESS -> {
+                val userData = response.data.data
+                val userAdapter = moshi.adapter(User::class.java).lenient()
+                val user = userAdapter.fromJson(userData.toString())
+                if (user != null) {
+                    dataStorePreferences.storeUserDetails(user)
+                    _loggedIn.value = true
+                }
+            }
+            is ResourceState.ERROR -> {
+                sendMessage(response.error)
+            }
+
+            else -> {}
+        }
+    }
 }

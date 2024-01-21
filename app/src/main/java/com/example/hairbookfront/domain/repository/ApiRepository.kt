@@ -26,11 +26,12 @@ class ApiRepository @Inject constructor(private val hairBookDataSource: HairBook
             emit(ResourceState.ERROR(e.localizedMessage ?: "Something went wrong with api"))
         }
     }
-
-    suspend fun signUp(str: String): Flow<ResourceState<HairBookResponse>> {
+    suspend fun getAllShops(
+        accessToken: String
+    ): Flow<ResourceState<HairBookResponse>> {
         return flow {
             emit(ResourceState.LOADING())
-            val response = hairBookDataSource.signUp(str)
+            val response = hairBookDataSource.getAllShops(accessToken)
             if (response.isSuccessful && response.body() != null) {
                 emit(ResourceState.SUCCESS(response.body()!!))
             } else {

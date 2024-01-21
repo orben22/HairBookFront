@@ -6,5 +6,5 @@ import retrofit2.Response
 interface HairBookDataSource {
     suspend fun login(email: String, password: String): Response<HairBookResponse>
 
-    suspend fun signUp(str: String): Response<HairBookResponse>
+    suspend fun getAllShops(accessToken: String): Response<HairBookResponse>
 }

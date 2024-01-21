@@ -1,11 +1,15 @@
 package com.example.hairbookfront.ui.common
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import com.example.hairbookfront.R
 
@@ -22,13 +26,13 @@ fun AppDialog(
 ) {
     AlertDialog(
         icon = {
-            Icon(painter = painterResource(id = icon), contentDescription = "Example Icon")
+            Image(painter = painterResource(id = icon), contentDescription = "Example Icon")
         },
         title = {
             Text(text = dialogTitle)
         },
         text = {
-            Text(text = dialogText)
+            Text(text = dialogText, modifier = Modifier.fillMaxWidth())
         },
         onDismissRequest = {
             onDismissRequest()
@@ -38,10 +42,10 @@ fun AppDialog(
                 for (i in 1..numberOfConfirmButtons) {
                     TextButton(
                         onClick = {
-                            confirmFunctions[i-1]()
+                            confirmFunctions[i - 1]()
                         }
                     ) {
-                        Text(text = textOfConfirmButtons[i-1] ?: "Confirm")
+                        Text(text = textOfConfirmButtons[i - 1] ?: "Confirm")
                     }
                 }
             }

@@ -14,8 +14,8 @@ class HairBookDataSourceImpl @Inject constructor(
         return apiService.login(loginRequest)
     }
 
-    override suspend fun signUp(str: String): Response<HairBookResponse> {
-        return apiService.signUp(str)
+    override suspend fun getAllShops(accessToken: String): Response<HairBookResponse> {
+        return apiService.getAllShops(accessToken)
     }
 
 

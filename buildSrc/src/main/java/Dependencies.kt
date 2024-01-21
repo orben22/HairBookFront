@@ -49,6 +49,7 @@ object Dependencies {
 
     val lifecycleViewmodelCompose by lazy { "androidx.lifecycle:lifecycle-viewmodel-compose:${Versions.lifecycleViewmodelCompose}" }
     val lifecycleRuntimeCompose by lazy { "androidx.lifecycle:lifecycle-runtime-compose:${Versions.lifecycleViewmodelCompose}" }
+
     val datastore by lazy { "androidx.datastore:datastore:${Versions.datastore}" }
     val datastorePreferences by lazy { "androidx.datastore:datastore-preferences:${Versions.datastore}" }
     val kotlinxCollectionImmutable by lazy { "org.jetbrains.kotlinx:kotlinx-collection-immutable:${Versions.kotlinxCollectionImmutable}" }

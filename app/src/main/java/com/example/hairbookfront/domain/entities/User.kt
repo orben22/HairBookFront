@@ -10,7 +10,7 @@ data class BarberDTO(
 class CustomerDTO(
     val firstName: String,
     val lastName: String,
-    val age: Int,
+    val age: Float,
     val phoneNumber: String
 ) : UserDetails()
 
@@ -20,7 +20,8 @@ class User(
     val email: String,
     val password: String,
     val role: String,
-    val details: UserDetails
+    val details: UserDetails,
+    val accessToken: String?,
 )
 
 class LoginRequest(

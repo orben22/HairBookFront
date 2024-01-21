@@ -13,8 +13,10 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navigation
 import com.example.hairbookfront.ui.auth.signUpBarber.SignUpBarberScreen
 import com.example.hairbookfront.ui.auth.signUpCustomer.SignUpCustomerScreen
+import com.example.hairbookfront.ui.auth.welcome.WelcomeViewModel
 import com.example.hairbookfront.ui.customer.customerDetails.CustomerDetailsScreen
 import com.example.hairbookfront.ui.customer.customerHome.CustomerHomeScreen
+import com.example.hairbookfront.ui.customer.customerHome.CustomerHomeViewModel
 
 
 @Composable
@@ -29,7 +31,8 @@ fun AppNavGraph(
             startDestination = Routes.WelcomeScreen.route
         ) {
             composable(route = Routes.WelcomeScreen.route) {
-                WelcomePageScreen(navController = navController)
+                val viewModel = it.sharedViewModel<WelcomeViewModel>(navController)
+                WelcomePageScreen(viewModel, navController = navController)
             }
             composable(route = Routes.SignupCustomerScreen.route) {
                 SignUpCustomerScreen()
@@ -43,7 +46,8 @@ fun AppNavGraph(
             startDestination = Routes.CustomerHomeScreen.route
         ) {
             composable(route = Routes.CustomerHomeScreen.route) {
-                CustomerHomeScreen(navController)
+                val viewModel = it.sharedViewModel<CustomerHomeViewModel>(navController)
+                CustomerHomeScreen(viewModel, navController = navController)
             }
             composable(route = Routes.CustomerDetailsScreen.route) {
                 CustomerDetailsScreen()

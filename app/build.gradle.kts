@@ -3,7 +3,6 @@ plugins {
     id("org.jetbrains.kotlin.android")
     kotlin("kapt")
     id("com.google.dagger.hilt.android")
-
 }
 
 android {
@@ -80,6 +79,7 @@ dependencies {
     implementation(Dependencies.okhttp3)
     implementation(Dependencies.gsonConverter)
     implementation(Dependencies.moshi)
+
     implementation(Dependencies.moshiConverter)
     implementation(Dependencies.loggingInterceptor)
 

@@ -13,14 +13,20 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.example.hairbookfront.ui.common.AppTextField
 import com.example.hairbookfront.ui.common.BarberShopList
 import com.example.hairbookfront.ui.common.TopAppBarHairBook
 import com.example.hairbookfront.theme.HairBookFrontTheme
+import com.example.hairbookfront.ui.auth.welcome.WelcomeViewModel
+import dagger.hilt.android.lifecycle.HiltViewModel
 
 @Composable
-fun CustomerHomeScreen(navController: NavHostController? = null) {
+fun CustomerHomeScreen(
+    welcomeViewModel: CustomerHomeViewModel = hiltViewModel(),
+    navController: NavHostController? = null
+) {
     val search = remember { mutableStateOf("") }
 
     Surface(color = MaterialTheme.colorScheme.surface) {
