@@ -50,16 +50,24 @@ class WelcomeViewModel @Inject constructor(
     val loggedIn: StateFlow<Boolean>
         get() = _loggedIn
 
+    private val _showDialog = MutableStateFlow(false)
+    val showDialog: StateFlow<Boolean>
+        get() = _showDialog
+
+    private val _dialogText = MutableStateFlow(listOf("Customer", "Barber"))
+    val dialogText: StateFlow<List<String>>
+        get() = _dialogText
+
+
     private val _userDetails: MutableStateFlow<ResourceState<HairBookResponse>> =
         MutableStateFlow(ResourceState.LOADING())
     val userDetails: StateFlow<ResourceState<HairBookResponse>>
         get() = _userDetails
 
-    fun sendMessage(message: String) {
-        viewModelScope.launch {
-            _toastMessage.emit(message)
-        }
-    }
+    private val _signUpScreen = MutableStateFlow("")
+    val signUpScreen: StateFlow<String>
+        get() = _signUpScreen
+
 
     fun emailChanged(email: String) {
         _email.value = email
@@ -71,6 +79,26 @@ class WelcomeViewModel @Inject constructor(
 
     fun showOrHidePassword() {
         _showOrHidePassword.value = !_showOrHidePassword.value
+    }
+
+    fun showOrHideDialog() {
+        _showDialog.value = !_showDialog.value
+    }
+
+    fun signUpBarberClicked() {
+        _signUpScreen.value = Routes.SignupBarberScreen.route
+        _showDialog.value = false
+    }
+
+    fun signUpCustomerClicked() {
+        _signUpScreen.value = Routes.SignupCustomerScreen.route
+        _showDialog.value = false
+    }
+
+    private fun sendMessage(message: String) {
+        viewModelScope.launch {
+            _toastMessage.emit(message)
+        }
     }
 
     private fun isValidEmail(): Boolean {

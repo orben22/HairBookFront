@@ -21,18 +21,20 @@ import com.example.hairbookfront.theme.HairBookFrontTheme
 
 @Composable
 fun CustomerHomeScreen(navController: NavHostController? = null) {
+    val search = remember { mutableStateOf("") }
+
     Surface(color = MaterialTheme.colorScheme.surface) {
-
-
-        val search = remember { mutableStateOf("") }
-
         // Compose UI components
         Column(
             modifier = Modifier.fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             TopAppBarHairBook(text = "Search Shop")
-            AppTextField(value =search.value , placeholderText ="Search BarberShop..." , icon = Icons.Outlined.Search , onValueChange = { search.value = it })
+            AppTextField(
+                value = search.value,
+                placeholderText = "Search BarberShop...",
+                icon = Icons.Outlined.Search,
+                onValueChange = { search.value = it })
             BarberShopList()
         }
     }

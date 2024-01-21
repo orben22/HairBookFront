@@ -1,4 +1,4 @@
-package com.example.hairbookfront.ui.auth.signUpUser
+package com.example.hairbookfront.ui.auth.signUpCustomer
 
 import android.content.res.Configuration
 import androidx.compose.foundation.layout.Arrangement
@@ -27,7 +27,7 @@ import com.example.hairbookfront.theme.HairBookFrontTheme
 
 
 @Composable
-fun SignUpUserScreen() {
+fun SignUpCustomerScreen() {
     Surface(color = MaterialTheme.colorScheme.surface) {
         val firstName = remember { mutableStateOf("") }
         val lastName = remember { mutableStateOf("") }
@@ -84,16 +84,16 @@ fun SignUpUserScreen() {
 
 @Preview(showBackground = true, showSystemUi = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
-fun SignUpUserScreenPreviewDark() {
+fun SignUpCustomerScreenPreviewDark() {
     HairBookFrontTheme {
-        SignUpUserScreen()
+        SignUpCustomerScreen()
     }
 }
 
 @Preview(showBackground = true, showSystemUi = true, uiMode = Configuration.UI_MODE_NIGHT_NO)
 @Composable
-fun SignUpUserScreenPreviewLight() {
+fun SignUpCustomerScreenPreviewLight() {
     HairBookFrontTheme {
-        SignUpUserScreen()
+        SignUpCustomerScreen()
     }
 }

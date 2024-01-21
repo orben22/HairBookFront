@@ -12,8 +12,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navigation
 import com.example.hairbookfront.ui.auth.signUpBarber.SignUpBarberScreen
-import com.example.hairbookfront.ui.auth.signUpUser.SignUpUserScreen
-import com.example.hairbookfront.ui.auth.welcome.WelcomeViewModel
+import com.example.hairbookfront.ui.auth.signUpCustomer.SignUpCustomerScreen
 import com.example.hairbookfront.ui.customer.customerDetails.CustomerDetailsScreen
 import com.example.hairbookfront.ui.customer.customerHome.CustomerHomeScreen
 
@@ -33,7 +32,7 @@ fun AppNavGraph(
                 WelcomePageScreen(navController = navController)
             }
             composable(route = Routes.SignupCustomerScreen.route) {
-                SignUpUserScreen()
+                SignUpCustomerScreen()
             }
             composable(route = Routes.SignupBarberScreen.route) {
                 SignUpBarberScreen()

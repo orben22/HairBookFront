@@ -19,7 +19,7 @@ import com.example.hairbookfront.ui.common.BookingCard
 fun CustomerDetailsScreen() {
     Scaffold(
         topBar = {
-            TopAppBarHairBook("User Details")
+            TopAppBarHairBook("Customer Details")
         },
         content = { innerPadding ->
             Column(

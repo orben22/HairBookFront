@@ -1,5 +1,4 @@
 import android.content.res.Configuration
-import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
@@ -9,7 +8,6 @@ import androidx.compose.material3.*
 import com.example.hairbookfront.R
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -22,7 +20,6 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import com.example.hairbookfront.ui.Dimens.mediumPadding2
 import com.example.hairbookfront.ui.Dimens.smallPadding3
 import com.example.hairbookfront.theme.HairBookFrontTheme
@@ -37,6 +34,7 @@ import com.example.hairbookfront.util.ResourceState
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.example.hairbookfront.ui.common.AppDialog
 import com.example.hairbookfront.ui.common.Loader
 
 @Composable
@@ -52,15 +50,21 @@ fun WelcomePageScreen(
     val showOrHidePassword = welcomeViewModel.showOrHidePassword.collectAsStateWithLifecycle()
     val loggedIn = welcomeViewModel.loggedIn.collectAsStateWithLifecycle()
     val userDetails = welcomeViewModel.userDetails.collectAsStateWithLifecycle()
+    val showDialog = welcomeViewModel.showDialog.collectAsStateWithLifecycle()
+    val dialogText = welcomeViewModel.dialogText.collectAsStateWithLifecycle()
+    val signUpScreen = welcomeViewModel.signUpScreen.collectAsStateWithLifecycle()
+
     when (userDetails.value) {
         is ResourceState.LOADING -> {
             Loader()
         }
+
         is ResourceState.SUCCESS -> {
             val response = (userDetails.value as ResourceState.SUCCESS).data
             Timber.d("State:" + response.state + " Result data:" + response.data)
             navController?.navigate(Routes.CustomerHomeScreen.route)
         }
+
         is ResourceState.ERROR -> {
             val error = (userDetails.value as ResourceState.ERROR)
             Timber.d("ERROR Logging in user $error")
@@ -76,6 +80,9 @@ fun WelcomePageScreen(
                     Toast.LENGTH_SHORT,
                 ).show()
             }
+    }
+    if (signUpScreen.value != "") {
+        navController?.navigate(signUpScreen.value)
     }
     Scaffold(
         content = { innerPadding ->
@@ -136,9 +143,23 @@ fun WelcomePageScreen(
                     )
                     ClickableText(
                         text = " Sign Up",
-                        onClick = { navController?.navigate(Routes.SignupCustomerScreen.route) },
+                        onClick = { welcomeViewModel.showOrHideDialog() },
                         color = Color.Cyan,
                         fontSize = 20
+                    )
+                }
+
+                if (showDialog.value) {
+                    AppDialog(
+                        dialogTitle = "Sign Up",
+                        dialogText = "Are you a Barber or a Customer?",
+                        numberOfConfirmButtons = 2,
+                        textOfConfirmButtons = dialogText.value,
+                        confirmFunctions = listOf(
+                            welcomeViewModel::signUpCustomerClicked,
+                            welcomeViewModel::signUpBarberClicked
+                        ),
+                        onDismissRequest = { welcomeViewModel.showOrHideDialog() }
                     )
                 }
             }
