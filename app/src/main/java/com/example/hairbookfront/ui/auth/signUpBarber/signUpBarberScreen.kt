@@ -39,6 +39,8 @@ fun SignUpBarberScreen(
 ) {
     val firstName = signUpBarberViewModel.firstName.collectAsStateWithLifecycle()
     val lastName = signUpBarberViewModel.lastName.collectAsStateWithLifecycle()
+    val firstNameError=signUpBarberViewModel.firstNameError.collectAsStateWithLifecycle()
+    val lastNameError=signUpBarberViewModel.lastNameError.collectAsStateWithLifecycle()
     val email = signUpBarberViewModel.email.collectAsStateWithLifecycle()
     val emailError = signUpBarberViewModel.emailError.collectAsStateWithLifecycle()
     val years_of_experience = signUpBarberViewModel.yearsOfExperience.collectAsStateWithLifecycle()
