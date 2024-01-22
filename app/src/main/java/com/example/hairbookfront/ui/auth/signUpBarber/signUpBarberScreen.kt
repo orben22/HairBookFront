@@ -106,3 +106,4 @@ fun SignUpBarberScreenPreviewLight() {
         SignUpBarberScreen(navController = null)
     }
 }
+//
