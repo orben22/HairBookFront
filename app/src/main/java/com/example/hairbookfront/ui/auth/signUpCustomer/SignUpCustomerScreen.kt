@@ -4,6 +4,7 @@ import android.content.res.Configuration
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.AccountCircle
 import androidx.compose.material.icons.outlined.Call
@@ -12,30 +13,38 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewModelScope
 import com.example.hairbookfront.ui.common.SubmitButton
 import com.example.hairbookfront.ui.common.AppTextField
 import com.example.hairbookfront.ui.common.TextFieldPassword
 import com.example.hairbookfront.ui.common.TopAppBarHairBook
 import com.example.hairbookfront.theme.HairBookFrontTheme
+import com.example.hairbookfront.ui.common.CustomButton
+import kotlinx.coroutines.launch
 
 
 @Composable
-fun SignUpCustomerScreen() {
+fun SignUpCustomerScreen(
+    signUpCustomerViewModel: SignUpCustomerViewModel = hiltViewModel()
+) {
+    val context = LocalContext.current
+    val firstName = signUpCustomerViewModel.firstName.collectAsStateWithLifecycle()
+    val lastName = signUpCustomerViewModel.lastName.collectAsStateWithLifecycle()
+    val age = signUpCustomerViewModel.age.collectAsStateWithLifecycle()
+    val phoneNumber = signUpCustomerViewModel.phoneNumber.collectAsStateWithLifecycle()
+    val email = signUpCustomerViewModel.email.collectAsStateWithLifecycle()
+    val password = signUpCustomerViewModel.password.collectAsStateWithLifecycle()
+    val emailError = signUpCustomerViewModel.emailError.collectAsStateWithLifecycle()
+    val passwordError = signUpCustomerViewModel.passwordError.collectAsStateWithLifecycle()
+    val showOrHidePassword = signUpCustomerViewModel.showOrHidePassword.collectAsStateWithLifecycle()
     Surface(color = MaterialTheme.colorScheme.surface) {
-        val firstName = remember { mutableStateOf("") }
-        val lastName = remember { mutableStateOf("") }
-        val phoneNumber = remember { mutableStateOf("") }
-        val email = remember { mutableStateOf("") }
-        val age = remember { mutableStateOf("") }
-        val password = remember { mutableStateOf("") }
-        var isValid by remember { mutableStateOf(false) }
 
         // Compose UI components
         Column(
@@ -48,35 +57,50 @@ fun SignUpCustomerScreen() {
                 value = firstName.value,
                 placeholderText = "First Name",
                 icon = Icons.Outlined.AccountCircle,
-                onValueChange = { firstName.value = it })
+                onValueChange = { signUpCustomerViewModel.firstNameChanged(it)}
+            )
             AppTextField(
                 value = lastName.value,
                 placeholderText = "Last Name",
                 icon = Icons.Outlined.AccountCircle,
-                onValueChange = { lastName.value = it })
+                onValueChange = { signUpCustomerViewModel.lastNameChanged(it) })
             AppTextField(
                 value = age.value,
                 placeholderText = "Age",
                 icon = null,
-                onValueChange = { age.value = it })
+                onValueChange = { signUpCustomerViewModel.ageChanged(it) },
+                keyboardOptions = KeyboardOptions.Default.copy(
+                    keyboardType = KeyboardType.Number))
             AppTextField(
                 value = phoneNumber.value,
                 placeholderText = "Phone Number",
                 icon = Icons.Outlined.Call,
-                onValueChange = { phoneNumber.value = it })
+                onValueChange = { signUpCustomerViewModel.phoneNumberChanged(it) },
+                keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number)
+            )
             AppTextField(
                 value = email.value,
                 placeholderText = "Email",
                 icon = Icons.Outlined.Email,
-                onValueChange = { email.value = it })
+                onValueChange = { signUpCustomerViewModel.emailChanged(it)},
+                isError = emailError.value
+            )
             TextFieldPassword(
                 password = password.value,
-                onValueChange = { },
-                isError = false,
-                onIconClicked = { },
-                passwordVisibility = false
+                onValueChange = { signUpCustomerViewModel.passwordChanged(it) },
+                isError = passwordError.value,
+                onIconClicked = { signUpCustomerViewModel.showOrHidePassword() },
+                passwordVisibility = showOrHidePassword.value
             )
-            SubmitButton()
+            CustomButton(
+                text = "Sign Up",
+                onClick = {
+                    signUpCustomerViewModel.viewModelScope.launch {
+                        signUpCustomerViewModel.signUp()
+                    }
+                },
+                icon = null
+            )
             Text(text = "Already have an account ? Sign In")
         }
     }
