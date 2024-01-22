@@ -21,7 +21,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewModelScope
-import com.example.hairbookfront.ui.common.SubmitButton
 import com.example.hairbookfront.ui.common.AppTextField
 import com.example.hairbookfront.ui.common.TextFieldPassword
 import com.example.hairbookfront.ui.common.TopAppBarHairBook
@@ -41,6 +40,10 @@ fun SignUpCustomerScreen(
     val phoneNumber = signUpCustomerViewModel.phoneNumber.collectAsStateWithLifecycle()
     val email = signUpCustomerViewModel.email.collectAsStateWithLifecycle()
     val password = signUpCustomerViewModel.password.collectAsStateWithLifecycle()
+    val firstNameError = signUpCustomerViewModel.firstNameError.collectAsStateWithLifecycle()
+    val lastNameError = signUpCustomerViewModel.lastNameError.collectAsStateWithLifecycle()
+    val ageError = signUpCustomerViewModel.ageError.collectAsStateWithLifecycle()
+    val phoneNumberError = signUpCustomerViewModel.phoneNumberError.collectAsStateWithLifecycle()
     val emailError = signUpCustomerViewModel.emailError.collectAsStateWithLifecycle()
     val passwordError = signUpCustomerViewModel.passwordError.collectAsStateWithLifecycle()
     val showOrHidePassword = signUpCustomerViewModel.showOrHidePassword.collectAsStateWithLifecycle()
@@ -57,26 +60,30 @@ fun SignUpCustomerScreen(
                 value = firstName.value,
                 placeholderText = "First Name",
                 icon = Icons.Outlined.AccountCircle,
-                onValueChange = { signUpCustomerViewModel.firstNameChanged(it)}
+                onValueChange = { signUpCustomerViewModel.firstNameChanged(it)},
+                isError = firstNameError.value
             )
             AppTextField(
                 value = lastName.value,
                 placeholderText = "Last Name",
                 icon = Icons.Outlined.AccountCircle,
-                onValueChange = { signUpCustomerViewModel.lastNameChanged(it) })
+                onValueChange = { signUpCustomerViewModel.lastNameChanged(it) },
+                isError = lastNameError.value)
             AppTextField(
                 value = age.value,
                 placeholderText = "Age",
                 icon = null,
                 onValueChange = { signUpCustomerViewModel.ageChanged(it) },
                 keyboardOptions = KeyboardOptions.Default.copy(
-                    keyboardType = KeyboardType.Number))
+                    keyboardType = KeyboardType.Number),
+                isError = ageError.value)
             AppTextField(
                 value = phoneNumber.value,
                 placeholderText = "Phone Number",
                 icon = Icons.Outlined.Call,
                 onValueChange = { signUpCustomerViewModel.phoneNumberChanged(it) },
-                keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number)
+                keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
+                isError = phoneNumberError.value
             )
             AppTextField(
                 value = email.value,
@@ -96,7 +103,7 @@ fun SignUpCustomerScreen(
                 text = "Sign Up",
                 onClick = {
                     signUpCustomerViewModel.viewModelScope.launch {
-                        signUpCustomerViewModel.signUp()
+                        signUpCustomerViewModel.signUpCustomer()
                     }
                 },
                 icon = null

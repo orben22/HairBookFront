@@ -6,33 +6,31 @@ import com.example.hairbookfront.di.DataStorePreferences
 import com.example.hairbookfront.domain.repository.ApiRepository
 import com.squareup.moshi.Moshi
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import okhttp3.internal.wait
 import java.util.regex.Pattern
 import javax.inject.Inject
+
 @HiltViewModel
 class SignUpCustomerViewModel @Inject constructor(
     private val hairBookRepository: ApiRepository,
     private val dataStorePreferences: DataStorePreferences,
     private val moshi: Moshi
-    ): ViewModel() {
+) : ViewModel() {
 
-        private val _firstName = MutableStateFlow("")
+    private val _firstName = MutableStateFlow("")
     val firstName: StateFlow<String>
         get() = _firstName
-    private val _lastName =  MutableStateFlow ("")
+    private val _lastName = MutableStateFlow("")
     val lastName: StateFlow<String>
         get() = _lastName
     private val _phoneNumber = MutableStateFlow("")
     val phoneNumber: StateFlow<String>
         get() = _phoneNumber
-    private val _age =  MutableStateFlow("")
+    private val _age = MutableStateFlow("")
     val age: StateFlow<String>
         get() = _age
 
@@ -77,13 +75,16 @@ class SignUpCustomerViewModel @Inject constructor(
     fun firstNameChanged(firstName: String) {
         _firstName.value = firstName
     }
+
     fun lastNameChanged(lastName: String) {
         _lastName.value = lastName
     }
+
     fun ageChanged(age: String) {
         _age.value = age
     }
-    fun phoneNumberChanged(phoneNumber : String) {
+
+    fun phoneNumberChanged(phoneNumber: String) {
         _phoneNumber.value = phoneNumber
     }
 
@@ -112,30 +113,31 @@ class SignUpCustomerViewModel @Inject constructor(
         val matcher = pattern.matcher(_password.value)
         return matcher.matches()
     }
+
     fun isFirstNameValid(): Boolean {
-        val nameRegex = "/^[a-z ,.'-]+\$/i"
+        val nameRegex = "^[a-zA-Z]+\$"
         val pattern = Pattern.compile(nameRegex)
         val matcher = pattern.matcher(_firstName.value)
         return matcher.matches()
     }
 
     fun isLastNameValid(): Boolean {
-        val nameRegex = "/^[a-z ,.'-]+\$/i"
+        val nameRegex = "^[a-zA-Z]+\$"
         val pattern = Pattern.compile(nameRegex)
         val matcher = pattern.matcher(_lastName.value)
         return matcher.matches()
     }
 
-    fun isAgeValid(age: String): Boolean {
+    fun isAgeValid(): Boolean {
         try {
-            val ageInt = age.toInt()
+            val ageInt = _age.value.toInt()
             return ageInt in 0..120
         } catch (e: NumberFormatException) {
             return false
         }
     }
 
-    fun isPhoneNumberValid(phoneNumber: String): Boolean {
+    fun isPhoneNumberValid(): Boolean {
         val phoneNumberRegex = "^\\d{10}\$"
         val pattern = Pattern.compile(phoneNumberRegex)
         val matcher = pattern.matcher(_phoneNumber.value)
@@ -148,44 +150,46 @@ class SignUpCustomerViewModel @Inject constructor(
         }
     }
 
-    suspend fun signUp() {
-        viewModelScope.launch(Dispatchers.IO) {
-            if (isValidEmail() && isValidPassword()
-                && isFirstNameValid() && isLastNameValid()&&
-                isAgeValid(age.value) && isPhoneNumberValid(phoneNumber.value)) {
-                _firstNameError.value = false
-                _lastNameError.value = false
-                _ageError.value = false
-                _phoneNumberError.value = false
-                _emailError.value = false
-                _passwordError.value = false
-                wait()
-            } else {
-                if (!isFirstNameValid()) {
-                    sendMessage("Invalid First Name")
-                    _firstNameError.value = true
-                }
-                if (!isLastNameValid()) {
-                    sendMessage("Invalid Last Name")
-                    _lastNameError.value = true
-                }
-                if (!isAgeValid(age.value)) {
-                    sendMessage("Invalid Age")
-                    _ageError.value = true
-                }
-                if (!isPhoneNumberValid(phoneNumber.value)) {
-                    sendMessage("Invalid Phone Number")
-                    _phoneNumberError.value = true
-                }
-                if (!isValidEmail()) {
-                    sendMessage("Invalid Email")
-                    _emailError.value = true
-                }
-                if (!isValidPassword()) {
-                    sendMessage("Invalid Password")
-                    _passwordError.value = true
-                }
-            }
+    suspend fun signUpCustomer() {
+
+        if (isFirstNameValid())
+            _firstNameError.value = false
+        else {
+            sendMessage("Invalid First Name")
+            _firstNameError.value = true
+        }
+
+        if (isLastNameValid())
+            _lastNameError.value = false
+        else {
+            sendMessage("Invalid Last Name")
+            _lastNameError.value = true
+        }
+        if (isAgeValid())
+            _ageError.value = false
+       else {
+            sendMessage("Invalid Age")
+            _ageError.value = true
+        }
+        if (isPhoneNumberValid())
+            _phoneNumberError.value = false
+        else {
+            sendMessage("Invalid Phone Number")
+            _phoneNumberError.value = true
+        }
+        if(isValidEmail())
+            _emailError.value = false
+        else {
+            sendMessage("Invalid Email")
+            _emailError.value = true
+        }
+        if(isValidPassword())
+            _passwordError.value = false
+        else {
+            sendMessage("Invalid Password")
+            _passwordError.value = true
         }
     }
 }
+
+
