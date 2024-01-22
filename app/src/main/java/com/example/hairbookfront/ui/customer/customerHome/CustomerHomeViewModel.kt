@@ -20,15 +20,15 @@ class CustomerHomeViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            dataStorePreferences.getAccessToken().collectLatest { it ->
-                hairBookRepository.getAllShops("Bearer $it").collectLatest {
-                    when (it) {
+            dataStorePreferences.getAccessToken().collectLatest { accessToken ->
+                hairBookRepository.getAllShops("Bearer $accessToken").collectLatest {response->
+                    when (response) {
                         is ResourceState.SUCCESS -> {
-                            Timber.d("success: ${it.data.data}")
+                            Timber.d("success: ${response.data.data}")
                         }
 
                         is ResourceState.ERROR -> {
-                            Timber.d("error: ${it.error}")
+                            Timber.d("error: ${response.error}")
                         }
 
                         is ResourceState.LOADING -> {
