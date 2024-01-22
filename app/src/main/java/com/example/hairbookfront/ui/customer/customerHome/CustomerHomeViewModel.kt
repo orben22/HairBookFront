@@ -24,7 +24,7 @@ class CustomerHomeViewModel @Inject constructor(
                 hairBookRepository.getAllShops("Bearer $it").collectLatest {
                     when (it) {
                         is ResourceState.SUCCESS -> {
-                            Timber.d("success: ${it.data}")
+                            Timber.d("success: ${it.data.data}")
                         }
 
                         is ResourceState.ERROR -> {
@@ -37,7 +37,6 @@ class CustomerHomeViewModel @Inject constructor(
                     }
                 }
             }
-
         }
     }
 }
