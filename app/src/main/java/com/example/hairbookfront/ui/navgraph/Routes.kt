@@ -14,7 +14,7 @@ sealed class Routes(val route: String) {
 
     object CustomerDetailsScreen : Routes("customerDetailsScreen")
 
-    object NewsNavigationScreen : Routes("newsNavigationScreen")
+    object BarberDetailsScreen : Routes("barberDetailsScreen")
 
     // Sub graphs
     object AuthGraph : Routes("authGraph")

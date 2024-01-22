@@ -120,23 +120,23 @@ class WelcomeViewModel @Inject constructor(
 
 
     suspend fun login() {
-        viewModelScope.launch(Dispatchers.IO) {
-            if (isValidEmail() && isValidPassword()) {
-                _emailError.value = false
-                _passwordError.value = false
+        if (isValidEmail() && isValidPassword()) {
+            _emailError.value = false
+            _passwordError.value = false
+            viewModelScope.launch(Dispatchers.IO) {
                 hairBookRepository.login(email.value, password.value).collectLatest { response ->
                     _userDetails.value = response
                     storeUserDetails(response)
                 }
-            } else {
-                if (!isValidEmail()) {
-                    sendMessage("Invalid Email")
-                    _emailError.value = true
-                }
-                if (!isValidPassword()) {
-                    sendMessage("Invalid Password")
-                    _passwordError.value = true
-                }
+            }
+        } else {
+            if (!isValidEmail()) {
+                sendMessage("Invalid Email")
+                _emailError.value = true
+            }
+            if (!isValidPassword()) {
+                sendMessage("Invalid Password")
+                _passwordError.value = true
             }
         }
     }
@@ -152,6 +152,7 @@ class WelcomeViewModel @Inject constructor(
                     _loggedIn.value = true
                 }
             }
+
             is ResourceState.ERROR -> {
                 sendMessage(response.error)
             }
