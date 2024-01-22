@@ -2,12 +2,17 @@ package com.example.hairbookfront.ui.auth.signUpBarber
 
 import androidx.core.text.isDigitsOnly
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.hairbookfront.di.DataStorePreferences
 import com.example.hairbookfront.domain.repository.ApiRepository
+import com.example.hairbookfront.util.ResourceState
 import com.squareup.moshi.Moshi
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.launch
 import java.util.regex.Pattern
 import javax.inject.Inject
 
@@ -22,9 +27,18 @@ class signUpBarberViewModel @Inject constructor(
     val firstName: StateFlow<String>
         get() = _firstName
 
+    private val _firstNameError = MutableStateFlow(false)
+    val firstNameError: StateFlow<Boolean>
+        get() = _firstNameError
+
     private val _lastName = MutableStateFlow("")
     val lastName: StateFlow<String>
         get() = _lastName
+
+    private val _lastNameError = MutableStateFlow(false)
+    val lastNameError: StateFlow<Boolean>
+        get() = _lastNameError
+
 
     private val _yearsOfExperience = MutableStateFlow("")
     val yearsOfExperience: StateFlow<String>
@@ -34,6 +48,7 @@ class signUpBarberViewModel @Inject constructor(
     private val _yearsOfExperienceError = MutableStateFlow(false)
     val yearsOfExperienceError: StateFlow<Boolean>
         get() = _yearsOfExperienceError
+
 
     private val _email = MutableStateFlow("customer@customer.com")
     val email: StateFlow<String>
@@ -54,6 +69,9 @@ class signUpBarberViewModel @Inject constructor(
     val showOrHidePassword: StateFlow<Boolean>
         get() = _showOrHidePassword
 
+    private val _toastMessage = MutableSharedFlow<String>()
+    val toastMessage = _toastMessage.asSharedFlow()
+
     //#
     // functions
 //#
@@ -67,8 +85,8 @@ class signUpBarberViewModel @Inject constructor(
 
     fun yearsOfExperienceChanged(yearsOfExperience: String) {
         _yearsOfExperience.value = yearsOfExperience
-        validateYearsOfExperience(yearsOfExperience)
     }
+
 
     fun emailChanged(email: String) {
         _email.value = email
@@ -81,6 +99,21 @@ class signUpBarberViewModel @Inject constructor(
     fun showOrHidePassword() {
         _showOrHidePassword.value = !_showOrHidePassword.value
     }
+
+    fun isFirstNameValid(): Boolean {
+        val nameRegex = "^[a-zA-Z]+\$"
+        val pattern = Pattern.compile(nameRegex)
+        val matcher = pattern.matcher(_firstName.value)
+        return matcher.matches()
+    }
+
+    fun isLastNameValid(): Boolean {
+        val nameRegex = "^[a-zA-Z]+\$"
+        val pattern = Pattern.compile(nameRegex)
+        val matcher = pattern.matcher(_lastName.value)
+        return matcher.matches()
+    }
+
 
     private fun isValidEmail(): Boolean {
         val emailRegex = "^[A-Za-z](.*)(@)(.+)(\\.)(.+)"
@@ -97,14 +130,54 @@ class signUpBarberViewModel @Inject constructor(
     }
 
 
-    // Function to validate the "Years of Experience" input
-    private fun validateYearsOfExperience(yearsOfExperience: String) {
-        _yearsOfExperienceError.value = !yearsOfExperience.isDigitsOnly()
+    private fun isValidYearsOfExperience(): Boolean {
+        try {
+            val yearsOfExp = _yearsOfExperience.value.toInt()
+            return yearsOfExp in 0..120
+        } catch (e: NumberFormatException) {
+            return false
+        }
+    }
+
+    private fun sendMessage(message: String) {
+        viewModelScope.launch {
+            _toastMessage.emit(message)
+        }
     }
 
 
     suspend fun signUpBarber() {
+        if (isFirstNameValid())
+            _firstNameError.value = false
+        else {
+            sendMessage("Invalid First Name")
+            _firstNameError.value = true
+        }
 
-
+        if (isLastNameValid())
+            _lastNameError.value = false
+        else {
+            sendMessage("Invalid Last Name")
+            _lastNameError.value = true
+        }
+        if (isValidYearsOfExperience())
+            _yearsOfExperienceError.value = false
+        else {
+            sendMessage("Invalid Years Of Experience")
+            _yearsOfExperienceError.value = true
+        }
+        if (isValidEmail())
+            _emailError.value = false
+        else {
+            sendMessage("Invalid Email")
+            _emailError.value = true
+        }
+        if (isValidPassword())
+            _passwordError.value = false
+        else {
+            sendMessage("Invalid Password")
+            _passwordError.value = true
+        }
     }
 }
+

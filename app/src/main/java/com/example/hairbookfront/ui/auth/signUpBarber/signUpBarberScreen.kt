@@ -22,22 +22,32 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavHostController
 import com.example.hairbookfront.ui.common.SubmitButton
 import com.example.hairbookfront.ui.common.AppTextField
 import com.example.hairbookfront.theme.HairBookFrontTheme
+import com.example.hairbookfront.ui.auth.welcome.WelcomeViewModel
 import com.example.hairbookfront.ui.common.TextFieldPassword
 import com.example.hairbookfront.ui.common.TopAppBarHairBook
 
 @Composable
-fun SignUpBarberScreen() {
+fun SignUpBarberScreen(
+    signUpBarberViewModel: signUpBarberViewModel = hiltViewModel(),
+    navController: NavHostController?
+) {
+    val firstName = signUpBarberViewModel.firstName.collectAsStateWithLifecycle()
+    val lastName = signUpBarberViewModel.lastName.collectAsStateWithLifecycle()
+    val email = signUpBarberViewModel.email.collectAsStateWithLifecycle()
+    val emailError = signUpBarberViewModel.emailError.collectAsStateWithLifecycle()
+    val years_of_experience = signUpBarberViewModel.yearsOfExperience.collectAsStateWithLifecycle()
+    val years_of_experience_error =
+        signUpBarberViewModel.yearsOfExperienceError.collectAsStateWithLifecycle()
+    val password = signUpBarberViewModel.password.collectAsStateWithLifecycle()
+    val passwordError = signUpBarberViewModel.passwordError.collectAsStateWithLifecycle()
+
     Surface(color = MaterialTheme.colorScheme.surface) {
-        val firstName = remember { mutableStateOf("") }
-        val lastName = remember { mutableStateOf("") }
-        val phoneNumber = remember { mutableStateOf("") }
-        val email = remember { mutableStateOf("") }
-        val years_of_experience = remember { mutableStateOf("") }
-        val password = remember { mutableStateOf("") }
-        var isValid by remember { mutableStateOf(false) }
         Column(
             modifier = Modifier.fillMaxSize(),
             verticalArrangement = Arrangement.Center,
@@ -48,31 +58,26 @@ fun SignUpBarberScreen() {
                 value = firstName.value,
                 placeholderText = "First Name",
                 icon = Icons.Outlined.AccountCircle,
-                onValueChange = { firstName.value = it })
+                onValueChange = { signUpBarberViewModel.firstNameChanged(it) })
             AppTextField(
                 value = lastName.value,
                 placeholderText = "Last Name",
                 icon = Icons.Outlined.AccountCircle,
-                onValueChange = { lastName.value = it })
+                onValueChange = { signUpBarberViewModel.lastNameChanged(it)})
             AppTextField(
                 value = years_of_experience.value,
                 placeholderText = "Years of Experience",
                 icon = Icons.Outlined.Build,
-                onValueChange = { years_of_experience.value = it },
+                onValueChange = { signUpBarberViewModel.yearsOfExperienceChanged(it) },
                 keyboardOptions = KeyboardOptions.Default.copy(
                     keyboardType = KeyboardType.Number
                 )
             )
             AppTextField(
-                value = phoneNumber.value,
-                placeholderText = "Phone Number",
-                icon = Icons.Outlined.Call,
-                onValueChange = { phoneNumber.value = it })
-            AppTextField(
                 value = email.value,
                 placeholderText = "Email",
                 icon = Icons.Outlined.Email,
-                onValueChange = { email.value = it })
+                onValueChange = { signUpBarberViewModel.emailChanged(it) })
             TextFieldPassword(
                 password = password.value,
                 onValueChange = { },
@@ -90,7 +95,7 @@ fun SignUpBarberScreen() {
 @Composable
 fun SignUpBarberScreenPreviewDark() {
     HairBookFrontTheme {
-        SignUpBarberScreen()
+        SignUpBarberScreen(navController = null)
     }
 }
 
@@ -98,6 +103,6 @@ fun SignUpBarberScreenPreviewDark() {
 @Composable
 fun SignUpBarberScreenPreviewLight() {
     HairBookFrontTheme {
-        SignUpBarberScreen()
+        SignUpBarberScreen(navController = null)
     }
 }
