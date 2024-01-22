@@ -4,6 +4,7 @@ import android.content.res.Configuration
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.AccountCircle
 import androidx.compose.material.icons.outlined.Build
@@ -19,6 +20,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.hairbookfront.ui.common.SubmitButton
 import com.example.hairbookfront.ui.common.AppTextField
@@ -56,7 +58,11 @@ fun SignUpBarberScreen() {
                 value = years_of_experience.value,
                 placeholderText = "Years of Experience",
                 icon = Icons.Outlined.Build,
-                onValueChange = { years_of_experience.value = it })
+                onValueChange = { years_of_experience.value = it },
+                keyboardOptions = KeyboardOptions.Default.copy(
+                    keyboardType = KeyboardType.Number
+                )
+            )
             AppTextField(
                 value = phoneNumber.value,
                 placeholderText = "Phone Number",

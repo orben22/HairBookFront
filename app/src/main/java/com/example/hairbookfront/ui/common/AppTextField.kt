@@ -2,6 +2,7 @@ package com.example.hairbookfront.ui.common
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -11,7 +12,14 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import com.example.hairbookfront.ui.Dimens
 
 @Composable
-fun AppTextField(value: String, placeholderText: String, icon: ImageVector?, onValueChange: (String) -> Unit,isError: Boolean = false){
+fun AppTextField(
+    value: String,
+    placeholderText: String,
+    icon: ImageVector?,
+    onValueChange: (String) -> Unit,
+    isError: Boolean = false,
+    keyboardOptions: KeyboardOptions = KeyboardOptions.Default
+) {
     TextField(
         modifier = Modifier
             .fillMaxWidth()
@@ -27,6 +35,7 @@ fun AppTextField(value: String, placeholderText: String, icon: ImageVector?, onV
                 )
             }
         },
-        isError = isError
+        isError = isError,
+        keyboardOptions = keyboardOptions
     )
 }
