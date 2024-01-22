@@ -1,10 +1,17 @@
 package com.example.hairbookfront.di
 
 import android.app.Application
+import android.content.Context
+import androidx.datastore.core.DataStore
+import androidx.datastore.core.handlers.ReplaceFileCorruptionHandler
+import androidx.datastore.preferences.core.PreferenceDataStoreFactory
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.emptyPreferences
+import androidx.datastore.preferences.preferencesDataStoreFile
 import com.example.hairbookfront.data.manager.LocalUserManagerImpl
 import com.example.hairbookfront.data.remote.ApiService
-import com.example.hairbookfront.data.remote.NewsDataSource
-import com.example.hairbookfront.data.remote.NewsDataSourceImpl
+import com.example.hairbookfront.data.remote.HairBookDataSource
+import com.example.hairbookfront.data.remote.HairBookDataSourceImpl
 import com.example.hairbookfront.domain.manager.LocalUserManager
 import com.example.hairbookfront.domain.repository.ApiRepository
 import com.example.hairbookfront.domain.usecases.app_entry.AppEntryUseCases
@@ -16,6 +23,7 @@ import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -43,10 +51,17 @@ object AppModule {
         )
     }
 
+    @Provides
+    @Singleton
+    fun provideMoshi(): Moshi {
+        return Moshi.Builder()
+            .add(KotlinJsonAdapterFactory())
+            .build()
+    }
 
     @Provides
     @Singleton
-    fun providesRetrofit(): Retrofit {
+    fun providesRetrofit(moshi: Moshi): Retrofit {
         val httpLoggingInterceptor = HttpLoggingInterceptor().apply {
             // Logs request and response lines and their respective headers and bodies (if present).
             level = HttpLoggingInterceptor.Level.BODY
@@ -60,7 +75,6 @@ object AppModule {
             readTimeout(60, TimeUnit.SECONDS)
         }
 
-        val moshi = Moshi.Builder().add(KotlinJsonAdapterFactory()).build()
         return Retrofit.Builder()
             .baseUrl(Constants.BASE_URL)
             .client(httpClient.build())
@@ -76,13 +90,21 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun providesDataSource(apiService: ApiService): NewsDataSource {
-        return NewsDataSourceImpl(apiService)
+    fun providesDataSource(apiService: ApiService): HairBookDataSource {
+        return HairBookDataSourceImpl(apiService)
     }
 
     @Provides
     @Singleton
-    fun providesRepository(newsDataSource: NewsDataSource): ApiRepository {
+    fun providesRepository(newsDataSource: HairBookDataSource): ApiRepository {
         return ApiRepository(newsDataSource)
+    }
+
+    @Singleton
+    @Provides
+    fun provideDataStore(@ApplicationContext context: Context): DataStore<Preferences> {
+        return PreferenceDataStoreFactory.create(
+            corruptionHandler = ReplaceFileCorruptionHandler(produceNewData = { emptyPreferences() }),
+            produceFile = { context.preferencesDataStoreFile(DataStorePreferences.DATA) })
     }
 }

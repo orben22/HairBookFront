@@ -20,7 +20,7 @@ class MainViewModel @Inject constructor(
     private val _splashCondition = mutableStateOf(true)
     val splashCondition: State<Boolean> = _splashCondition
 
-    var startDestination by mutableStateOf(Routes.AppStartNavigation.route)
+    var startDestination by mutableStateOf(Routes.AuthGraph.route)
         private set
 
     init {
@@ -28,7 +28,7 @@ class MainViewModel @Inject constructor(
             startDestination = if (shouldStartFromHomeScreen) {
                 Routes.NewsNavigation.route
             } else {
-                Routes.AppStartNavigation.route
+                Routes.AuthGraph.route
             }
             _splashCondition.value = false
         }.launchIn(viewModelScope)

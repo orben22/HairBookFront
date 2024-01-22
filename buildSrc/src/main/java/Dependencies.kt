@@ -47,6 +47,14 @@ object Dependencies {
 
     val timber by lazy { "com.jakewharton.timber:timber:${Versions.timber}" }
 
+    val lifecycleViewmodelCompose by lazy { "androidx.lifecycle:lifecycle-viewmodel-compose:${Versions.lifecycleViewmodelCompose}" }
+    val lifecycleRuntimeCompose by lazy { "androidx.lifecycle:lifecycle-runtime-compose:${Versions.lifecycleViewmodelCompose}" }
+
+    val datastore by lazy { "androidx.datastore:datastore:${Versions.datastore}" }
+    val datastorePreferences by lazy { "androidx.datastore:datastore-preferences:${Versions.datastore}" }
+    val kotlinxCollectionImmutable by lazy { "org.jetbrains.kotlinx:kotlinx-collection-immutable:${Versions.kotlinxCollectionImmutable}" }
+    val json by lazy { "org.jetbrains.kotlinx:kotlinx-serialization-json:${Versions.json}" }
+
 }
 
 object Modules {

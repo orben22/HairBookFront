@@ -11,7 +11,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import com.example.hairbookfront.ui.Dimens
 
 @Composable
-fun AppTextField(value: String, placeholderText: String, icon: ImageVector?, onValueChange: (String) -> Unit ) {
+fun AppTextField(value: String, placeholderText: String, icon: ImageVector?, onValueChange: (String) -> Unit,isError: Boolean = false){
     TextField(
         modifier = Modifier
             .fillMaxWidth()
@@ -26,6 +26,7 @@ fun AppTextField(value: String, placeholderText: String, icon: ImageVector?, onV
                     contentDescription = null
                 )
             }
-        }
+        },
+        isError = isError
     )
 }

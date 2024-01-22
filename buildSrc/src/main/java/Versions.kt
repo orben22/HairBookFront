@@ -1,7 +1,6 @@
 object Versions {
 
 
-
     const val coreKts = "1.12.0"
     const val appcompact = "1.6.1"
     const val material = "1.11.0"
@@ -35,5 +34,9 @@ object Versions {
     const val paging_version = "3.2.1"
     const val room_version = "2.6.1"
     const val timber = "5.0.1"
+    const val datastore = "1.0.0"
+    const val kotlinxCollectionImmutable = "0.3.5"
+    const val json = "1.5.1"
+    const val lifecycleViewmodelCompose = "2.7.0"
 
 }

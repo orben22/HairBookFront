@@ -3,7 +3,6 @@ plugins {
     id("org.jetbrains.kotlin.android")
     kotlin("kapt")
     id("com.google.dagger.hilt.android")
-
 }
 
 android {
@@ -58,7 +57,6 @@ dependencies {
     implementation(Dependencies.coreKts)
     implementation(Dependencies.lifecycleRuntimeKtx)
     implementation(Dependencies.activityCompose)
-
     implementation(Dependencies.composeUi)
     implementation(Dependencies.composeUiGraphics)
     implementation(Dependencies.composeUiToolingPreview)
@@ -81,6 +79,7 @@ dependencies {
     implementation(Dependencies.okhttp3)
     implementation(Dependencies.gsonConverter)
     implementation(Dependencies.moshi)
+
     implementation(Dependencies.moshiConverter)
     implementation(Dependencies.loggingInterceptor)
 
@@ -109,6 +108,16 @@ dependencies {
 
     //Timber
     implementation(Dependencies.timber)
+
+    //Lifecycle compose
+    implementation(Dependencies.lifecycleViewmodelCompose)
+    implementation(Dependencies.lifecycleRuntimeCompose)
+
+    //Datastore
+    implementation(Dependencies.datastore)
+    implementation(Dependencies.datastorePreferences)
+//    implementation(Dependencies.kotlinxCollectionImmutable)
+    implementation(Dependencies.json)
 }
 
 kapt {

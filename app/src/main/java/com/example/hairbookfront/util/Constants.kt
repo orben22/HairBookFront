@@ -6,17 +6,10 @@ object Constants {
 
     const val APP_ENTRY = "appEntry"
 
-    const val BASE_URL = "http://newsapi.org/v2/"
+    const val BASE_URL = "http://10.0.2.2:3000/"
     const val COUNTRY = "us"
 
-
-    const val MAIN_ACTIVITY_TAG = "MainActivity"
-
-    const val ONBOARDING_SCREEN_TAG = "OnBoardingScreen"
-
     const val HOME_SCREEN_TAG = "HomeScreen"
-
-    const val ONBOARDING_VIEW_MODEL_TAG = "OnBoardingViewModel"
 
     const val HOME_VIEW_MODEL_TAG = "HomeViewModel"
 
