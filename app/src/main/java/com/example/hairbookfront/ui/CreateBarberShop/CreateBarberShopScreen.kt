@@ -28,12 +28,15 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.hairbookfront.presentation.Dimens
-import com.example.hairbookfront.presentation.common.AppTextField
-import com.example.hairbookfront.presentation.common.BarberShopList
-import com.example.hairbookfront.presentation.common.SubmitButton
-import com.example.hairbookfront.presentation.common.TopAppBarHairBook
+import com.example.hairbookfront.ui.Dimens
+import com.example.hairbookfront.ui.common.AppTextField
+import com.example.hairbookfront.ui.common.BarberShopList
+import com.example.hairbookfront.ui.common.SubmitButton
+import com.example.hairbookfront.ui.common.TopAppBarHairBook
 import com.example.hairbookfront.theme.HairBookFrontTheme
+import com.example.hairbookfront.ui.common.AppTextField
+import com.example.hairbookfront.ui.common.SubmitButton
+import com.example.hairbookfront.ui.common.TopAppBarHairBook
 
 @Composable
 fun CreateBarberShop() {
