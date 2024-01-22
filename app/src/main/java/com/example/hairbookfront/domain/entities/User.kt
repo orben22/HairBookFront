@@ -7,7 +7,7 @@ data class BarberDTO(
     val yearsOfExperience: Int
 ) : UserDetails()
 
-class CustomerDTO(
+data class CustomerDTO(
     val firstName: String,
     val lastName: String,
     val age: Float,
@@ -15,7 +15,7 @@ class CustomerDTO(
 ) : UserDetails()
 
 
-class User(
+data class User(
     val userId: String?,
     val email: String,
     val password: String,
@@ -24,7 +24,7 @@ class User(
     val accessToken: String?,
 )
 
-class LoginRequest(
+data class LoginRequest(
     val email: String,
     val password: String
 )

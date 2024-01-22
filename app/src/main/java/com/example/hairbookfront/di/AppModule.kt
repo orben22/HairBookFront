@@ -1,6 +1,5 @@
 package com.example.hairbookfront.di
 
-import android.app.Application
 import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.core.handlers.ReplaceFileCorruptionHandler
@@ -8,15 +7,10 @@ import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.emptyPreferences
 import androidx.datastore.preferences.preferencesDataStoreFile
-import com.example.hairbookfront.data.manager.LocalUserManagerImpl
 import com.example.hairbookfront.data.remote.ApiService
 import com.example.hairbookfront.data.remote.HairBookDataSource
 import com.example.hairbookfront.data.remote.HairBookDataSourceImpl
-import com.example.hairbookfront.domain.manager.LocalUserManager
 import com.example.hairbookfront.domain.repository.ApiRepository
-import com.example.hairbookfront.domain.usecases.app_entry.AppEntryUseCases
-import com.example.hairbookfront.domain.usecases.app_entry.ReadAppEntry
-import com.example.hairbookfront.domain.usecases.app_entry.SaveAppEntry
 import com.example.hairbookfront.util.Constants
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
@@ -36,20 +30,6 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object AppModule {
 
-    @Provides
-    @Singleton
-    fun provideLocalUserManager(application: Application): LocalUserManager {
-        return LocalUserManagerImpl(application)
-    }
-
-    @Provides
-    @Singleton
-    fun provideAppEntryUseCases(localUserManager: LocalUserManager): AppEntryUseCases {
-        return AppEntryUseCases(
-            readAppEntry = ReadAppEntry(localUserManager),
-            saveAppEntry = SaveAppEntry(localUserManager)
-        )
-    }
 
     @Provides
     @Singleton

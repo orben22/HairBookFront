@@ -62,7 +62,7 @@ fun WelcomePageScreen(
         is ResourceState.SUCCESS -> {
             val response = (userDetails.value as ResourceState.SUCCESS).data
             Timber.d("State:" + response.state + " Result data:" + response.data)
-            navController?.navigate(Routes.CustomerHomeScreen.route)
+            navController?.navigate(Routes.BarberDetailsScreen.route)
         }
 
         is ResourceState.ERROR -> {
