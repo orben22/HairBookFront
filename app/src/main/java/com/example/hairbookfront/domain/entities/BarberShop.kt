@@ -20,6 +20,7 @@ data class BarberShop(
         val matchingCombinations = listOf(
             barbershopName,
             "${barbershopName.first()}",
+            barbershopName.lowercase(),
             location,
         )
         return matchingCombinations.any {

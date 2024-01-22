@@ -18,21 +18,22 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
+import com.example.hairbookfront.domain.entities.BarberShop
 import com.example.hairbookfront.ui.Dimens
-import com.example.hairbookfront.ui.customer.customerHome.BarberShopsData
-import com.example.hairbookfront.ui.customer.customerHome.barbershops
 
 @Composable
-fun BarberShopList(editable: Boolean=false) {
-    LazyColumn {
-        items(barbershops) { barberShop ->
-            BarberShopItem(barberShop = barberShop,editable)
+fun BarberShopList(barberShops: List<BarberShop>?, editable: Boolean = false) {
+    barberShops?.let {
+        LazyColumn {
+            items(barberShops) { barberShop ->
+                BarberShopItem(barberShop = barberShop, editable)
+            }
         }
     }
 }
 
 @Composable
-fun BarberShopItem(barberShop: BarberShopsData,editable:Boolean) {
+fun BarberShopItem(barberShop: BarberShop, editable: Boolean) {
     ElevatedCard(
         elevation = CardDefaults.cardElevation(
             defaultElevation = Dimens.smallPadding1
@@ -48,8 +49,8 @@ fun BarberShopItem(barberShop: BarberShopsData,editable:Boolean) {
     ) {
         Text(
             modifier = Modifier.padding(
-            top = Dimens.smallPadding1,
-            start = Dimens.smallPadding3
+                top = Dimens.smallPadding1,
+                start = Dimens.smallPadding3
             ),
             text = barberShop.barbershopName,
             fontWeight = FontWeight.Bold,
@@ -80,7 +81,7 @@ fun BarberShopItem(barberShop: BarberShopsData,editable:Boolean) {
                 top = Dimens.smallPadding1,
                 start = Dimens.smallPadding3, bottom = Dimens.smallPadding1
             ),
-            text = "Barber: ${barberShop.barberName}",
+            text = "Barber: ${barberShop.barbershopName}",
             fontSize = Dimens.fontMedium,
             fontWeight = FontWeight.Bold,
             color = MaterialTheme.colorScheme.onPrimary
@@ -99,7 +100,7 @@ fun BarberShopItem(barberShop: BarberShopsData,editable:Boolean) {
                     Icon(imageVector = Icons.Default.Delete, contentDescription = "Remove")
                 }
             }
-            }
         }
     }
+}
 

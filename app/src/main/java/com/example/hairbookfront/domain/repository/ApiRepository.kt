@@ -1,7 +1,8 @@
 package com.example.hairbookfront.domain.repository
 
 import com.example.hairbookfront.data.remote.HairBookDataSource
-import com.example.hairbookfront.domain.entities.HairBookResponse
+import com.example.hairbookfront.domain.entities.BarberShop
+import com.example.hairbookfront.domain.entities.User
 import com.example.hairbookfront.util.ResourceState
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
@@ -13,7 +14,7 @@ class ApiRepository @Inject constructor(private val hairBookDataSource: HairBook
     suspend fun login(
         email: String,
         password: String
-    ): Flow<ResourceState<HairBookResponse>> {
+    ): Flow<ResourceState<User>> {
         return flow {
             emit(ResourceState.LOADING())
             val response = hairBookDataSource.login(email, password)
@@ -26,9 +27,10 @@ class ApiRepository @Inject constructor(private val hairBookDataSource: HairBook
             emit(ResourceState.ERROR(e.localizedMessage ?: "Something went wrong with api"))
         }
     }
+
     suspend fun getAllShops(
         accessToken: String
-    ): Flow<ResourceState<HairBookResponse>> {
+    ): Flow<ResourceState<List<BarberShop>>> {
         return flow {
             emit(ResourceState.LOADING())
             val response = hairBookDataSource.getAllShops(accessToken)

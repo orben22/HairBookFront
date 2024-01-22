@@ -29,9 +29,6 @@ class CustomerHomeViewModel @Inject constructor(
     private val moshi: Moshi
 ) : ViewModel() {
 
-    private val _shopsFromServer = MutableSharedFlow<List<BarberShop>>()
-    val shopsFromServer: MutableSharedFlow<List<BarberShop>>
-        get() = _shopsFromServer
     private val _searchText = MutableStateFlow("")
     val searchText: StateFlow<String>
         get() = _searchText
@@ -62,24 +59,19 @@ class CustomerHomeViewModel @Inject constructor(
         viewModelScope.launch {
             dataStorePreferences.getAccessToken().collectLatest { accessToken ->
                 hairBookRepository.getAllShops("Bearer $accessToken").collectLatest { response ->
+                    Timber.d("response: $response")
                     when (response) {
+                        is ResourceState.LOADING -> {
+                            Timber.d("Loading")
+                        }
+
                         is ResourceState.SUCCESS -> {
-                            println("Raw JSON Data ${response.data.data}")
-                            val gson = Gson()
-                            val barberShopsType = object : TypeToken<List<BarberShop>>() {}.type
-
-                            val barberShops: List<BarberShop> =
-                                gson.fromJson(response.data.data.toString(), barberShopsType)
-
-
+                            Timber.d("Success")
+                            _barberShops.emit(response.data)
                         }
 
                         is ResourceState.ERROR -> {
-                            Timber.d("error: ${response.error}")
-                        }
-
-                        is ResourceState.LOADING -> {
-                            Timber.d("loading")
+                            Timber.d("Error")
                         }
                     }
                 }

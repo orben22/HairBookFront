@@ -82,7 +82,7 @@ fun BarberDetailsScreen(
                     text = "My barbershops:",
                     style = MaterialTheme.typography.bodyMedium
                 )
-                BarberShopList(true)
+                BarberShopList(null,true)
             }
         }
     )

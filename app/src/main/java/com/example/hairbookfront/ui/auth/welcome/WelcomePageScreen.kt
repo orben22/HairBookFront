@@ -60,9 +60,7 @@ fun WelcomePageScreen(
         }
 
         is ResourceState.SUCCESS -> {
-            val response = (userDetails.value as ResourceState.SUCCESS).data
-            Timber.d("State:" + response.state + " Result data:" + response.data)
-            navController?.navigate(Routes.BarberDetailsScreen.route)
+            navController?.navigate(Routes.CustomerHomeScreen.route)
         }
 
         is ResourceState.ERROR -> {
@@ -130,10 +128,7 @@ fun WelcomePageScreen(
                     passwordVisibility = showOrHidePassword.value
                 )
                 CustomButton(text = "Sign In", onClick = {
-                    Timber.d("Sign In button clicked ${loggedIn.value}")
-                    welcomeViewModel.viewModelScope.launch {
-                        welcomeViewModel.login()
-                    }
+                    welcomeViewModel.login()
                 }, icon = null)
                 Row {
                     Text(

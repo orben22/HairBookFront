@@ -3,7 +3,6 @@ package com.example.hairbookfront.ui.auth.welcome
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.hairbookfront.di.DataStorePreferences
-import com.example.hairbookfront.domain.entities.HairBookResponse
 import com.example.hairbookfront.domain.entities.User
 import com.example.hairbookfront.domain.repository.ApiRepository
 import com.example.hairbookfront.ui.navgraph.Routes
@@ -62,9 +61,9 @@ class WelcomeViewModel @Inject constructor(
         get() = _dialogText
 
 
-    private val _userDetails: MutableStateFlow<ResourceState<HairBookResponse>> =
+    private val _userDetails: MutableStateFlow<ResourceState<User>> =
         MutableStateFlow(ResourceState.LOADING())
-    val userDetails: StateFlow<ResourceState<HairBookResponse>>
+    val userDetails: StateFlow<ResourceState<User>>
         get() = _userDetails
 
     private val _signUpScreen = MutableStateFlow("")
@@ -119,7 +118,7 @@ class WelcomeViewModel @Inject constructor(
     }
 
 
-    suspend fun login() {
+     fun login() {
         if (isValidEmail() && isValidPassword()) {
             _emailError.value = false
             _passwordError.value = false
@@ -141,22 +140,16 @@ class WelcomeViewModel @Inject constructor(
         }
     }
 
-    private suspend fun storeUserDetails(response: ResourceState<HairBookResponse>) {
+    private suspend fun storeUserDetails(response: ResourceState<User>) {
         when (response) {
             is ResourceState.SUCCESS -> {
-                val userData = response.data.data
-                val userAdapter = moshi.adapter(User::class.java).lenient()
-                val user = userAdapter.fromJson(userData.toString())
-                if (user != null) {
-                    dataStorePreferences.storeUserDetails(user)
-                    _loggedIn.value = true
-                }
+                val userData = response.data
+                dataStorePreferences.storeUserDetails(userData)
+                _loggedIn.value = true
             }
-
             is ResourceState.ERROR -> {
                 sendMessage(response.error)
             }
-
             else -> {}
         }
     }
