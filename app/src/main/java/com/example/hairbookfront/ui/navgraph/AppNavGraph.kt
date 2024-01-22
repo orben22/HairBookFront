@@ -1,5 +1,6 @@
 package com.example.hairbookfront.ui.navgraph
 
+import com.example.hairbookfront.ui.barber.barberDetails.BarberDetailsViewModel
 import WelcomePageScreen
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -14,6 +15,7 @@ import androidx.navigation.navigation
 import com.example.hairbookfront.ui.auth.signUpBarber.SignUpBarberScreen
 import com.example.hairbookfront.ui.auth.signUpCustomer.SignUpCustomerScreen
 import com.example.hairbookfront.ui.auth.welcome.WelcomeViewModel
+import com.example.hairbookfront.ui.barber.barberDetails.BarberDetailsScreen
 import com.example.hairbookfront.ui.customer.customerDetails.CustomerDetailsScreen
 import com.example.hairbookfront.ui.customer.customerHome.CustomerHomeScreen
 import com.example.hairbookfront.ui.customer.customerHome.CustomerHomeViewModel
@@ -51,6 +53,15 @@ fun AppNavGraph(
             }
             composable(route = Routes.CustomerDetailsScreen.route) {
                 CustomerDetailsScreen()
+            }
+        }
+        navigation(
+            route = Routes.BarberGraph.route,
+            startDestination = Routes.BarberDetailsScreen.route
+        ) {
+            composable(route = Routes.BarberDetailsScreen.route) {
+                val viewModel = it.sharedViewModel<BarberDetailsViewModel>(navController)
+                BarberDetailsScreen(viewModel)
             }
         }
     }

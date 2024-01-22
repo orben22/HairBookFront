@@ -104,6 +104,7 @@ dependencies {
 
     //Room
     implementation(Dependencies.room)
+    kapt(Dependencies.roomCompiler)
     implementation(project(Modules.utilities))
 
     //Timber
@@ -118,6 +119,8 @@ dependencies {
     implementation(Dependencies.datastorePreferences)
 //    implementation(Dependencies.kotlinxCollectionImmutable)
     implementation(Dependencies.json)
+    implementation("com.fasterxml.jackson.core:jackson-databind:2.13.3")
+
 }
 
 kapt {

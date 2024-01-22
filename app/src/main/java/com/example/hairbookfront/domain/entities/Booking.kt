@@ -1,6 +1,6 @@
 package com.example.hairbookfront.domain.entities
 
-class Booking(
+data class Booking(
     val bookingId: String?,
     val service: Service,
     val date: String,

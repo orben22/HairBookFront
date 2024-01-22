@@ -44,6 +44,7 @@ object Dependencies {
     val pagingCompose by lazy { "androidx.paging:paging-compose:${Versions.paging_version}" }
 
     val room by lazy { "androidx.room:room-runtime:${Versions.room_version}" }
+    val roomCompiler by lazy { "androidx.room:room-compiler:${Versions.room_version}" }
 
     val timber by lazy { "com.jakewharton.timber:timber:${Versions.timber}" }
 
@@ -54,6 +55,8 @@ object Dependencies {
     val datastorePreferences by lazy { "androidx.datastore:datastore-preferences:${Versions.datastore}" }
     val kotlinxCollectionImmutable by lazy { "org.jetbrains.kotlinx:kotlinx-collection-immutable:${Versions.kotlinxCollectionImmutable}" }
     val json by lazy { "org.jetbrains.kotlinx:kotlinx-serialization-json:${Versions.json}" }
+
+
 
 }
 

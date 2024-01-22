@@ -1,6 +1,6 @@
 package com.example.hairbookfront.domain.entities
 
-class Review(
+data class Review(
     val reviewId: String?,
     val firstName: String,
     val lastName: String,
