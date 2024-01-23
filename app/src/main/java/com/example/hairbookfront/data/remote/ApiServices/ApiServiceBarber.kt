@@ -95,4 +95,6 @@ interface ApiServiceBarber {
         @Query("barberShopId") barberShopId: String
     ): Response<List<Service>>
 
+
+
 }

@@ -16,6 +16,22 @@ import javax.inject.Inject
 class ApiRepositoryBarber @Inject constructor(
     private val hairBookDataSourceBarber: HairBookDataSourceBarber
 ) {
+
+    suspend fun getMyBarberShops(
+        accessToken: String
+    ): Flow<ResourceState<List<BarberShop>>> {
+        return flow {
+            emit(ResourceState.LOADING())
+            val response = hairBookDataSourceBarber.getMyBarberShops(accessToken)
+            if (response.isSuccessful && response.body() != null) {
+                emit(ResourceState.SUCCESS(response.body()!!))
+            } else {
+                emit(ResourceState.ERROR("Error getting barber shops"))
+            }
+        }.catch { e ->
+            emit(ResourceState.ERROR(e.localizedMessage ?: "Something went wrong with api"))
+        }
+    }
     suspend fun getBarberDetails(
         accessToken: String
     ): Flow<ResourceState<User>> {

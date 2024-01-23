@@ -6,6 +6,7 @@ import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.Header
 import retrofit2.http.POST
+import retrofit2.http.PUT
 import retrofit2.http.Query
 
 interface ApiServiceReview {
@@ -20,6 +21,15 @@ interface ApiServiceReview {
         @Header("Authorization") authToken: String,
         @Query("reviewId") reviewId: String,
     ): Response<String>
+
+    @PUT("review/update-review")
+    suspend fun updateReview(
+        @Header("Authorization") authToken: String,
+        @Query("reviewId") reviewId: String,
+        @Body review: Review
+    ): Response<Review>
+
+
 
 
 }
