@@ -22,7 +22,10 @@ interface ApiService {
     @POST("auth/sign-up")
     suspend fun signUp(@Body userSignUpRequest: UserSignUpRequest): Response<User>
 
-
+    @GET("barber/get-my-barbershops")
+    suspend fun getMyBarberShops(
+        @Header("Authorization") authToken: String
+    ): Response<List<BarberShop>>
 
 
 }

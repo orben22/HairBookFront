@@ -11,4 +11,6 @@ interface HairBookDataSource {
     suspend fun getAllShops(accessToken: String): Response<List<BarberShop>>
 
     suspend fun signUp(signUpRequest: UserSignUpRequest): Response<User>
+
+    suspend fun getMyBarberShops(accessToken: String): Response<List<BarberShop>>
 }

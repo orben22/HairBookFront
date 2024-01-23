@@ -27,11 +27,13 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavHostController
 import com.example.hairbookfront.ui.common.SubmitButton
 import com.example.hairbookfront.ui.common.AppTextField
 import com.example.hairbookfront.theme.HairBookFrontTheme
 import com.example.hairbookfront.ui.auth.welcome.WelcomeViewModel
+import com.example.hairbookfront.ui.common.CustomButton
 import com.example.hairbookfront.ui.common.TextFieldPassword
 import com.example.hairbookfront.ui.common.TopAppBarHairBook
 import kotlinx.coroutines.launch
@@ -75,12 +77,16 @@ fun SignUpBarberScreen(
                 value = firstName.value,
                 placeholderText = "First Name",
                 icon = Icons.Outlined.AccountCircle,
-                onValueChange = { signUpBarberViewModel.firstNameChanged(it) })
+                onValueChange = { signUpBarberViewModel.firstNameChanged(it) },
+                isError = firstNameError.value
+                )
             AppTextField(
                 value = lastName.value,
                 placeholderText = "Last Name",
                 icon = Icons.Outlined.AccountCircle,
-                onValueChange = { signUpBarberViewModel.lastNameChanged(it) })
+                onValueChange = { signUpBarberViewModel.lastNameChanged(it) },
+                isError = lastNameError.value
+                )
             AppTextField(
                 value = years_of_experience.value,
                 placeholderText = "Years of Experience",
@@ -88,21 +94,31 @@ fun SignUpBarberScreen(
                 onValueChange = { signUpBarberViewModel.yearsOfExperienceChanged(it) },
                 keyboardOptions = KeyboardOptions.Default.copy(
                     keyboardType = KeyboardType.Number
-                )
+                ),
+                isError = years_of_experience_error.value
             )
             AppTextField(
                 value = email.value,
                 placeholderText = "Email",
                 icon = Icons.Outlined.Email,
-                onValueChange = { signUpBarberViewModel.emailChanged(it) })
+                onValueChange = { signUpBarberViewModel.emailChanged(it) },
+                isError = emailError.value)
             TextFieldPassword(
                 password = password.value,
                 onValueChange = { },
-                isError = false,
+                isError = passwordError.value,
                 onIconClicked = { },
                 passwordVisibility = false
             )
-            SubmitButton()
+            CustomButton(
+                text = "Sign Up",
+                onClick = {
+                    signUpBarberViewModel.viewModelScope.launch {
+                        signUpBarberViewModel.signUpBarber()
+                    }
+                },
+                icon = null
+            )
             Text(text = "Already have an account ? Sign In")
         }
     }
