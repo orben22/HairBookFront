@@ -16,6 +16,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import java.util.regex.Pattern
 import javax.inject.Inject
 
@@ -194,6 +195,18 @@ class SignUpCustomerViewModel @Inject constructor(
             sendMessage("Invalid Password")
             _passwordError.value = true
         }
+        val user= UserSignUpRequest(
+            email = email.value,
+            password = password.value,
+            role = "Customer",
+            details = CustomerDTO(
+                firstName = firstName.value,
+                lastName = lastName.value,
+                age = age.value.toFloat(),
+                phoneNumber = phoneNumber.value
+            )
+        )
+        Timber.d("user: $user")
 
         if (isFirstNameValid() && isLastNameValid() && isAgeValid() && isPhoneNumberValid() && isValidEmail() && isValidPassword()) {
             _firstNameError.value = false
@@ -204,17 +217,7 @@ class SignUpCustomerViewModel @Inject constructor(
             _passwordError.value = false
             viewModelScope.launch {
                 hairBookRepository.signUp(
-                    signUpRequest = UserSignUpRequest(
-                        email = email.value,
-                        password = password.value,
-                        role = "Customer",
-                        details = CustomerDTO(
-                            firstName = firstName.value,
-                            lastName = lastName.value,
-                            age = age.value.toFloat(),
-                            phoneNumber = phoneNumber.value
-                        )
-                    )
+                    signUpRequest = user
                 ).collectLatest { response ->
                     when (response) {
                         is ResourceState.LOADING -> {
