@@ -15,7 +15,6 @@ import com.example.hairbookfront.domain.entities.LoginRequest
 import com.example.hairbookfront.domain.entities.Review
 import com.example.hairbookfront.domain.entities.Service
 import com.example.hairbookfront.domain.entities.User
-import com.example.hairbookfront.domain.entities.UserSignUpRequest
 import retrofit2.Response
 import javax.inject.Inject
 
