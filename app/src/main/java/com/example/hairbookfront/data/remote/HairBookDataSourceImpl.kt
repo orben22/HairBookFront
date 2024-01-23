@@ -1,7 +1,9 @@
 package com.example.hairbookfront.data.remote
 
+import com.example.hairbookfront.domain.entities.BarberDTO
 import com.example.hairbookfront.domain.entities.BarberShop
 import com.example.hairbookfront.domain.entities.Booking
+import com.example.hairbookfront.domain.entities.CustomerDTO
 import com.example.hairbookfront.domain.entities.LoginRequest
 import com.example.hairbookfront.domain.entities.Review
 import com.example.hairbookfront.domain.entities.Service
@@ -13,7 +15,8 @@ import javax.inject.Inject
 class HairBookDataSourceImpl @Inject constructor(
     private val apiServiceAuth: ApiServiceAuth,
     private val apiServiceBarber: ApiServiceBarber,
-    private val apiServiceBooking: ApiServiceBooking
+    private val apiServiceBooking: ApiServiceBooking,
+    private val apiServiceReview: ApiServiceReview
 ) : HairBookDataSource {
 
     override suspend fun login(email: String, password: String): Response<User> {
@@ -21,12 +24,23 @@ class HairBookDataSourceImpl @Inject constructor(
         return apiServiceAuth.login(loginRequest)
     }
 
+    override suspend fun signOut(accessToken: String): Response<String> {
+        return apiServiceAuth.signOut(accessToken)
+    }
     override suspend fun getAllShops(accessToken: String): Response<List<BarberShop>> {
         return apiServiceAuth.getAllShops(accessToken)
     }
 
     override suspend fun signUp(signUpRequest: UserSignUpRequest): Response<User> {
         return apiServiceAuth.signUp(signUpRequest)
+    }
+
+    override suspend fun getDetailsCustomer(accessToken: String): Response<CustomerDTO> {
+        return apiServiceAuth.getDetailsCustomer(accessToken)
+    }
+
+    override suspend fun getDetailsBarber(accessToken: String): Response<BarberDTO> {
+        return apiServiceAuth.getDetailsBarber(accessToken)
     }
 
     override suspend fun getMyBarberShops(accessToken: String): Response<List<BarberShop>> {
@@ -101,6 +115,16 @@ class HairBookDataSourceImpl @Inject constructor(
     override suspend fun getClosestBooking(accessToken: String): Response<Booking> {
         return apiServiceBooking.getClosestBooking(accessToken)
     }
+
+    override suspend fun postReview(accessToken: String, review: Review): Response<Review> {
+        return apiServiceReview.postReview(accessToken, review)
+    }
+
+    override suspend fun deleteReview(accessToken: String, reviewId: String): Response<String> {
+        return apiServiceReview.deleteReview(accessToken, reviewId)
+    }
+
+
 
 
 }

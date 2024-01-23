@@ -1,8 +1,10 @@
 package com.example.hairbookfront.domain.repository
 
 import com.example.hairbookfront.data.remote.HairBookDataSource
+import com.example.hairbookfront.domain.entities.BarberDTO
 import com.example.hairbookfront.domain.entities.BarberShop
 import com.example.hairbookfront.domain.entities.Booking
+import com.example.hairbookfront.domain.entities.CustomerDTO
 import com.example.hairbookfront.domain.entities.Review
 import com.example.hairbookfront.domain.entities.Service
 import com.example.hairbookfront.domain.entities.User
@@ -64,21 +66,54 @@ class ApiRepository @Inject constructor(private val hairBookDataSource: HairBook
         }
     }
 
-suspend fun getMyBarberShops(
+    suspend fun signOut(
         accessToken: String
-    ): Flow<ResourceState<List<BarberShop>>> {
+    ): Flow<ResourceState<String>> {
         return flow {
             emit(ResourceState.LOADING())
-            val response = hairBookDataSource.getMyBarberShops(accessToken)
+            val response = hairBookDataSource.signOut(accessToken)
             if (response.isSuccessful && response.body() != null) {
                 emit(ResourceState.SUCCESS(response.body()!!))
             } else {
-                emit(ResourceState.ERROR("Error getting barber shops"))
+                emit(ResourceState.ERROR("Sign out failed"))
             }
         }.catch { e ->
             emit(ResourceState.ERROR(e.localizedMessage ?: "Something went wrong with api"))
         }
     }
+    suspend fun getDetailsBarber(
+        accessToken: String
+    ): Flow<ResourceState<BarberDTO>> {
+        return flow {
+            emit(ResourceState.LOADING())
+            val response = hairBookDataSource.getDetailsBarber(accessToken)
+            if (response.isSuccessful && response.body() != null) {
+                emit(ResourceState.SUCCESS(response.body()!!))
+            } else {
+                emit(ResourceState.ERROR("Get details failed"))
+            }
+        }.catch { e ->
+            emit(ResourceState.ERROR(e.localizedMessage ?: "Something went wrong with api"))
+        }
+    }
+
+    suspend fun getDetailsCustomer(
+        accessToken: String
+    ): Flow<ResourceState<CustomerDTO>> {
+        return flow {
+            emit(ResourceState.LOADING())
+            val response = hairBookDataSource.getDetailsCustomer(accessToken)
+            if (response.isSuccessful && response.body() != null) {
+                emit(ResourceState.SUCCESS(response.body()!!))
+            } else {
+                emit(ResourceState.ERROR("Get details failed"))
+            }
+        }.catch { e ->
+            emit(ResourceState.ERROR(e.localizedMessage ?: "Something went wrong with api"))
+        }
+    }
+
+
 
     suspend fun getBarberDetails(
         accessToken: String
@@ -367,6 +402,40 @@ suspend fun deleteService(
                 emit(ResourceState.SUCCESS(response.body()!!))
             } else {
                 emit(ResourceState.ERROR("Error getting closest booking"))
+            }
+        }.catch { e ->
+            emit(ResourceState.ERROR(e.localizedMessage ?: "Something went wrong with api"))
+        }
+    }
+
+    suspend fun postReview(
+        accessToken: String,
+        review: Review
+    ): Flow<ResourceState<Review>> {
+        return flow {
+            emit(ResourceState.LOADING())
+            val response = hairBookDataSource.postReview(accessToken, review)
+            if (response.isSuccessful && response.body() != null) {
+                emit(ResourceState.SUCCESS(response.body()!!))
+            } else {
+                emit(ResourceState.ERROR("Error to post review"))
+            }
+        }.catch { e ->
+            emit(ResourceState.ERROR(e.localizedMessage ?: "Something went wrong with api"))
+        }
+    }
+
+    suspend fun deleteReview(
+        accessToken: String,
+        reviewId: String
+    ): Flow<ResourceState<String>> {
+        return flow {
+            emit(ResourceState.LOADING())
+            val response = hairBookDataSource.deleteReview(accessToken, reviewId)
+            if (response.isSuccessful && response.body() != null) {
+                emit(ResourceState.SUCCESS(response.body()!!))
+            } else {
+                emit(ResourceState.ERROR("Delete review failed"))
             }
         }.catch { e ->
             emit(ResourceState.ERROR(e.localizedMessage ?: "Something went wrong with api"))

@@ -1,7 +1,9 @@
 package com.example.hairbookfront.data.remote
 
+import com.example.hairbookfront.domain.entities.BarberDTO
 import com.example.hairbookfront.domain.entities.BarberShop
 import com.example.hairbookfront.domain.entities.Booking
+import com.example.hairbookfront.domain.entities.CustomerDTO
 import com.example.hairbookfront.domain.entities.Review
 import com.example.hairbookfront.domain.entities.Service
 import com.example.hairbookfront.domain.entities.User
@@ -11,10 +13,14 @@ import retrofit2.http.Query
 
 interface HairBookDataSource {
     suspend fun login(email: String, password: String): Response<User>
-
+    suspend fun signOut(accessToken: String): Response<String>
     suspend fun getAllShops(accessToken: String): Response<List<BarberShop>>
 
     suspend fun signUp(signUpRequest: UserSignUpRequest): Response<User>
+
+    suspend fun getDetailsCustomer(accessToken: String): Response<CustomerDTO>
+
+    suspend fun getDetailsBarber(accessToken: String): Response<BarberDTO>
 
     suspend fun getMyBarberShops(accessToken: String): Response<List<BarberShop>>
 
@@ -51,4 +57,8 @@ interface HairBookDataSource {
     suspend fun getUserBookings(accessToken: String): Response<List<Booking>>
 
     suspend fun getClosestBooking(accessToken: String): Response<Booking>
+
+    suspend fun postReview(accessToken: String, review: Review): Response<Review>
+
+    suspend fun deleteReview(accessToken: String, reviewId: String): Response<String>
 }
