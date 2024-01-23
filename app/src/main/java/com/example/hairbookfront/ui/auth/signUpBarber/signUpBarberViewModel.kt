@@ -1,11 +1,9 @@
 package com.example.hairbookfront.ui.auth.signUpBarber
 
-import androidx.core.text.isDigitsOnly
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.hairbookfront.di.DataStorePreferences
+import com.example.hairbookfront.data.datastore.DataStorePreferences
 import com.example.hairbookfront.domain.repository.ApiRepository
-import com.example.hairbookfront.util.ResourceState
 import com.squareup.moshi.Moshi
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow

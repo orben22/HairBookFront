@@ -3,6 +3,7 @@ package com.example.hairbookfront.domain.entities
 data class BarberShop(
     val barbershopId: String?,
     val barbershopName: String,
+    val barberName: String,
     val phoneNumber: String,
     val workingDays: List<Double>,
     val sundayHours: List<String>?,
@@ -21,6 +22,9 @@ data class BarberShop(
             barbershopName,
             "${barbershopName.first()}",
             barbershopName.lowercase(),
+            barberName,
+            "${barberName.first()}",
+            barberName.lowercase(),
             location,
         )
         return matchingCombinations.any {

@@ -1,4 +1,4 @@
-package com.example.hairbookfront.di
+package com.example.hairbookfront.data.datastore
 
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.MutablePreferences

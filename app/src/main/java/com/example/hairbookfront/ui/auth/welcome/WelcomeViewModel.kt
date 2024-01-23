@@ -2,7 +2,7 @@ package com.example.hairbookfront.ui.auth.welcome
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.hairbookfront.di.DataStorePreferences
+import com.example.hairbookfront.data.datastore.DataStorePreferences
 import com.example.hairbookfront.domain.entities.User
 import com.example.hairbookfront.domain.repository.ApiRepository
 import com.example.hairbookfront.ui.navgraph.Routes

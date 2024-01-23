@@ -40,7 +40,7 @@ fun AppNavGraph(
                 SignUpCustomerScreen()
             }
             composable(route = Routes.SignupBarberScreen.route) {
-                SignUpBarberScreen()
+                SignUpBarberScreen(navController = navController)
             }
         }
         navigation(

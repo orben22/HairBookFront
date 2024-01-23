@@ -2,7 +2,7 @@ package com.example.hairbookfront.ui.auth.signUpCustomer
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.hairbookfront.di.DataStorePreferences
+import com.example.hairbookfront.data.datastore.DataStorePreferences
 import com.example.hairbookfront.domain.repository.ApiRepository
 import com.squareup.moshi.Moshi
 import dagger.hilt.android.lifecycle.HiltViewModel

@@ -2,14 +2,12 @@ package com.example.hairbookfront.ui.customer.customerHome
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.hairbookfront.di.DataStorePreferences
+import com.example.hairbookfront.data.datastore.DataStorePreferences
 import com.example.hairbookfront.domain.entities.BarberShop
 import com.example.hairbookfront.domain.repository.ApiRepository
 import com.example.hairbookfront.util.ResourceState
-import com.google.gson.Gson
 import com.squareup.moshi.Moshi
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -19,9 +17,10 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
-import com.fasterxml.jackson.databind.ObjectMapper
-import com.google.gson.reflect.TypeToken
+import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.flow.debounce
 
+@OptIn(FlowPreview::class)
 @HiltViewModel
 class CustomerHomeViewModel @Inject constructor(
     private val hairBookRepository: ApiRepository,
@@ -38,7 +37,7 @@ class CustomerHomeViewModel @Inject constructor(
         get() = _isSearching
 
     private val _barberShops = MutableStateFlow(listOf<BarberShop>())
-    val barberShops = searchText.combine(_barberShops) { text, barberShops ->
+    val barberShops = searchText.debounce(1000L).combine(_barberShops) { text, barberShops ->
         if (text.isBlank()) {
             barberShops
         } else {
