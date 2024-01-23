@@ -3,6 +3,7 @@ package com.example.hairbookfront.domain.repository
 import com.example.hairbookfront.data.remote.DataSources.HairBookDataSourceBooking
 import com.example.hairbookfront.data.remote.DataSources.HairBookDataSourceCustomer
 import com.example.hairbookfront.domain.entities.BarberShop
+import com.example.hairbookfront.domain.entities.CustomerDTO
 import com.example.hairbookfront.util.ResourceState
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
@@ -21,7 +22,23 @@ class ApiRepositoryCustomer @Inject constructor(
             if (response.isSuccessful && response.body() != null) {
                 emit(ResourceState.SUCCESS(response.body()!!))
             } else {
-                emit(ResourceState.ERROR("Error Logging in user"))
+                emit(ResourceState.ERROR("Error, can't get barber shops"))
+            }
+        }.catch { e ->
+            emit(ResourceState.ERROR(e.localizedMessage ?: "Something went wrong with api"))
+        }
+    }
+
+    suspend fun getDetailsCustomer(
+        accessToken: String
+    ): Flow<ResourceState<CustomerDTO>> {
+        return flow {
+            emit(ResourceState.LOADING())
+            val response = hairBookDataSourceCustomer.getDetailsCustomer(accessToken)
+            if (response.isSuccessful && response.body() != null) {
+                emit(ResourceState.SUCCESS(response.body()!!))
+            } else {
+                emit(ResourceState.ERROR("Error, can't get details customer"))
             }
         }.catch { e ->
             emit(ResourceState.ERROR(e.localizedMessage ?: "Something went wrong with api"))
