@@ -2,8 +2,10 @@ package com.example.hairbookfront.data.remote.ApiServices
 
 import com.example.hairbookfront.domain.entities.BarberDTO
 import com.example.hairbookfront.domain.entities.BarberShop
+import com.example.hairbookfront.domain.entities.BarberSignUpRequest
 import com.example.hairbookfront.domain.entities.Booking
 import com.example.hairbookfront.domain.entities.CustomerDTO
+import com.example.hairbookfront.domain.entities.CustomerSignUpRequest
 import com.example.hairbookfront.domain.entities.LoginRequest
 import com.example.hairbookfront.domain.entities.Review
 import com.example.hairbookfront.domain.entities.Service
@@ -37,13 +39,14 @@ interface ApiServiceAuth {
         @Header("Authorization") authToken: String
     ): Response<BarberDTO>
 
-    @GET("/customer/get-all-shops")
-    suspend fun getAllShops(
-        @Header("Authorization") authToken: String
-    ): Response<List<BarberShop>>
+    @POST("auth/sign-up")
+    suspend fun signUpCustomer(
+        @Body customerSignUpRequest: CustomerSignUpRequest
+    ): Response<User>
 
     @POST("auth/sign-up")
-    suspend fun signUp(
-        @Body userSignUpRequest: UserSignUpRequest
+    suspend fun signUpBarber(
+        @Body barberSignUpRequest: BarberSignUpRequest
     ): Response<User>
+
 }

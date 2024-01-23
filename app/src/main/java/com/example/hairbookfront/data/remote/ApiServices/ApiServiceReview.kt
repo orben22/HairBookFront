@@ -4,6 +4,7 @@ import com.example.hairbookfront.domain.entities.Review
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.DELETE
+import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.POST
 import retrofit2.http.PUT
@@ -29,7 +30,10 @@ interface ApiServiceReview {
         @Body review: Review
     ): Response<Review>
 
-
+    @GET("review/get-my-reviews")
+    suspend fun getMyReviews(
+        @Header("Authorization") authToken: String
+    ): Response<List<Review>>
 
 
 }

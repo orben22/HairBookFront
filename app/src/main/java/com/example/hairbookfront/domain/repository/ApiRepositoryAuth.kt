@@ -3,9 +3,10 @@ package com.example.hairbookfront.domain.repository
 import com.example.hairbookfront.data.remote.DataSources.HairBookDataSourceAuth
 import com.example.hairbookfront.domain.entities.BarberDTO
 import com.example.hairbookfront.domain.entities.BarberShop
+import com.example.hairbookfront.domain.entities.BarberSignUpRequest
 import com.example.hairbookfront.domain.entities.CustomerDTO
+import com.example.hairbookfront.domain.entities.CustomerSignUpRequest
 import com.example.hairbookfront.domain.entities.User
-import com.example.hairbookfront.domain.entities.UserSignUpRequest
 import com.example.hairbookfront.util.ResourceState
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
@@ -33,38 +34,36 @@ class ApiRepositoryAuth @Inject constructor(
         }
     }
 
-    suspend fun getAllShops(
-        accessToken: String
-    ): Flow<ResourceState<List<BarberShop>>> {
-        return flow {
-            emit(ResourceState.LOADING())
-            val response = hairBookDataSourceAuth.getAllShops(accessToken)
-            if (response.isSuccessful && response.body() != null) {
-                emit(ResourceState.SUCCESS(response.body()!!))
-            } else {
-                emit(ResourceState.ERROR("Error Logging in user"))
-            }
-        }.catch { e ->
-            emit(ResourceState.ERROR(e.localizedMessage ?: "Something went wrong with api"))
-        }
-    }
-
-    suspend fun signUp(
-        signUpRequest: UserSignUpRequest
+    suspend fun signUpCustomer(
+        customerSignUpRequest: CustomerSignUpRequest
     ): Flow<ResourceState<User>> {
         return flow {
             emit(ResourceState.LOADING())
-            val response = hairBookDataSourceAuth.signUp(signUpRequest)
+            val response = hairBookDataSourceAuth.signUpCustomer(customerSignUpRequest)
             if (response.isSuccessful && response.body() != null) {
                 emit(ResourceState.SUCCESS(response.body()!!))
             } else {
-                emit(ResourceState.ERROR("Error Sign Up"))
+                emit(ResourceState.ERROR("Sign up failed"))
             }
         }.catch { e ->
             emit(ResourceState.ERROR(e.localizedMessage ?: "Something went wrong with api"))
         }
     }
-
+    suspend fun signUpBarber(
+        barberSignUpRequest: BarberSignUpRequest
+    ): Flow<ResourceState<User>> {
+        return flow {
+            emit(ResourceState.LOADING())
+            val response = hairBookDataSourceAuth.signUpBarber(barberSignUpRequest)
+            if (response.isSuccessful && response.body() != null) {
+                emit(ResourceState.SUCCESS(response.body()!!))
+            } else {
+                emit(ResourceState.ERROR("Sign up failed"))
+            }
+        }.catch { e ->
+            emit(ResourceState.ERROR(e.localizedMessage ?: "Something went wrong with api"))
+        }
+    }
     suspend fun signOut(
         accessToken: String
     ): Flow<ResourceState<String>> {

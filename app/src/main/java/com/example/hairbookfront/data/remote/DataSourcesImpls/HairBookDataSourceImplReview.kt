@@ -16,4 +16,12 @@ class HairBookDataSourceImplReview @Inject constructor(
     override suspend fun deleteReview(accessToken: String, reviewId: String): Response<String> {
         return apiServiceReview.deleteReview(accessToken, reviewId)
     }
+
+    override suspend fun updateReview(accessToken: String, reviewId: String, review: Review): Response<Review> {
+        return apiServiceReview.updateReview(accessToken, reviewId, review)
+    }
+
+    override suspend fun getMyReviews(accessToken: String): Response<List<Review>> {
+        return apiServiceReview.getMyReviews(accessToken)
+    }
 }

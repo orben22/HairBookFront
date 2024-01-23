@@ -7,8 +7,10 @@ import com.example.hairbookfront.data.remote.ApiServices.ApiServiceReview
 import com.example.hairbookfront.data.remote.DataSources.HairBookDataSourceAuth
 import com.example.hairbookfront.domain.entities.BarberDTO
 import com.example.hairbookfront.domain.entities.BarberShop
+import com.example.hairbookfront.domain.entities.BarberSignUpRequest
 import com.example.hairbookfront.domain.entities.Booking
 import com.example.hairbookfront.domain.entities.CustomerDTO
+import com.example.hairbookfront.domain.entities.CustomerSignUpRequest
 import com.example.hairbookfront.domain.entities.LoginRequest
 import com.example.hairbookfront.domain.entities.Review
 import com.example.hairbookfront.domain.entities.Service
@@ -29,12 +31,13 @@ class HairBookDataSourceImplAuth @Inject constructor(
     override suspend fun signOut(accessToken: String): Response<String> {
         return apiServiceAuth.signOut(accessToken)
     }
-    override suspend fun getAllShops(accessToken: String): Response<List<BarberShop>> {
-        return apiServiceAuth.getAllShops(accessToken)
+
+    override suspend fun signUpCustomer(customerSignUpRequest: CustomerSignUpRequest): Response<User> {
+        return apiServiceAuth.signUpCustomer(customerSignUpRequest)
     }
 
-    override suspend fun signUp(signUpRequest: UserSignUpRequest): Response<User> {
-        return apiServiceAuth.signUp(signUpRequest)
+    override suspend fun signUpBarber(barberSignUpRequest: BarberSignUpRequest): Response<User> {
+        return apiServiceAuth.signUpBarber(barberSignUpRequest)
     }
 
     override suspend fun getDetailsCustomer(accessToken: String): Response<CustomerDTO> {
