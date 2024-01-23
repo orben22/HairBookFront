@@ -7,17 +7,10 @@ import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material3.Button
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -34,7 +27,6 @@ import com.example.hairbookfront.ui.common.BarberShopList
 import com.example.hairbookfront.ui.common.TopAppBarHairBook
 
 //private var viewModel = BarberDetailsViewModel();
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BarberDetailsScreen(
     barberDetailsViewModel: BarberDetailsViewModel = hiltViewModel(),
@@ -47,21 +39,18 @@ fun BarberDetailsScreen(
     val myshops = barberDetailsViewModel.myshops.collectAsStateWithLifecycle()
     Scaffold(
         topBar = {
-            TopAppBar(
-                title = {
-                    Text(text = "Barber Details")
+            TopAppBarHairBook("Barber Details")
+            Button(
+                onClick = {
+                    // Handle "Show Booking History" button click (Redirect to barber booking history)
                 },
-                navigationIcon = {
-                    IconButton(onClick = { /* Handle navigation back */ }) {
-                        Icon(imageVector = Icons.Default.ArrowBack, contentDescription = null)
-                    }
-                },
-                actions = {
-                  IconButton(onClick = { /*TODO*/ }) {
-                      Icon(imageVector = Icons.Default.KeyboardArrowDown, contentDescription = null)
-                  }
-                }
-            )
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 20.dp, start = distanceFromLeft, end = distanceFromLeft)
+                    .height(IntrinsicSize.Min)
+            ) {
+                Text(text = stringResource(R.string.booking_history))
+            }
         },
         bottomBar = {
             Button(
