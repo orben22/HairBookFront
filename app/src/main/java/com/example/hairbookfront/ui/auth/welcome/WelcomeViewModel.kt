@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.hairbookfront.data.datastore.DataStorePreferences
 import com.example.hairbookfront.domain.entities.User
-import com.example.hairbookfront.domain.repository.ApiRepository
+import com.example.hairbookfront.domain.repository.ApiRepositoryAuth
 import com.example.hairbookfront.ui.navgraph.Routes
 import com.example.hairbookfront.util.ResourceState
 import com.squareup.moshi.Moshi
@@ -21,7 +21,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class WelcomeViewModel @Inject constructor(
-    private val hairBookRepository: ApiRepository,
+    private val hairBookRepository: ApiRepositoryAuth,
     private val dataStorePreferences: DataStorePreferences,
     private val moshi: Moshi
 ) : ViewModel() {

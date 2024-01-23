@@ -1,0 +1,52 @@
+package com.example.hairbookfront.data.remote.DataSourcesImpls
+
+import com.example.hairbookfront.data.remote.ApiServices.ApiServiceAuth
+import com.example.hairbookfront.data.remote.ApiServices.ApiServiceBarber
+import com.example.hairbookfront.data.remote.ApiServices.ApiServiceBooking
+import com.example.hairbookfront.data.remote.ApiServices.ApiServiceReview
+import com.example.hairbookfront.data.remote.DataSources.HairBookDataSourceAuth
+import com.example.hairbookfront.domain.entities.BarberDTO
+import com.example.hairbookfront.domain.entities.BarberShop
+import com.example.hairbookfront.domain.entities.Booking
+import com.example.hairbookfront.domain.entities.CustomerDTO
+import com.example.hairbookfront.domain.entities.LoginRequest
+import com.example.hairbookfront.domain.entities.Review
+import com.example.hairbookfront.domain.entities.Service
+import com.example.hairbookfront.domain.entities.User
+import com.example.hairbookfront.domain.entities.UserSignUpRequest
+import retrofit2.Response
+import javax.inject.Inject
+
+class HairBookDataSourceImplAuth @Inject constructor(
+    private val apiServiceAuth: ApiServiceAuth
+) : HairBookDataSourceAuth {
+
+    override suspend fun login(email: String, password: String): Response<User> {
+        val loginRequest = LoginRequest(email, password)
+        return apiServiceAuth.login(loginRequest)
+    }
+
+    override suspend fun signOut(accessToken: String): Response<String> {
+        return apiServiceAuth.signOut(accessToken)
+    }
+    override suspend fun getAllShops(accessToken: String): Response<List<BarberShop>> {
+        return apiServiceAuth.getAllShops(accessToken)
+    }
+
+    override suspend fun signUp(signUpRequest: UserSignUpRequest): Response<User> {
+        return apiServiceAuth.signUp(signUpRequest)
+    }
+
+    override suspend fun getDetailsCustomer(accessToken: String): Response<CustomerDTO> {
+        return apiServiceAuth.getDetailsCustomer(accessToken)
+    }
+
+    override suspend fun getDetailsBarber(accessToken: String): Response<BarberDTO> {
+        return apiServiceAuth.getDetailsBarber(accessToken)
+    }
+
+
+
+
+
+}

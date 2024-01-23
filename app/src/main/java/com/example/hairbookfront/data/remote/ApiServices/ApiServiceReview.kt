@@ -1,4 +1,4 @@
-package com.example.hairbookfront.data.remote
+package com.example.hairbookfront.data.remote.ApiServices
 
 import com.example.hairbookfront.domain.entities.Review
 import retrofit2.Response

@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.hairbookfront.data.datastore.DataStorePreferences
 import com.example.hairbookfront.domain.entities.BarberShop
-import com.example.hairbookfront.domain.repository.ApiRepository
+import com.example.hairbookfront.domain.repository.ApiRepositoryAuth
 import com.example.hairbookfront.util.ResourceState
 import com.squareup.moshi.Moshi
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -23,7 +23,7 @@ import kotlinx.coroutines.flow.debounce
 @OptIn(FlowPreview::class)
 @HiltViewModel
 class CustomerHomeViewModel @Inject constructor(
-    private val hairBookRepository: ApiRepository,
+    private val hairBookRepository: ApiRepositoryAuth,
     private val dataStorePreferences: DataStorePreferences,
     private val moshi: Moshi
 ) : ViewModel() {

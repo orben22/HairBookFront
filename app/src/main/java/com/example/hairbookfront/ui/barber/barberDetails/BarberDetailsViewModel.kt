@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.hairbookfront.data.datastore.DataStorePreferences
 import com.example.hairbookfront.domain.entities.BarberShop
-import com.example.hairbookfront.domain.repository.ApiRepository
+import com.example.hairbookfront.domain.repository.ApiRepositoryAuth
 import com.example.hairbookfront.util.ResourceState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -17,7 +17,7 @@ import javax.inject.Inject
 @HiltViewModel
 class BarberDetailsViewModel @Inject constructor(
     private val dataStorePreferences: DataStorePreferences,
-    private val apiRepository: ApiRepository
+    private val apiRepository: ApiRepositoryAuth
 ) : ViewModel() {
     private val _firstName = MutableStateFlow("")
     val firstName: StateFlow<String>

@@ -1,0 +1,50 @@
+package com.example.hairbookfront.domain.repository
+
+import com.example.hairbookfront.data.remote.DataSources.HairBookDataSourceAuth
+import com.example.hairbookfront.data.remote.DataSources.HairBookDataSourceReview
+import com.example.hairbookfront.domain.entities.Review
+import com.example.hairbookfront.util.ResourceState
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.flow
+import javax.inject.Inject
+
+class ApiRepositoryReview @Inject constructor(
+    private val hairBookDataSourceReview: HairBookDataSourceReview
+) {
+
+    suspend fun postReview(
+        accessToken: String,
+        review: Review
+    ): Flow<ResourceState<Review>> {
+        return flow {
+            emit(ResourceState.LOADING())
+            val response = hairBookDataSourceReview.postReview(accessToken, review)
+            if (response.isSuccessful && response.body() != null) {
+                emit(ResourceState.SUCCESS(response.body()!!))
+            } else {
+                emit(ResourceState.ERROR("Error to post review"))
+            }
+        }.catch { e ->
+            emit(ResourceState.ERROR(e.localizedMessage ?: "Something went wrong with api"))
+        }
+    }
+
+    suspend fun deleteReview(
+        accessToken: String,
+        reviewId: String
+    ): Flow<ResourceState<String>> {
+        return flow {
+            emit(ResourceState.LOADING())
+            val response = hairBookDataSourceReview.deleteReview(accessToken, reviewId)
+            if (response.isSuccessful && response.body() != null) {
+                emit(ResourceState.SUCCESS(response.body()!!))
+            } else {
+                emit(ResourceState.ERROR("Delete review failed"))
+            }
+        }.catch { e ->
+            emit(ResourceState.ERROR(e.localizedMessage ?: "Something went wrong with api"))
+        }
+    }
+
+}
