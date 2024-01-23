@@ -9,6 +9,7 @@ import androidx.datastore.preferences.core.emptyPreferences
 import androidx.datastore.preferences.preferencesDataStoreFile
 import com.example.hairbookfront.data.datastore.DataStorePreferences
 import com.example.hairbookfront.data.remote.ApiService
+import com.example.hairbookfront.data.remote.ApiServiceBooking
 import com.example.hairbookfront.data.remote.HairBookDataSource
 import com.example.hairbookfront.data.remote.HairBookDataSourceImpl
 import com.example.hairbookfront.domain.repository.ApiRepository
@@ -68,11 +69,16 @@ object AppModule {
     fun providesApiService(retrofit: Retrofit): ApiService {
         return retrofit.create(ApiService::class.java)
     }
+    @Provides
+    @Singleton
+    fun providesApiServiceBooking(retrofit: Retrofit): ApiServiceBooking {
+        return retrofit.create(ApiServiceBooking::class.java)
+    }
 
     @Provides
     @Singleton
-    fun providesDataSource(apiService: ApiService): HairBookDataSource {
-        return HairBookDataSourceImpl(apiService)
+    fun providesDataSource(apiService: ApiService,apiServiceBooking: ApiServiceBooking): HairBookDataSource {
+        return HairBookDataSourceImpl(apiService, apiServiceBooking = apiServiceBooking)
     }
 
     @Provides
