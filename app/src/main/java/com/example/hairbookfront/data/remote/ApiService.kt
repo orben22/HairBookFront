@@ -3,6 +3,7 @@ package com.example.hairbookfront.data.remote
 import com.example.hairbookfront.domain.entities.BarberShop
 import com.example.hairbookfront.domain.entities.LoginRequest
 import com.example.hairbookfront.domain.entities.User
+import com.example.hairbookfront.domain.entities.UserSignUpRequest
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -17,6 +18,11 @@ interface ApiService {
     suspend fun getAllShops(
         @Header("Authorization") authToken: String
     ): Response<List<BarberShop>>
+
+    @POST("auth/sign-up")
+    suspend fun signUp(@Body userSignUpRequest: UserSignUpRequest): Response<User>
+
+
 
 
 }

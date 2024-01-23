@@ -24,6 +24,13 @@ data class User(
     val accessToken: String?,
 )
 
+data class UserSignUpRequest(
+    val email: String,
+    val password: String,
+    val role: String,
+    val details: UserDetails
+)
+
 data class LoginRequest(
     val email: String,
     val password: String

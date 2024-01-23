@@ -1,6 +1,7 @@
 package com.example.hairbookfront.ui.auth.signUpCustomer
 
 import android.content.res.Configuration
+import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -13,6 +14,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -21,17 +23,23 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.NavHostController
 import com.example.hairbookfront.ui.common.AppTextField
 import com.example.hairbookfront.ui.common.TextFieldPassword
 import com.example.hairbookfront.ui.common.TopAppBarHairBook
 import com.example.hairbookfront.theme.HairBookFrontTheme
 import com.example.hairbookfront.ui.common.CustomButton
+import com.example.hairbookfront.ui.common.Loader
+import com.example.hairbookfront.ui.navgraph.Routes
+import com.example.hairbookfront.util.ResourceState
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 
 @Composable
 fun SignUpCustomerScreen(
-    signUpCustomerViewModel: SignUpCustomerViewModel = hiltViewModel()
+    signUpCustomerViewModel: SignUpCustomerViewModel = hiltViewModel(),
+    navController: NavHostController?
 ) {
     val context = LocalContext.current
     val firstName = signUpCustomerViewModel.firstName.collectAsStateWithLifecycle()
@@ -47,6 +55,17 @@ fun SignUpCustomerScreen(
     val emailError = signUpCustomerViewModel.emailError.collectAsStateWithLifecycle()
     val passwordError = signUpCustomerViewModel.passwordError.collectAsStateWithLifecycle()
     val showOrHidePassword = signUpCustomerViewModel.showOrHidePassword.collectAsStateWithLifecycle()
+    LaunchedEffect(Unit) {
+        signUpCustomerViewModel
+            .toastMessage
+            .collect { message ->
+                Toast.makeText(
+                    context,
+                    message,
+                    Toast.LENGTH_SHORT,
+                ).show()
+            }
+    }
     Surface(color = MaterialTheme.colorScheme.surface) {
 
         // Compose UI components
@@ -113,18 +132,18 @@ fun SignUpCustomerScreen(
     }
 }
 
-@Preview(showBackground = true, showSystemUi = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
-@Composable
-fun SignUpCustomerScreenPreviewDark() {
-    HairBookFrontTheme {
-        SignUpCustomerScreen()
-    }
-}
-
-@Preview(showBackground = true, showSystemUi = true, uiMode = Configuration.UI_MODE_NIGHT_NO)
-@Composable
-fun SignUpCustomerScreenPreviewLight() {
-    HairBookFrontTheme {
-        SignUpCustomerScreen()
-    }
-}
+//@Preview(showBackground = true, showSystemUi = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
+//@Composable
+//fun SignUpCustomerScreenPreviewDark() {
+//    HairBookFrontTheme {
+//        SignUpCustomerScreen()
+//    }
+//}
+//
+//@Preview(showBackground = true, showSystemUi = true, uiMode = Configuration.UI_MODE_NIGHT_NO)
+//@Composable
+//fun SignUpCustomerScreenPreviewLight() {
+//    HairBookFrontTheme {
+//        SignUpCustomerScreen()
+//    }
+//}

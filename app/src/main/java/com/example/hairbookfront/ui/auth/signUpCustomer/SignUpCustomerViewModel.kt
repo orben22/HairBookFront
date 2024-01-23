@@ -3,13 +3,18 @@ package com.example.hairbookfront.ui.auth.signUpCustomer
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.hairbookfront.data.datastore.DataStorePreferences
+import com.example.hairbookfront.domain.entities.CustomerDTO
+import com.example.hairbookfront.domain.entities.UserDetails
+import com.example.hairbookfront.domain.entities.UserSignUpRequest
 import com.example.hairbookfront.domain.repository.ApiRepository
+import com.example.hairbookfront.util.ResourceState
 import com.squareup.moshi.Moshi
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import java.util.regex.Pattern
 import javax.inject.Inject
@@ -21,23 +26,23 @@ class SignUpCustomerViewModel @Inject constructor(
     private val moshi: Moshi
 ) : ViewModel() {
 
-    private val _firstName = MutableStateFlow("")
+    private val _firstName = MutableStateFlow("or")
     val firstName: StateFlow<String>
         get() = _firstName
-    private val _lastName = MutableStateFlow("")
+    private val _lastName = MutableStateFlow("ben")
     val lastName: StateFlow<String>
         get() = _lastName
-    private val _phoneNumber = MutableStateFlow("")
+    private val _phoneNumber = MutableStateFlow("0505971580")
     val phoneNumber: StateFlow<String>
         get() = _phoneNumber
-    private val _age = MutableStateFlow("")
+    private val _age = MutableStateFlow("45")
     val age: StateFlow<String>
         get() = _age
 
-    private val _email = MutableStateFlow("customer@customer.com")
+    private val _email = MutableStateFlow("or@customer.com")
     val email: StateFlow<String>
         get() = _email
-    private val _password = MutableStateFlow("customer_password")
+    private val _password = MutableStateFlow("or_password")
     val password: StateFlow<String>
         get() = _password
 
@@ -188,6 +193,42 @@ class SignUpCustomerViewModel @Inject constructor(
         else {
             sendMessage("Invalid Password")
             _passwordError.value = true
+        }
+
+        if (isFirstNameValid() && isLastNameValid() && isAgeValid() && isPhoneNumberValid() && isValidEmail() && isValidPassword()) {
+            _firstNameError.value = false
+            _lastNameError.value = false
+            _ageError.value = false
+            _phoneNumberError.value = false
+            _emailError.value = false
+            _passwordError.value = false
+            viewModelScope.launch {
+                hairBookRepository.signUp(
+                    signUpRequest = UserSignUpRequest(
+                        email = email.value,
+                        password = password.value,
+                        role = "Customer",
+                        details = CustomerDTO(
+                            firstName = firstName.value,
+                            lastName = lastName.value,
+                            age = age.value.toFloat(),
+                            phoneNumber = phoneNumber.value
+                        )
+                    )
+                ).collectLatest { response ->
+                    when (response) {
+                        is ResourceState.LOADING -> {
+                            sendMessage("Loading")
+                        }
+                        is ResourceState.SUCCESS -> {
+                            sendMessage("Success")
+                        }
+                        is ResourceState.ERROR -> {
+                            sendMessage(response.error)
+                        }
+                    }
+                }
+            }
         }
     }
 }

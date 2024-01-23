@@ -3,6 +3,7 @@ package com.example.hairbookfront.domain.repository
 import com.example.hairbookfront.data.remote.HairBookDataSource
 import com.example.hairbookfront.domain.entities.BarberShop
 import com.example.hairbookfront.domain.entities.User
+import com.example.hairbookfront.domain.entities.UserSignUpRequest
 import com.example.hairbookfront.util.ResourceState
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
@@ -38,6 +39,22 @@ class ApiRepository @Inject constructor(private val hairBookDataSource: HairBook
                 emit(ResourceState.SUCCESS(response.body()!!))
             } else {
                 emit(ResourceState.ERROR("Error Logging in user"))
+            }
+        }.catch { e ->
+            emit(ResourceState.ERROR(e.localizedMessage ?: "Something went wrong with api"))
+        }
+    }
+
+    suspend fun signUp(
+        signUpRequest: UserSignUpRequest
+    ): Flow<ResourceState<User>> {
+        return flow {
+            emit(ResourceState.LOADING())
+            val response = hairBookDataSource.signUp(signUpRequest)
+            if (response.isSuccessful && response.body() != null) {
+                emit(ResourceState.SUCCESS(response.body()!!))
+            } else {
+                emit(ResourceState.ERROR("Error Sign Up"))
             }
         }.catch { e ->
             emit(ResourceState.ERROR(e.localizedMessage ?: "Something went wrong with api"))

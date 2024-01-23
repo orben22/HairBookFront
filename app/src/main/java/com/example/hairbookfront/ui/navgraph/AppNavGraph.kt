@@ -37,7 +37,7 @@ fun AppNavGraph(
                 WelcomePageScreen(viewModel, navController = navController)
             }
             composable(route = Routes.SignupCustomerScreen.route) {
-                SignUpCustomerScreen()
+                SignUpCustomerScreen(navController = navController)
             }
             composable(route = Routes.SignupBarberScreen.route) {
                 SignUpBarberScreen(navController = navController)
