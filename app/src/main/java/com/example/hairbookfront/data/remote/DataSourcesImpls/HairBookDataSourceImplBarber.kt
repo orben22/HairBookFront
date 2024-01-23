@@ -6,6 +6,7 @@ import com.example.hairbookfront.data.remote.ApiServices.ApiServiceBooking
 import com.example.hairbookfront.data.remote.ApiServices.ApiServiceReview
 import com.example.hairbookfront.data.remote.DataSources.HairBookDataSourceAuth
 import com.example.hairbookfront.data.remote.DataSources.HairBookDataSourceBarber
+import com.example.hairbookfront.domain.entities.BarberDTO
 import com.example.hairbookfront.domain.entities.BarberShop
 import com.example.hairbookfront.domain.entities.Booking
 import com.example.hairbookfront.domain.entities.Review
@@ -21,7 +22,7 @@ class HairBookDataSourceImplBarber @Inject constructor(
         return apiServiceBarber.getMyBarberShops(accessToken)
     }
 
-    override suspend fun getBarberDetails(accessToken: String): Response<User> {
+    override suspend fun getBarberDetails(accessToken: String): Response<BarberDTO> {
         return apiServiceBarber.getBarberDetails(accessToken)
     }
 

@@ -1,5 +1,6 @@
 package com.example.hairbookfront.data.remote.DataSources
 
+import com.example.hairbookfront.domain.entities.BarberDTO
 import com.example.hairbookfront.domain.entities.BarberShop
 import com.example.hairbookfront.domain.entities.Booking
 import com.example.hairbookfront.domain.entities.Review
@@ -10,7 +11,7 @@ import retrofit2.Response
 interface HairBookDataSourceBarber {
     suspend fun getMyBarberShops(accessToken: String): Response<List<BarberShop>>
 
-    suspend fun getBarberDetails(accessToken: String): Response<User>
+    suspend fun getBarberDetails(accessToken: String): Response<BarberDTO>
 
     suspend fun createBarberShop(barberShop: BarberShop): Response<BarberShop>
 
