@@ -28,7 +28,7 @@ class HairBookDataSourceImplAuth @Inject constructor(
     }
 
     override suspend fun signOut(accessToken: String): Response<String> {
-        return apiServiceAuth.signOut(accessToken)
+        return apiServiceAuth.signOut("Bearer $accessToken")
     }
 
     override suspend fun signUpCustomer(customerSignUpRequest: CustomerSignUpRequest): Response<User> {
@@ -40,15 +40,12 @@ class HairBookDataSourceImplAuth @Inject constructor(
     }
 
     override suspend fun getDetailsCustomer(accessToken: String): Response<CustomerDTO> {
-        return apiServiceAuth.getDetailsCustomer(accessToken)
+        return apiServiceAuth.getDetailsCustomer("Bearer $accessToken")
     }
 
     override suspend fun getDetailsBarber(accessToken: String): Response<BarberDTO> {
-        return apiServiceAuth.getDetailsBarber(accessToken)
+        return apiServiceAuth.getDetailsBarber("Bearer $accessToken")
     }
-
-
-
 
 
 }

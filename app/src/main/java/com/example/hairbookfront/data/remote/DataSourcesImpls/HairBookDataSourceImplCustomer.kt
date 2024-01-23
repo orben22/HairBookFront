@@ -12,6 +12,6 @@ class HairBookDataSourceImplCustomer @Inject constructor(
     private val apiServiceCustomer: ApiServiceCustomer
 ) : HairBookDataSourceCustomer {
     override suspend fun getAllShops(accessToken: String): Response<List<BarberShop>> {
-        return apiServiceCustomer.getAllShops(accessToken)
+        return apiServiceCustomer.getAllShops("Bearer $accessToken")
     }
 }

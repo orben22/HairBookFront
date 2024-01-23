@@ -16,6 +16,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import java.util.regex.Pattern
 import javax.inject.Inject
 
@@ -26,10 +27,10 @@ class WelcomeViewModel @Inject constructor(
     private val moshi: Moshi
 ) : ViewModel() {
 
-    private val _email = MutableStateFlow("customer@customer.com")
+    private val _email = MutableStateFlow("barber@example.com")
     val email: StateFlow<String>
         get() = _email
-    private val _password = MutableStateFlow("customer_password")
+    private val _password = MutableStateFlow("barber_password")
     val password: StateFlow<String>
         get() = _password
 
@@ -61,15 +62,19 @@ class WelcomeViewModel @Inject constructor(
         get() = _dialogText
 
 
-    private val _userDetails: MutableStateFlow<ResourceState<User>> =
-        MutableStateFlow(ResourceState.LOADING())
-    val userDetails: StateFlow<ResourceState<User>>
+    private val _userDetails: MutableStateFlow<User?> =
+        MutableStateFlow(null)
+    val userDetails: StateFlow<User?>
         get() = _userDetails
+
 
     private val _signUpScreen = MutableStateFlow("")
     val signUpScreen: StateFlow<String>
         get() = _signUpScreen
 
+    private val _homeScreen = MutableStateFlow("")
+    val homeScreen: StateFlow<String>
+        get() = _homeScreen
 
     fun emailChanged(email: String) {
         _email.value = email
@@ -118,39 +123,76 @@ class WelcomeViewModel @Inject constructor(
     }
 
 
-     fun login() {
-        if (isValidEmail() && isValidPassword()) {
-            _emailError.value = false
-            _passwordError.value = false
+    fun login() {
+        if (areCredentialsValid()) {
             viewModelScope.launch(Dispatchers.IO) {
                 hairBookRepository.login(email.value, password.value).collectLatest { response ->
-                    _userDetails.value = response
-                    storeUserDetails(response)
+                    when (response) {
+                        is ResourceState.SUCCESS -> handleLoginSuccess(response.data)
+                        is ResourceState.ERROR -> handleLoginError(response.error)
+                        else -> {}
+                    }
                 }
-            }
-        } else {
-            if (!isValidEmail()) {
-                sendMessage("Invalid Email")
-                _emailError.value = true
-            }
-            if (!isValidPassword()) {
-                sendMessage("Invalid Password")
-                _passwordError.value = true
             }
         }
     }
 
-    private suspend fun storeUserDetails(response: ResourceState<User>) {
-        when (response) {
-            is ResourceState.SUCCESS -> {
-                val userData = response.data
-                dataStorePreferences.storeUserDetails(userData)
-                _loggedIn.value = true
-            }
-            is ResourceState.ERROR -> {
-                sendMessage(response.error)
-            }
-            else -> {}
+    private fun areCredentialsValid(): Boolean {
+        val isEmailValid = isValidEmail()
+        val isPasswordValid = isValidPassword()
+
+        if (!isEmailValid) {
+            sendMessage("Invalid Email")
+            _emailError.value = true
         }
+
+        if (!isPasswordValid) {
+            sendMessage("Invalid Password")
+            _passwordError.value = true
+        }
+
+        return isEmailValid && isPasswordValid
+    }
+
+    private suspend fun handleLoginSuccess(data: User) {
+        _userDetails.emit(data)
+        storeUserDetails()
+        _loggedIn.value = true
+        if (data.role == "CUSTOMER") {
+            hairBookRepository.getDetailsCustomer(data.accessToken!!).collect {
+                when (it) {
+                    is ResourceState.SUCCESS -> {
+                        Timber.d("customerDetails: ${it.data}")
+                        dataStorePreferences.storeCustomerDetails(it.data)
+                        _homeScreen.value = Routes.CustomerHomeScreen.route
+                    }
+
+                    is ResourceState.ERROR -> sendMessage(it.error)
+                    else -> {}
+                }
+            }
+        } else {
+            hairBookRepository.getDetailsBarber(data.accessToken!!).collect {
+                when (it) {
+                    is ResourceState.SUCCESS -> {
+                        Timber.d("barberDetails: ${it.data}")
+                        dataStorePreferences.storeBarberDetails(it.data)
+                        _homeScreen.value = Routes.BarberDetailsScreen.route
+                    }
+
+                    is ResourceState.ERROR -> sendMessage(it.error+"heyyyy")
+                    else -> {}
+                }
+            }
+        }
+    }
+
+    private fun handleLoginError(error: String) {
+        sendMessage(error)
+    }
+
+    private suspend fun storeUserDetails() {
+        dataStorePreferences.storeUserDetails(_userDetails.value!!)
+        _loggedIn.value = true
     }
 }

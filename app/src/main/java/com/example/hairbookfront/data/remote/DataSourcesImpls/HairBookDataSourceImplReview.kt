@@ -10,18 +10,18 @@ class HairBookDataSourceImplReview @Inject constructor(
     private val apiServiceReview: ApiServiceReview
 ) : HairBookDataSourceReview {
     override suspend fun postReview(accessToken: String, review: Review): Response<Review> {
-        return apiServiceReview.postReview(accessToken, review)
+        return apiServiceReview.postReview("Bearer $accessToken", review)
     }
 
     override suspend fun deleteReview(accessToken: String, reviewId: String): Response<String> {
-        return apiServiceReview.deleteReview(accessToken, reviewId)
+        return apiServiceReview.deleteReview("Bearer $accessToken", reviewId)
     }
 
     override suspend fun updateReview(accessToken: String, reviewId: String, review: Review): Response<Review> {
-        return apiServiceReview.updateReview(accessToken, reviewId, review)
+        return apiServiceReview.updateReview("Bearer $accessToken", reviewId, review)
     }
 
     override suspend fun getMyReviews(accessToken: String): Response<List<Review>> {
-        return apiServiceReview.getMyReviews(accessToken)
+        return apiServiceReview.getMyReviews("Bearer $accessToken")
     }
 }

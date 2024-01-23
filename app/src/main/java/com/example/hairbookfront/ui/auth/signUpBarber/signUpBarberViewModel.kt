@@ -4,7 +4,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.hairbookfront.data.datastore.DataStorePreferences
 import com.example.hairbookfront.domain.entities.BarberDTO
-import com.example.hairbookfront.domain.entities.UserSignUpRequest
+import com.example.hairbookfront.domain.entities.BarberSignUpRequest
+import com.example.hairbookfront.domain.entities.CustomerSignUpRequest
 import com.example.hairbookfront.domain.repository.ApiRepositoryAuth
 import com.example.hairbookfront.util.ResourceState
 import com.squareup.moshi.Moshi
@@ -188,8 +189,8 @@ class signUpBarberViewModel @Inject constructor(
             _emailError.value = false
             _passwordError.value = false
             viewModelScope.launch {
-                hairBookRepository.signUp(
-                    signUpRequest = UserSignUpRequest(
+                hairBookRepository.signUpBarber(
+                    BarberSignUpRequest(
                         email = email.value,
                         password = password.value,
                         role = "Barber",
@@ -204,9 +205,11 @@ class signUpBarberViewModel @Inject constructor(
                         is ResourceState.LOADING -> {
                             sendMessage("Loading")
                         }
+
                         is ResourceState.SUCCESS -> {
                             sendMessage("Success")
                         }
+
                         is ResourceState.ERROR -> {
                             sendMessage(response.error)
                         }

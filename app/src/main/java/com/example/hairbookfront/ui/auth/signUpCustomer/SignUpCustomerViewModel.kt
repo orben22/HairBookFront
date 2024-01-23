@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.hairbookfront.data.datastore.DataStorePreferences
 import com.example.hairbookfront.domain.entities.CustomerDTO
-import com.example.hairbookfront.domain.entities.UserSignUpRequest
+import com.example.hairbookfront.domain.entities.CustomerSignUpRequest
 import com.example.hairbookfront.domain.repository.ApiRepositoryAuth
 import com.example.hairbookfront.util.ResourceState
 import com.squareup.moshi.Moshi
@@ -172,7 +172,7 @@ class SignUpCustomerViewModel @Inject constructor(
         }
         if (isAgeValid())
             _ageError.value = false
-       else {
+        else {
             sendMessage("Invalid Age")
             _ageError.value = true
         }
@@ -182,19 +182,19 @@ class SignUpCustomerViewModel @Inject constructor(
             sendMessage("Invalid Phone Number")
             _phoneNumberError.value = true
         }
-        if(isValidEmail())
+        if (isValidEmail())
             _emailError.value = false
         else {
             sendMessage("Invalid Email")
             _emailError.value = true
         }
-        if(isValidPassword())
+        if (isValidPassword())
             _passwordError.value = false
         else {
             sendMessage("Invalid Password")
             _passwordError.value = true
         }
-        val user= UserSignUpRequest(
+        val user = CustomerSignUpRequest(
             email = email.value,
             password = password.value,
             role = "Customer",
@@ -215,16 +215,16 @@ class SignUpCustomerViewModel @Inject constructor(
             _emailError.value = false
             _passwordError.value = false
             viewModelScope.launch {
-                hairBookRepository.signUp(
-                    signUpRequest = user
-                ).collectLatest { response ->
+                hairBookRepository.signUpCustomer(user).collectLatest { response ->
                     when (response) {
                         is ResourceState.LOADING -> {
                             sendMessage("Loading")
                         }
+
                         is ResourceState.SUCCESS -> {
                             sendMessage("Success")
                         }
+
                         is ResourceState.ERROR -> {
                             sendMessage(response.error)
                         }

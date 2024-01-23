@@ -19,6 +19,8 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -29,22 +31,22 @@ import androidx.navigation.NavHostController
 import com.example.hairbookfront.R
 import com.example.hairbookfront.ui.Dimens.distanceFromLeft
 import com.example.hairbookfront.ui.Dimens.distanceFromBottom
-import com.example.hairbookfront.ui.auth.welcome.WelcomeViewModel
 import com.example.hairbookfront.ui.common.BarberShopList
-import com.example.hairbookfront.ui.common.TopAppBarHairBook
+import timber.log.Timber
 
-//private var viewModel = BarberDetailsViewModel();
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BarberDetailsScreen(
     barberDetailsViewModel: BarberDetailsViewModel = hiltViewModel(),
     navController: NavHostController? = null
 ) {
-    val firstname = barberDetailsViewModel.firstName.collectAsStateWithLifecycle()
-    val lastname = barberDetailsViewModel.lastName.collectAsStateWithLifecycle()
-    val experience = barberDetailsViewModel.exp.collectAsStateWithLifecycle()
-    val email = barberDetailsViewModel.email.collectAsStateWithLifecycle()
-    val myshops = barberDetailsViewModel.myshops.collectAsStateWithLifecycle()
+
+    val yearsOfExperience by barberDetailsViewModel.getYearsOfExperience().collectAsState(initial = 0)
+    val firstname by barberDetailsViewModel.getFirstName().collectAsState(initial = "")
+    val lastname by barberDetailsViewModel.getLastName().collectAsState(initial = "")
+    val email by barberDetailsViewModel.getEmail().collectAsState(initial = "")
+    val myShops by barberDetailsViewModel.myshops.collectAsStateWithLifecycle()
+    Timber.d("experience: $yearsOfExperience")
     Scaffold(
         topBar = {
             TopAppBar(
@@ -93,17 +95,17 @@ fun BarberDetailsScreen(
                 // User Information (You can use your own user data here if available)
                 Text(
                     modifier = Modifier.padding(bottom = 10.dp),
-                    text = "Full Name: ${firstname.value} ${lastname.value}",
+                    text = "Full Name: $firstname $lastname",
                     style = MaterialTheme.typography.bodyMedium
                 )
                 Text(
                     modifier = Modifier.padding(bottom = 10.dp),
-                    text = "Email: ${email.value}",
+                    text = "Email: $email",
                     style = MaterialTheme.typography.bodyMedium
                 )
                 Text(
                     modifier = Modifier.padding(bottom = 10.dp),
-                    text = "Experience: ${experience.value} years.",
+                    text = "Experience: $yearsOfExperience years.",
                     style = MaterialTheme.typography.bodyMedium
                 )
                 Text(
@@ -111,7 +113,7 @@ fun BarberDetailsScreen(
                     text = "My barbershops:",
                     style = MaterialTheme.typography.bodyMedium
                 )
-                BarberShopList(barberShops = myshops.value, true)
+                BarberShopList(barberShops = myShops, true)
             }
         }
     )

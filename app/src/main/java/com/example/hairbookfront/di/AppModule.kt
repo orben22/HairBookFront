@@ -11,18 +11,22 @@ import com.example.hairbookfront.data.datastore.DataStorePreferences
 import com.example.hairbookfront.data.remote.ApiServices.ApiServiceAuth
 import com.example.hairbookfront.data.remote.ApiServices.ApiServiceBarber
 import com.example.hairbookfront.data.remote.ApiServices.ApiServiceBooking
+import com.example.hairbookfront.data.remote.ApiServices.ApiServiceCustomer
 import com.example.hairbookfront.data.remote.ApiServices.ApiServiceReview
 import com.example.hairbookfront.data.remote.DataSources.HairBookDataSourceAuth
 import com.example.hairbookfront.data.remote.DataSources.HairBookDataSourceBarber
 import com.example.hairbookfront.data.remote.DataSources.HairBookDataSourceBooking
+import com.example.hairbookfront.data.remote.DataSources.HairBookDataSourceCustomer
 import com.example.hairbookfront.data.remote.DataSources.HairBookDataSourceReview
 import com.example.hairbookfront.data.remote.DataSourcesImpls.HairBookDataSourceImplAuth
 import com.example.hairbookfront.data.remote.DataSourcesImpls.HairBookDataSourceImplBarber
 import com.example.hairbookfront.data.remote.DataSourcesImpls.HairBookDataSourceImplBooking
+import com.example.hairbookfront.data.remote.DataSourcesImpls.HairBookDataSourceImplCustomer
 import com.example.hairbookfront.data.remote.DataSourcesImpls.HairBookDataSourceImplReview
 import com.example.hairbookfront.domain.repository.ApiRepositoryAuth
 import com.example.hairbookfront.domain.repository.ApiRepositoryBarber
 import com.example.hairbookfront.domain.repository.ApiRepositoryBooking
+import com.example.hairbookfront.domain.repository.ApiRepositoryCustomer
 import com.example.hairbookfront.domain.repository.ApiRepositoryReview
 import com.example.hairbookfront.util.Constants
 import com.squareup.moshi.Moshi
@@ -101,6 +105,12 @@ object AppModule {
 
     @Provides
     @Singleton
+    fun providesApiServiceCustomer(retrofit: Retrofit): ApiServiceCustomer {
+        return retrofit.create(ApiServiceCustomer::class.java)
+    }
+
+    @Provides
+    @Singleton
     fun providesDataSourceAuth(apiServiceAuth: ApiServiceAuth): HairBookDataSourceAuth {
         return HairBookDataSourceImplAuth(apiServiceAuth)
     }
@@ -118,6 +128,11 @@ object AppModule {
     @Singleton
     fun providesDataSourceReview(apiServiceReview: ApiServiceReview): HairBookDataSourceReview {
         return HairBookDataSourceImplReview(apiServiceReview)
+    }
+    @Provides
+    @Singleton
+    fun providesDataSourceCustomer(apiServiceCustomer: ApiServiceCustomer): HairBookDataSourceCustomer {
+        return HairBookDataSourceImplCustomer(apiServiceCustomer)
     }
 
     @Provides
@@ -143,6 +158,13 @@ object AppModule {
     fun providesRepositoryReview(hairBookDataSourceReview: HairBookDataSourceReview): ApiRepositoryReview {
         return ApiRepositoryReview(hairBookDataSourceReview)
     }
+
+    @Provides
+    @Singleton
+    fun providesRepositoryApi(hairBookDataSourceCustomer: HairBookDataSourceCustomer): ApiRepositoryCustomer {
+        return ApiRepositoryCustomer(hairBookDataSourceCustomer)
+    }
+
 
 
     @Singleton

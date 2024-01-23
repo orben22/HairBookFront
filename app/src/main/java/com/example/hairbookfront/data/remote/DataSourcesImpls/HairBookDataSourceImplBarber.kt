@@ -19,11 +19,11 @@ class HairBookDataSourceImplBarber @Inject constructor(
     private val apiServiceBarber: ApiServiceBarber
 ) : HairBookDataSourceBarber {
     override suspend fun getMyBarberShops(accessToken: String): Response<List<BarberShop>> {
-        return apiServiceBarber.getMyBarberShops(accessToken)
+        return apiServiceBarber.getMyBarberShops("Bearer $accessToken")
     }
 
     override suspend fun getBarberDetails(accessToken: String): Response<BarberDTO> {
-        return apiServiceBarber.getBarberDetails(accessToken)
+        return apiServiceBarber.getBarberDetails("Bearer $accessToken")
     }
 
     override suspend fun createBarberShop(barberShop: BarberShop): Response<BarberShop> {
@@ -31,43 +31,43 @@ class HairBookDataSourceImplBarber @Inject constructor(
     }
 
     override suspend fun getBarberShopById(accessToken: String, barberShopId: String): Response<BarberShop> {
-        return apiServiceBarber.getBarberShopById(accessToken, barberShopId)
+        return apiServiceBarber.getBarberShopById("Bearer $accessToken", barberShopId)
     }
 
     override suspend fun deleteBarberShop(accessToken: String, barberShopId: String): Response<String> {
-        return apiServiceBarber.deleteBarberShop(accessToken, barberShopId)
+        return apiServiceBarber.deleteBarberShop("Bearer $accessToken", barberShopId)
     }
 
     override suspend fun updateBarberShop(accessToken: String, barberShopId: String, barberShop: BarberShop): Response<BarberShop> {
-        return apiServiceBarber.updateBarberShop(accessToken, barberShopId, barberShop)
+        return apiServiceBarber.updateBarberShop("Bearer $accessToken", barberShopId, barberShop)
     }
 
     override suspend fun getReviews(accessToken: String, barberShopId: String): Response<List<Review>> {
-        return apiServiceBarber.getReviews(accessToken, barberShopId)
+        return apiServiceBarber.getReviews("Bearer $accessToken", barberShopId)
     }
 
     override suspend fun getClosestBooking(accessToken: String, barberShopId: String): Response<Booking> {
-        return apiServiceBarber.getClosestBooking(accessToken, barberShopId)
+        return apiServiceBarber.getClosestBooking("Bearer $accessToken", barberShopId)
     }
 
     override suspend fun getMyBookings(accessToken: String, barberShopId: String): Response<List<Booking>> {
-        return apiServiceBarber.getMyBookings(accessToken, barberShopId)
+        return apiServiceBarber.getMyBookings("Bearer $accessToken", barberShopId)
     }
 
     override suspend fun createService(accessToken: String, barberShopId: String, service: Service): Response<Service> {
-        return apiServiceBarber.createService(accessToken, barberShopId, service)
+        return apiServiceBarber.createService("Bearer $accessToken", barberShopId, service)
     }
 
     override suspend fun updateService(accessToken: String, barberShopId: String, serviceId: String, service: Service): Response<Service> {
-        return apiServiceBarber.updateService(accessToken, barberShopId, serviceId, service)
+        return apiServiceBarber.updateService("Bearer $accessToken", barberShopId, serviceId, service)
     }
 
     override suspend fun deleteService(accessToken: String, barberShopId: String, serviceId: String): Response<String> {
-        return apiServiceBarber.deleteService(accessToken, barberShopId, serviceId)
+        return apiServiceBarber.deleteService("Bearer $accessToken", barberShopId, serviceId)
     }
 
     override suspend fun getServices(accessToken: String, barberShopId: String): Response<List<Service>> {
-        return apiServiceBarber.getServices(accessToken, barberShopId)
+        return apiServiceBarber.getServices("Bearer $accessToken", barberShopId)
     }
 
 }
