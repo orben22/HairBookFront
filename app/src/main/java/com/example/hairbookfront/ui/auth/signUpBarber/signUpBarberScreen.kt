@@ -1,6 +1,7 @@
 package com.example.hairbookfront.ui.auth.signUpBarber
 
 import android.content.res.Configuration
+import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -14,12 +15,14 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -31,6 +34,7 @@ import com.example.hairbookfront.theme.HairBookFrontTheme
 import com.example.hairbookfront.ui.auth.welcome.WelcomeViewModel
 import com.example.hairbookfront.ui.common.TextFieldPassword
 import com.example.hairbookfront.ui.common.TopAppBarHairBook
+import kotlinx.coroutines.launch
 
 @Composable
 fun SignUpBarberScreen(
@@ -39,8 +43,8 @@ fun SignUpBarberScreen(
 ) {
     val firstName = signUpBarberViewModel.firstName.collectAsStateWithLifecycle()
     val lastName = signUpBarberViewModel.lastName.collectAsStateWithLifecycle()
-    val firstNameError=signUpBarberViewModel.firstNameError.collectAsStateWithLifecycle()
-    val lastNameError=signUpBarberViewModel.lastNameError.collectAsStateWithLifecycle()
+    val firstNameError = signUpBarberViewModel.firstNameError.collectAsStateWithLifecycle()
+    val lastNameError = signUpBarberViewModel.lastNameError.collectAsStateWithLifecycle()
     val email = signUpBarberViewModel.email.collectAsStateWithLifecycle()
     val emailError = signUpBarberViewModel.emailError.collectAsStateWithLifecycle()
     val years_of_experience = signUpBarberViewModel.yearsOfExperience.collectAsStateWithLifecycle()
@@ -48,7 +52,18 @@ fun SignUpBarberScreen(
         signUpBarberViewModel.yearsOfExperienceError.collectAsStateWithLifecycle()
     val password = signUpBarberViewModel.password.collectAsStateWithLifecycle()
     val passwordError = signUpBarberViewModel.passwordError.collectAsStateWithLifecycle()
-
+    val context = LocalContext.current
+    LaunchedEffect(Unit) {
+        signUpBarberViewModel
+            .toastMessage
+            .collect { message ->
+                Toast.makeText(
+                    context,
+                    message,
+                    Toast.LENGTH_SHORT,
+                ).show()
+            }
+    }
     Surface(color = MaterialTheme.colorScheme.surface) {
         Column(
             modifier = Modifier.fillMaxSize(),
@@ -65,7 +80,7 @@ fun SignUpBarberScreen(
                 value = lastName.value,
                 placeholderText = "Last Name",
                 icon = Icons.Outlined.AccountCircle,
-                onValueChange = { signUpBarberViewModel.lastNameChanged(it)})
+                onValueChange = { signUpBarberViewModel.lastNameChanged(it) })
             AppTextField(
                 value = years_of_experience.value,
                 placeholderText = "Years of Experience",

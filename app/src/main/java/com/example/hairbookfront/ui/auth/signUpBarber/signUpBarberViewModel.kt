@@ -3,13 +3,18 @@ package com.example.hairbookfront.ui.auth.signUpBarber
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.hairbookfront.data.datastore.DataStorePreferences
+import com.example.hairbookfront.domain.entities.BarberDTO
+import com.example.hairbookfront.domain.entities.CustomerDTO
+import com.example.hairbookfront.domain.entities.UserSignUpRequest
 import com.example.hairbookfront.domain.repository.ApiRepository
+import com.example.hairbookfront.util.ResourceState
 import com.squareup.moshi.Moshi
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import java.util.regex.Pattern
 import javax.inject.Inject
@@ -137,6 +142,7 @@ class signUpBarberViewModel @Inject constructor(
         }
     }
 
+
     private fun sendMessage(message: String) {
         viewModelScope.launch {
             _toastMessage.emit(message)
@@ -176,6 +182,40 @@ class signUpBarberViewModel @Inject constructor(
             sendMessage("Invalid Password")
             _passwordError.value = true
         }
+        if (isFirstNameValid() && isLastNameValid() && isValidYearsOfExperience() && isValidEmail() && isValidPassword()) {
+            _firstNameError.value = false
+            _lastNameError.value = false
+            _yearsOfExperienceError.value = false
+            _emailError.value = false
+            _passwordError.value = false
+            viewModelScope.launch {
+                hairBookRepository.signUp(
+                    signUpRequest = UserSignUpRequest(
+                        email = email.value,
+                        password = password.value,
+                        role = "Barber",
+                        details = BarberDTO(
+                            firstName = firstName.value,
+                            lastName = lastName.value,
+                            yearsOfExperience = yearsOfExperience.value.toInt()
+                        )
+                    )
+                ).collectLatest { response ->
+                    when (response) {
+                        is ResourceState.LOADING -> {
+                            sendMessage("Loading")
+                        }
+                        is ResourceState.SUCCESS -> {
+                            sendMessage("Success")
+                        }
+                        is ResourceState.ERROR -> {
+                            sendMessage(response.error)
+                        }
+                    }
+                }
+            }
+        }
     }
 }
+
 
