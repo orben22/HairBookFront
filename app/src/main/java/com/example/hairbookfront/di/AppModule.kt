@@ -8,7 +8,9 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.emptyPreferences
 import androidx.datastore.preferences.preferencesDataStoreFile
 import com.example.hairbookfront.data.datastore.DataStorePreferences
-import com.example.hairbookfront.data.remote.ApiService
+import com.example.hairbookfront.data.remote.ApiServiceAuth
+import com.example.hairbookfront.data.remote.ApiServiceBarber
+import com.example.hairbookfront.data.remote.ApiServiceBooking
 import com.example.hairbookfront.data.remote.HairBookDataSource
 import com.example.hairbookfront.data.remote.HairBookDataSourceImpl
 import com.example.hairbookfront.domain.repository.ApiRepository
@@ -65,14 +67,26 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun providesApiService(retrofit: Retrofit): ApiService {
-        return retrofit.create(ApiService::class.java)
+    fun providesApiServiceAuth(retrofit: Retrofit): ApiServiceAuth {
+        return retrofit.create(ApiServiceAuth::class.java)
     }
 
     @Provides
     @Singleton
-    fun providesDataSource(apiService: ApiService): HairBookDataSource {
-        return HairBookDataSourceImpl(apiService)
+    fun providesApiServiceBarber(retrofit: Retrofit): ApiServiceBarber {
+        return retrofit.create(ApiServiceBarber::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun providesApiServiceBooking(retrofit: Retrofit): ApiServiceBooking {
+        return retrofit.create(ApiServiceBooking::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun providesDataSource(apiServiceAuth: ApiServiceAuth, apiServiceBarber: ApiServiceBarber, apiServiceBooking: ApiServiceBooking): HairBookDataSource {
+        return HairBookDataSourceImpl(apiServiceAuth, apiServiceBarber, apiServiceBooking)
     }
 
     @Provides
