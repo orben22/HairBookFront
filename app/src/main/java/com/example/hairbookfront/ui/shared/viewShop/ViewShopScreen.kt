@@ -37,12 +37,21 @@ fun ViewShop(
     Scaffold(
         bottomBar = {
             BottomAppBarHaiBook(
-                onClick1 = { /* do something */ },
-                onClick2 = { /* do something */ },
-                flaotingOnClick = { /* do something */ },
-                icon1 = Icons.Filled.Edit,
-                icon2 = Icons.Filled.Check,
-                floatingIcon = Icons.Filled.Add
+                onClickFunctions = listOf(
+                    { /* do something */ },
+                    { /* do something */ }
+                ), onClickFlaoting = { /* do something */ },
+                numberOfIcons = 2,
+                icons = listOf(
+                    Icons.Filled.Check,
+                    Icons.Filled.Edit
+                ),
+                textToIcon = listOf(
+                    "Booking History",
+                    "Write Review"
+                ),
+                floatingIcon = Icons.Filled.Add,
+                textToFloatingIcon = "Book Haircut"
             )
         },
 

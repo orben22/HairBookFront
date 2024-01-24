@@ -10,3 +10,4 @@ data class Review(
     val userId: String,
     val barbershopId: String,
 )
+
