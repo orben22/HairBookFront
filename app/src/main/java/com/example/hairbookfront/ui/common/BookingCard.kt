@@ -19,11 +19,17 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
-import com.example.hairbookfront.ui.customer.customerDetails.BookingData
+import com.example.hairbookfront.R
+import com.example.hairbookfront.domain.entities.Booking
 
 @Composable
-fun BookingCard(isCustomer : Boolean,bookingData: BookingData) {
+fun BookingCard(
+    isCustomer: Boolean, booking: Booking, numberOfOptions: Int = 2,
+    optionsIcons: List<ImageVector> = listOf(Icons.Filled.Edit, Icons.Filled.Delete),
+    optionFunctions: List<() -> Unit>
+) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -42,36 +48,35 @@ fun BookingCard(isCustomer : Boolean,bookingData: BookingData) {
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-
-                Text(
-                    text = "Booking Details:",
-                    style = MaterialTheme.typography.bodySmall,
-                    color = Color.Black
-                )
-
+            Text(
+                text = "Booking Details:",
+                style = MaterialTheme.typography.bodySmall,
+                color = Color.Black
+            )
             Spacer(modifier = Modifier.height(8.dp))
-
-            Text(text = "Shop Name: " + bookingData.barberShopName, color = Color.Black)
+            Text(text = "Shop Name:  ${booking.barberShopName}", color = Color.Black)
             if (isCustomer) {
-                bookingData.barberName?.let { Text(text = "Barber Name:$it ", color = Color.Black) }
-            }else Text(text = "Customer Name"+ bookingData.costumerName)
-            Text(text = "Service: " + bookingData.service.serviceName, color = Color.Black)
-            Text(text = "Price: " + bookingData.service.price, color = Color.Black)
-            Text(text = "Date: " + bookingData.date, color = Color.Black)
-
-
-
+                Text(text = "Barber Name:${booking.barberName} ", color = Color.Black)
+            } else Text(text = "Customer Name ${booking.customerName}")
+            Text(text = "Service: ${booking.service.serviceName}", color = Color.Black)
+            Text(text = "Price: ${booking.service.price}", color = Color.Black)
+            Text(text = "duration: ${booking.service.duration}", color = Color.Black)
+            Text(text = "Date: ${booking.date}", color = Color.Black)
             Spacer(modifier = Modifier.height(16.dp))
-
             Row(
                 modifier = Modifier
                     .padding(top = 8.dp),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                // Edit Button
-                CustomButton(text = "", onClick = { /*TODO*/ }, icon = Icons.Filled.Edit)
-                // Cancel Button
-                CustomButton(text = "", onClick = { /*TODO*/ }, icon = Icons.Filled.Delete)
+                for (i in 1..numberOfOptions) {
+                    CustomButton(
+                        text = "",
+                        icon = optionsIcons[i - 1],
+                        onClick = {
+                            optionFunctions[i - 1]()
+                        }
+                    )
+                }
             }
         }
     }

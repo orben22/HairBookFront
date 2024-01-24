@@ -2,7 +2,6 @@ package com.example.hairbookfront.domain.repository
 
 import com.example.hairbookfront.data.remote.DataSources.HairBookDataSourceAuth
 import com.example.hairbookfront.domain.entities.BarberDTO
-import com.example.hairbookfront.domain.entities.BarberShop
 import com.example.hairbookfront.domain.entities.BarberSignUpRequest
 import com.example.hairbookfront.domain.entities.CustomerDTO
 import com.example.hairbookfront.domain.entities.CustomerSignUpRequest
@@ -11,6 +10,7 @@ import com.example.hairbookfront.util.ResourceState
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
+import timber.log.Timber
 import javax.inject.Inject
 
 class ApiRepositoryAuth @Inject constructor(
@@ -43,12 +43,18 @@ class ApiRepositoryAuth @Inject constructor(
             if (response.isSuccessful && response.body() != null) {
                 emit(ResourceState.SUCCESS(response.body()!!))
             } else {
-                emit(ResourceState.ERROR("Sign up failed"))
+                val errorMessage = if (response.code() == 400) {
+                    response.errorBody()?.string()?.removeSurrounding("\"")
+                } else {
+                    response.toString()
+                }
+                emit(ResourceState.ERROR(errorMessage!!))
             }
         }.catch { e ->
             emit(ResourceState.ERROR(e.localizedMessage ?: "Something went wrong with api"))
         }
     }
+
     suspend fun signUpBarber(
         barberSignUpRequest: BarberSignUpRequest
     ): Flow<ResourceState<User>> {
@@ -58,12 +64,18 @@ class ApiRepositoryAuth @Inject constructor(
             if (response.isSuccessful && response.body() != null) {
                 emit(ResourceState.SUCCESS(response.body()!!))
             } else {
-                emit(ResourceState.ERROR("Sign up failed"))
+                val errorMessage = if (response.code() == 400) {
+                    response.errorBody()?.string()?.removeSurrounding("\"")
+                } else {
+                    response.toString()
+                }
+                emit(ResourceState.ERROR(errorMessage!!))
             }
         }.catch { e ->
             emit(ResourceState.ERROR(e.localizedMessage ?: "Something went wrong with api"))
         }
     }
+
     suspend fun signOut(
         accessToken: String
     ): Flow<ResourceState<String>> {
@@ -79,6 +91,7 @@ class ApiRepositoryAuth @Inject constructor(
             emit(ResourceState.ERROR(e.localizedMessage ?: "Something went wrong with api"))
         }
     }
+
     suspend fun getDetailsBarber(
         accessToken: String
     ): Flow<ResourceState<BarberDTO>> {

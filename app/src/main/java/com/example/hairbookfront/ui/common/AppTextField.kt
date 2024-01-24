@@ -23,7 +23,7 @@ fun AppTextField(
     TextField(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(Dimens.mediumPadding1),
+            .padding(Dimens.smallPadding3),
         value = value,
         onValueChange = onValueChange,
         placeholder = { Text(text = placeholderText) },

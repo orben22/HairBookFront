@@ -6,8 +6,10 @@ import com.example.hairbookfront.data.datastore.DataStorePreferences
 import com.example.hairbookfront.domain.entities.BarberDTO
 import com.example.hairbookfront.domain.entities.BarberSignUpRequest
 import com.example.hairbookfront.domain.entities.CustomerSignUpRequest
+import com.example.hairbookfront.domain.entities.User
 import com.example.hairbookfront.domain.repository.ApiRepositoryAuth
 import com.example.hairbookfront.domain.repository.ApiRepositoryBarber
+import com.example.hairbookfront.ui.navgraph.Routes
 import com.example.hairbookfront.util.ResourceState
 import com.squareup.moshi.Moshi
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -17,6 +19,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import java.util.regex.Pattern
 import javax.inject.Inject
 
@@ -24,9 +27,14 @@ import javax.inject.Inject
 class signUpBarberViewModel @Inject constructor(
     private val hairBookRepositoryAuth: ApiRepositoryAuth,
     private val dataStorePreferences: DataStorePreferences,
-    private val moshi: Moshi
 ) : ViewModel() {
 
+    private val _userDetails: MutableStateFlow<User?> =
+        MutableStateFlow(null)
+
+    private val _homeScreen = MutableStateFlow("")
+    val homeScreen: StateFlow<String>
+        get() = _homeScreen
     private val _firstName = MutableStateFlow("")
     val firstName: StateFlow<String>
         get() = _firstName
@@ -76,9 +84,7 @@ class signUpBarberViewModel @Inject constructor(
     private val _toastMessage = MutableSharedFlow<String>()
     val toastMessage = _toastMessage.asSharedFlow()
 
-    //#
     // functions
-//#
     fun firstNameChanged(firstName: String) {
         _firstName.value = firstName
     }
@@ -104,14 +110,14 @@ class signUpBarberViewModel @Inject constructor(
         _showOrHidePassword.value = !_showOrHidePassword.value
     }
 
-    fun isFirstNameValid(): Boolean {
+    private fun isFirstNameValid(): Boolean {
         val nameRegex = "^[a-zA-Z]+\$"
         val pattern = Pattern.compile(nameRegex)
         val matcher = pattern.matcher(_firstName.value)
         return matcher.matches()
     }
 
-    fun isLastNameValid(): Boolean {
+    private fun isLastNameValid(): Boolean {
         val nameRegex = "^[a-zA-Z]+\$"
         val pattern = Pattern.compile(nameRegex)
         val matcher = pattern.matcher(_lastName.value)
@@ -135,14 +141,13 @@ class signUpBarberViewModel @Inject constructor(
 
 
     private fun isValidYearsOfExperience(): Boolean {
-        try {
+        return try {
             val yearsOfExp = _yearsOfExperience.value.toInt()
-            return yearsOfExp in 0..120
+            yearsOfExp in 0..120
         } catch (e: NumberFormatException) {
-            return false
+            false
         }
     }
-
 
     private fun sendMessage(message: String) {
         viewModelScope.launch {
@@ -155,14 +160,14 @@ class signUpBarberViewModel @Inject constructor(
         if (isFirstNameValid())
             _firstNameError.value = false
         else {
-            sendMessage("Invalid First Name")
+            sendMessage("First name cannot be empty")
             _firstNameError.value = true
         }
 
         if (isLastNameValid())
             _lastNameError.value = false
         else {
-            sendMessage("Invalid Last Name")
+            sendMessage("Last name cannot be empty")
             _lastNameError.value = true
         }
         if (isValidYearsOfExperience())
@@ -180,7 +185,7 @@ class signUpBarberViewModel @Inject constructor(
         if (isValidPassword())
             _passwordError.value = false
         else {
-            sendMessage("Invalid Password")
+            sendMessage("Invalid Password. Please enter at least 8 characters")
             _passwordError.value = true
         }
         if (isFirstNameValid() && isLastNameValid() && isValidYearsOfExperience() && isValidEmail() && isValidPassword()) {
@@ -208,7 +213,7 @@ class signUpBarberViewModel @Inject constructor(
                         }
 
                         is ResourceState.SUCCESS -> {
-                            sendMessage("Success")
+                            handleSignUpSuccess(response.data)
                         }
 
                         is ResourceState.ERROR -> {
@@ -218,6 +223,28 @@ class signUpBarberViewModel @Inject constructor(
                 }
             }
         }
+    }
+
+    private suspend fun handleSignUpSuccess(data: User) {
+        _userDetails.emit(data)
+        storeUserDetails()
+        Timber.d("handleSignUpSuccess: $data")
+        hairBookRepositoryAuth.getDetailsBarber(data.accessToken!!).collect {
+            when (it) {
+                is ResourceState.SUCCESS -> {
+                    dataStorePreferences.storeBarberDetails(it.data)
+                    sendMessage("Welcome ${it.data.firstName}")
+                    _homeScreen.value = Routes.BarberDetailsScreen.route
+                }
+
+                is ResourceState.ERROR -> sendMessage(it.error)
+                else -> {}
+            }
+        }
+    }
+
+    private suspend fun storeUserDetails() {
+        dataStorePreferences.storeUserDetails(_userDetails.value!!)
     }
 }
 

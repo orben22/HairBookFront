@@ -17,6 +17,7 @@ import com.example.hairbookfront.ui.auth.signUpCustomer.SignUpCustomerScreen
 import com.example.hairbookfront.ui.auth.welcome.WelcomeViewModel
 import com.example.hairbookfront.ui.barber.barberDetails.BarberDetailsScreen
 import com.example.hairbookfront.ui.customer.customerDetails.CustomerDetailsScreen
+import com.example.hairbookfront.ui.customer.customerDetails.CustomerDetailsViewModel
 import com.example.hairbookfront.ui.customer.customerHome.CustomerHomeScreen
 import com.example.hairbookfront.ui.customer.customerHome.CustomerHomeViewModel
 
@@ -28,6 +29,7 @@ fun AppNavGraph(
     val navController = rememberNavController()
 
     NavHost(navController = navController, startDestination = startDestination) {
+        //Auth Sub graph
         navigation(
             route = Routes.AuthGraph.route,
             startDestination = Routes.WelcomeScreen.route
@@ -43,6 +45,8 @@ fun AppNavGraph(
                 SignUpBarberScreen(navController = navController)
             }
         }
+
+        //Customer Sub graph
         navigation(
             route = Routes.CustomerGraph.route,
             startDestination = Routes.CustomerHomeScreen.route
@@ -52,7 +56,8 @@ fun AppNavGraph(
                 CustomerHomeScreen(viewModel, navController = navController)
             }
             composable(route = Routes.CustomerDetailsScreen.route) {
-                CustomerDetailsScreen()
+                val viewModel = it.sharedViewModel<CustomerDetailsViewModel>(navController)
+                CustomerDetailsScreen(viewModel, navController = navController)
             }
         }
         navigation(

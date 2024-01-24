@@ -1,13 +1,9 @@
 package com.example.hairbookfront.data.remote.DataSources
 
 import com.example.hairbookfront.domain.entities.BarberDTO
-import com.example.hairbookfront.domain.entities.BarberShop
 import com.example.hairbookfront.domain.entities.BarberSignUpRequest
-import com.example.hairbookfront.domain.entities.Booking
 import com.example.hairbookfront.domain.entities.CustomerDTO
 import com.example.hairbookfront.domain.entities.CustomerSignUpRequest
-import com.example.hairbookfront.domain.entities.Review
-import com.example.hairbookfront.domain.entities.Service
 import com.example.hairbookfront.domain.entities.User
 import retrofit2.Response
 

@@ -2,7 +2,6 @@ package com.example.hairbookfront.data.remote.ApiServices
 
 import com.example.hairbookfront.domain.entities.BarberShop
 import com.example.hairbookfront.domain.entities.CustomerDTO
-import com.example.hairbookfront.domain.entities.User
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Header

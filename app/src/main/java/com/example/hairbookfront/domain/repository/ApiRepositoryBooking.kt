@@ -1,12 +1,12 @@
 package com.example.hairbookfront.domain.repository
 
-import com.example.hairbookfront.data.remote.DataSources.HairBookDataSourceAuth
 import com.example.hairbookfront.data.remote.DataSources.HairBookDataSourceBooking
 import com.example.hairbookfront.domain.entities.Booking
 import com.example.hairbookfront.util.ResourceState
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
+import timber.log.Timber
 import javax.inject.Inject
 
 class ApiRepositoryBooking @Inject constructor(

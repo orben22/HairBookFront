@@ -58,7 +58,7 @@ class CustomerHomeViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             dataStorePreferences.getAccessToken().collectLatest { accessToken ->
-                hairBookRepository.getAllShops("Bearer $accessToken").collectLatest { response ->
+                hairBookRepository.getAllShops(accessToken).collectLatest { response ->
                     Timber.d("response: $response")
                     when (response) {
                         is ResourceState.LOADING -> {

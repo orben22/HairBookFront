@@ -5,7 +5,6 @@ import com.example.hairbookfront.domain.entities.BarberShop
 import com.example.hairbookfront.domain.entities.Booking
 import com.example.hairbookfront.domain.entities.Review
 import com.example.hairbookfront.domain.entities.Service
-import com.example.hairbookfront.domain.entities.User
 import retrofit2.Response
 
 interface HairBookDataSourceBarber {

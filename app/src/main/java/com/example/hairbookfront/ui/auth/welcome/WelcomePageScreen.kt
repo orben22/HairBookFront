@@ -48,8 +48,6 @@ fun WelcomePageScreen(
     val emailError = welcomeViewModel.emailError.collectAsStateWithLifecycle()
     val passwordError = welcomeViewModel.passwordError.collectAsStateWithLifecycle()
     val showOrHidePassword = welcomeViewModel.showOrHidePassword.collectAsStateWithLifecycle()
-    val loggedIn = welcomeViewModel.loggedIn.collectAsStateWithLifecycle()
-    val userDetails = welcomeViewModel.userDetails.collectAsStateWithLifecycle()
     val showDialog = welcomeViewModel.showDialog.collectAsStateWithLifecycle()
     val dialogText = welcomeViewModel.dialogText.collectAsStateWithLifecycle()
     val signUpScreen = welcomeViewModel.signUpScreen.collectAsStateWithLifecycle()

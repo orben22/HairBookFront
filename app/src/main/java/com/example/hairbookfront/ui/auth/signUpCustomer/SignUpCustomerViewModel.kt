@@ -5,7 +5,10 @@ import androidx.lifecycle.viewModelScope
 import com.example.hairbookfront.data.datastore.DataStorePreferences
 import com.example.hairbookfront.domain.entities.CustomerDTO
 import com.example.hairbookfront.domain.entities.CustomerSignUpRequest
+import com.example.hairbookfront.domain.entities.User
 import com.example.hairbookfront.domain.repository.ApiRepositoryAuth
+import com.example.hairbookfront.ui.navgraph.Routes
+import com.example.hairbookfront.util.Constants.CustomerRole
 import com.example.hairbookfront.util.ResourceState
 import com.squareup.moshi.Moshi
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -23,8 +26,10 @@ import javax.inject.Inject
 class SignUpCustomerViewModel @Inject constructor(
     private val hairBookRepository: ApiRepositoryAuth,
     private val dataStorePreferences: DataStorePreferences,
-    private val moshi: Moshi
 ) : ViewModel() {
+
+    private val _userDetails: MutableStateFlow<User?> =
+        MutableStateFlow(null)
 
     private val _firstName = MutableStateFlow("or")
     val firstName: StateFlow<String>
@@ -77,6 +82,10 @@ class SignUpCustomerViewModel @Inject constructor(
     private val _toastMessage = MutableSharedFlow<String>()
     val toastMessage = _toastMessage.asSharedFlow()
 
+    private val _homeScreen = MutableStateFlow("")
+    val homeScreen: StateFlow<String>
+        get() = _homeScreen
+
     fun firstNameChanged(firstName: String) {
         _firstName.value = firstName
     }
@@ -119,30 +128,30 @@ class SignUpCustomerViewModel @Inject constructor(
         return matcher.matches()
     }
 
-    fun isFirstNameValid(): Boolean {
+    private fun isFirstNameValid(): Boolean {
         val nameRegex = "^[a-zA-Z]+\$"
         val pattern = Pattern.compile(nameRegex)
         val matcher = pattern.matcher(_firstName.value)
         return matcher.matches()
     }
 
-    fun isLastNameValid(): Boolean {
+    private fun isLastNameValid(): Boolean {
         val nameRegex = "^[a-zA-Z]+\$"
         val pattern = Pattern.compile(nameRegex)
         val matcher = pattern.matcher(_lastName.value)
         return matcher.matches()
     }
 
-    fun isAgeValid(): Boolean {
-        try {
+    private fun isAgeValid(): Boolean {
+        return try {
             val ageInt = _age.value.toInt()
-            return ageInt in 0..120
+            ageInt in 0..120
         } catch (e: NumberFormatException) {
-            return false
+            false
         }
     }
 
-    fun isPhoneNumberValid(): Boolean {
+    private fun isPhoneNumberValid(): Boolean {
         val phoneNumberRegex = "^\\d{10}\$"
         val pattern = Pattern.compile(phoneNumberRegex)
         val matcher = pattern.matcher(_phoneNumber.value)
@@ -160,14 +169,14 @@ class SignUpCustomerViewModel @Inject constructor(
         if (isFirstNameValid())
             _firstNameError.value = false
         else {
-            sendMessage("Invalid First Name")
+            sendMessage("First name cannot be empty")
             _firstNameError.value = true
         }
 
         if (isLastNameValid())
             _lastNameError.value = false
         else {
-            sendMessage("Invalid Last Name")
+            sendMessage("Last name cannot be empty")
             _lastNameError.value = true
         }
         if (isAgeValid())
@@ -191,13 +200,13 @@ class SignUpCustomerViewModel @Inject constructor(
         if (isValidPassword())
             _passwordError.value = false
         else {
-            sendMessage("Invalid Password")
+            sendMessage("Invalid Password. Please enter at least 8 characters")
             _passwordError.value = true
         }
         val user = CustomerSignUpRequest(
             email = email.value,
             password = password.value,
-            role = "Customer",
+            role = CustomerRole,
             details = CustomerDTO(
                 firstName = firstName.value,
                 lastName = lastName.value,
@@ -205,8 +214,6 @@ class SignUpCustomerViewModel @Inject constructor(
                 phoneNumber = phoneNumber.value
             )
         )
-        Timber.d("user: $user")
-
         if (isFirstNameValid() && isLastNameValid() && isAgeValid() && isPhoneNumberValid() && isValidEmail() && isValidPassword()) {
             _firstNameError.value = false
             _lastNameError.value = false
@@ -222,7 +229,7 @@ class SignUpCustomerViewModel @Inject constructor(
                         }
 
                         is ResourceState.SUCCESS -> {
-                            sendMessage("Success")
+                            handleSignUpSuccess(response.data)
                         }
 
                         is ResourceState.ERROR -> {
@@ -232,6 +239,28 @@ class SignUpCustomerViewModel @Inject constructor(
                 }
             }
         }
+    }
+
+    private suspend fun handleSignUpSuccess(data: User) {
+        _userDetails.emit(data)
+        storeUserDetails()
+        Timber.d("handleSignUpSuccess: $data")
+        hairBookRepository.getDetailsCustomer(data.accessToken!!).collect {
+            when (it) {
+                is ResourceState.SUCCESS -> {
+                    sendMessage("Welcome ${it.data.firstName}")
+                    dataStorePreferences.storeCustomerDetails(it.data)
+                    _homeScreen.value = Routes.CustomerHomeScreen.route
+                }
+
+                is ResourceState.ERROR -> sendMessage(it.error)
+                else -> {}
+            }
+        }
+    }
+
+    private suspend fun storeUserDetails() {
+        dataStorePreferences.storeUserDetails(_userDetails.value!!)
     }
 }
 

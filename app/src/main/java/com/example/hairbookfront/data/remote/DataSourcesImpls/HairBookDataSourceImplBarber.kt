@@ -1,17 +1,12 @@
 package com.example.hairbookfront.data.remote.DataSourcesImpls
 
-import com.example.hairbookfront.data.remote.ApiServices.ApiServiceAuth
 import com.example.hairbookfront.data.remote.ApiServices.ApiServiceBarber
-import com.example.hairbookfront.data.remote.ApiServices.ApiServiceBooking
-import com.example.hairbookfront.data.remote.ApiServices.ApiServiceReview
-import com.example.hairbookfront.data.remote.DataSources.HairBookDataSourceAuth
 import com.example.hairbookfront.data.remote.DataSources.HairBookDataSourceBarber
 import com.example.hairbookfront.domain.entities.BarberDTO
 import com.example.hairbookfront.domain.entities.BarberShop
 import com.example.hairbookfront.domain.entities.Booking
 import com.example.hairbookfront.domain.entities.Review
 import com.example.hairbookfront.domain.entities.Service
-import com.example.hairbookfront.domain.entities.User
 import retrofit2.Response
 import javax.inject.Inject
 

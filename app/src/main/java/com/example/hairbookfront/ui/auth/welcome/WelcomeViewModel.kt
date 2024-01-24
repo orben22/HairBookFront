@@ -6,6 +6,8 @@ import com.example.hairbookfront.data.datastore.DataStorePreferences
 import com.example.hairbookfront.domain.entities.User
 import com.example.hairbookfront.domain.repository.ApiRepositoryAuth
 import com.example.hairbookfront.ui.navgraph.Routes
+import com.example.hairbookfront.util.Constants.BarberRole
+import com.example.hairbookfront.util.Constants.CustomerRole
 import com.example.hairbookfront.util.ResourceState
 import com.squareup.moshi.Moshi
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -27,6 +29,8 @@ class WelcomeViewModel @Inject constructor(
     private val moshi: Moshi
 ) : ViewModel() {
 
+    //customer@customer.com customer_password
+    // barber@example.com barber_password
     private val _email = MutableStateFlow("barber@example.com")
     val email: StateFlow<String>
         get() = _email
@@ -49,15 +53,12 @@ class WelcomeViewModel @Inject constructor(
     private val _toastMessage = MutableSharedFlow<String>()
     val toastMessage = _toastMessage.asSharedFlow()
 
-    private val _loggedIn = MutableStateFlow(false)
-    val loggedIn: StateFlow<Boolean>
-        get() = _loggedIn
 
     private val _showDialog = MutableStateFlow(false)
     val showDialog: StateFlow<Boolean>
         get() = _showDialog
 
-    private val _dialogText = MutableStateFlow(listOf("Customer", "Barber"))
+    private val _dialogText = MutableStateFlow(listOf(CustomerRole, BarberRole))
     val dialogText: StateFlow<List<String>>
         get() = _dialogText
 
@@ -157,30 +158,27 @@ class WelcomeViewModel @Inject constructor(
     private suspend fun handleLoginSuccess(data: User) {
         _userDetails.emit(data)
         storeUserDetails()
-        _loggedIn.value = true
-        if (data.role == "CUSTOMER") {
+        if (data.role == CustomerRole) {
             hairBookRepository.getDetailsCustomer(data.accessToken!!).collect {
                 when (it) {
                     is ResourceState.SUCCESS -> {
-                        Timber.d("customerDetails: ${it.data}")
                         dataStorePreferences.storeCustomerDetails(it.data)
-                        _homeScreen.value = Routes.CustomerHomeScreen.route
+                        _homeScreen.value = Routes.CustomerDetailsScreen.route
                     }
 
                     is ResourceState.ERROR -> sendMessage(it.error)
                     else -> {}
                 }
             }
-        } else {
+        } else if (data.role == BarberRole) {
             hairBookRepository.getDetailsBarber(data.accessToken!!).collect {
                 when (it) {
                     is ResourceState.SUCCESS -> {
-                        Timber.d("barberDetails: ${it.data}")
                         dataStorePreferences.storeBarberDetails(it.data)
                         _homeScreen.value = Routes.BarberDetailsScreen.route
                     }
 
-                    is ResourceState.ERROR -> sendMessage(it.error+"heyyyy")
+                    is ResourceState.ERROR -> sendMessage(it.error)
                     else -> {}
                 }
             }
@@ -193,6 +191,5 @@ class WelcomeViewModel @Inject constructor(
 
     private suspend fun storeUserDetails() {
         dataStorePreferences.storeUserDetails(_userDetails.value!!)
-        _loggedIn.value = true
     }
 }

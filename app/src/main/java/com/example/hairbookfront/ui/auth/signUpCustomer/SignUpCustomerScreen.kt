@@ -4,6 +4,7 @@ import android.content.res.Configuration
 import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
@@ -15,11 +16,15 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewModelScope
@@ -28,6 +33,7 @@ import com.example.hairbookfront.ui.common.AppTextField
 import com.example.hairbookfront.ui.common.TextFieldPassword
 import com.example.hairbookfront.ui.common.TopAppBarHairBook
 import com.example.hairbookfront.theme.HairBookFrontTheme
+import com.example.hairbookfront.ui.common.ClickableText
 import com.example.hairbookfront.ui.common.CustomButton
 import com.example.hairbookfront.ui.common.Loader
 import com.example.hairbookfront.ui.navgraph.Routes
@@ -42,19 +48,20 @@ fun SignUpCustomerScreen(
     navController: NavHostController?
 ) {
     val context = LocalContext.current
-    val firstName = signUpCustomerViewModel.firstName.collectAsStateWithLifecycle()
-    val lastName = signUpCustomerViewModel.lastName.collectAsStateWithLifecycle()
-    val age = signUpCustomerViewModel.age.collectAsStateWithLifecycle()
-    val phoneNumber = signUpCustomerViewModel.phoneNumber.collectAsStateWithLifecycle()
-    val email = signUpCustomerViewModel.email.collectAsStateWithLifecycle()
-    val password = signUpCustomerViewModel.password.collectAsStateWithLifecycle()
-    val firstNameError = signUpCustomerViewModel.firstNameError.collectAsStateWithLifecycle()
-    val lastNameError = signUpCustomerViewModel.lastNameError.collectAsStateWithLifecycle()
-    val ageError = signUpCustomerViewModel.ageError.collectAsStateWithLifecycle()
-    val phoneNumberError = signUpCustomerViewModel.phoneNumberError.collectAsStateWithLifecycle()
-    val emailError = signUpCustomerViewModel.emailError.collectAsStateWithLifecycle()
-    val passwordError = signUpCustomerViewModel.passwordError.collectAsStateWithLifecycle()
-    val showOrHidePassword = signUpCustomerViewModel.showOrHidePassword.collectAsStateWithLifecycle()
+    val firstName by signUpCustomerViewModel.firstName.collectAsStateWithLifecycle()
+    val lastName by signUpCustomerViewModel.lastName.collectAsStateWithLifecycle()
+    val age by signUpCustomerViewModel.age.collectAsStateWithLifecycle()
+    val phoneNumber by signUpCustomerViewModel.phoneNumber.collectAsStateWithLifecycle()
+    val email by signUpCustomerViewModel.email.collectAsStateWithLifecycle()
+    val password by signUpCustomerViewModel.password.collectAsStateWithLifecycle()
+    val firstNameError by signUpCustomerViewModel.firstNameError.collectAsStateWithLifecycle()
+    val lastNameError by signUpCustomerViewModel.lastNameError.collectAsStateWithLifecycle()
+    val ageError by signUpCustomerViewModel.ageError.collectAsStateWithLifecycle()
+    val phoneNumberError by signUpCustomerViewModel.phoneNumberError.collectAsStateWithLifecycle()
+    val emailError by signUpCustomerViewModel.emailError.collectAsStateWithLifecycle()
+    val passwordError by signUpCustomerViewModel.passwordError.collectAsStateWithLifecycle()
+    val showOrHidePassword by signUpCustomerViewModel.showOrHidePassword.collectAsStateWithLifecycle()
+    val homeScreen by signUpCustomerViewModel.homeScreen.collectAsStateWithLifecycle()
     LaunchedEffect(Unit) {
         signUpCustomerViewModel
             .toastMessage
@@ -66,6 +73,9 @@ fun SignUpCustomerScreen(
                 ).show()
             }
     }
+    if (homeScreen != "") {
+        navController?.navigate(homeScreen)
+    }
     Surface(color = MaterialTheme.colorScheme.surface) {
 
         // Compose UI components
@@ -74,49 +84,60 @@ fun SignUpCustomerScreen(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            TopAppBarHairBook(text = "User Sign Up")
+            TopAppBarHairBook(text = "Customer Sign Up")
             AppTextField(
-                value = firstName.value,
+                value = firstName,
                 placeholderText = "First Name",
                 icon = Icons.Outlined.AccountCircle,
-                onValueChange = { signUpCustomerViewModel.firstNameChanged(it)},
-                isError = firstNameError.value
+                onValueChange = { signUpCustomerViewModel.firstNameChanged(it) },
+                isError = firstNameError,
+                keyboardOptions = KeyboardOptions.Default.copy(
+                    capitalization = KeyboardCapitalization.Words,
+                    keyboardType = KeyboardType.Text
+                )
             )
             AppTextField(
-                value = lastName.value,
+                value = lastName,
                 placeholderText = "Last Name",
                 icon = Icons.Outlined.AccountCircle,
                 onValueChange = { signUpCustomerViewModel.lastNameChanged(it) },
-                isError = lastNameError.value)
+                isError = lastNameError,
+                keyboardOptions = KeyboardOptions.Default.copy(
+                    capitalization = KeyboardCapitalization.Words,
+                    keyboardType = KeyboardType.Text
+                )
+            )
             AppTextField(
-                value = age.value,
+                value = age,
                 placeholderText = "Age",
                 icon = null,
                 onValueChange = { signUpCustomerViewModel.ageChanged(it) },
                 keyboardOptions = KeyboardOptions.Default.copy(
-                    keyboardType = KeyboardType.Number),
-                isError = ageError.value)
+                    keyboardType = KeyboardType.Number
+                ),
+                isError = ageError
+            )
             AppTextField(
-                value = phoneNumber.value,
+                value = phoneNumber,
                 placeholderText = "Phone Number",
                 icon = Icons.Outlined.Call,
                 onValueChange = { signUpCustomerViewModel.phoneNumberChanged(it) },
                 keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
-                isError = phoneNumberError.value
+                isError = phoneNumberError
             )
             AppTextField(
-                value = email.value,
+                value = email,
                 placeholderText = "Email",
                 icon = Icons.Outlined.Email,
-                onValueChange = { signUpCustomerViewModel.emailChanged(it)},
-                isError = emailError.value
+                onValueChange = { signUpCustomerViewModel.emailChanged(it) },
+                isError = emailError
             )
             TextFieldPassword(
-                password = password.value,
+                password = password,
                 onValueChange = { signUpCustomerViewModel.passwordChanged(it) },
-                isError = passwordError.value,
+                isError = passwordError,
                 onIconClicked = { signUpCustomerViewModel.showOrHidePassword() },
-                passwordVisibility = showOrHidePassword.value
+                passwordVisibility = showOrHidePassword
             )
             CustomButton(
                 text = "Sign Up",
@@ -127,23 +148,20 @@ fun SignUpCustomerScreen(
                 },
                 icon = null
             )
-            Text(text = "Already have an account ? Sign In")
+            Row {
+                Text(
+                    text = "Already have an account?",
+                    modifier = Modifier,
+                    fontSize = 20.sp
+                )
+                ClickableText(
+                    text = " Sign In",
+                    onClick = { navController?.navigate(Routes.WelcomeScreen.route) },
+                    color = Color.Cyan,
+                    fontSize = 20
+                )
+            }
         }
     }
 }
 
-//@Preview(showBackground = true, showSystemUi = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
-//@Composable
-//fun SignUpCustomerScreenPreviewDark() {
-//    HairBookFrontTheme {
-//        SignUpCustomerScreen()
-//    }
-//}
-//
-//@Preview(showBackground = true, showSystemUi = true, uiMode = Configuration.UI_MODE_NIGHT_NO)
-//@Composable
-//fun SignUpCustomerScreenPreviewLight() {
-//    HairBookFrontTheme {
-//        SignUpCustomerScreen()
-//    }
-//}

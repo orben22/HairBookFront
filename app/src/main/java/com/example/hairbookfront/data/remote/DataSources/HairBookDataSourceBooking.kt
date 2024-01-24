@@ -6,7 +6,11 @@ import retrofit2.Response
 interface HairBookDataSourceBooking {
     suspend fun bookHaircut(accessToken: String, booking: Booking): Response<Booking>
 
-    suspend fun updateBooking(accessToken: String, bookingId: String, booking: Booking): Response<Booking>
+    suspend fun updateBooking(
+        accessToken: String,
+        bookingId: String,
+        booking: Booking
+    ): Response<Booking>
 
     suspend fun deleteBooking(accessToken: String, bookingId: String): Response<String>
 
