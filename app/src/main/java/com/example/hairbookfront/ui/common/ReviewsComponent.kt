@@ -74,7 +74,7 @@ fun ReviewItem(review: Review, editable: Boolean) {
                 start = Dimens.smallPadding3
             ),
             text = "Rating: " + review.rating,
-            fontSize = Dimens.fontMedium,
+            fontSize = Dimens.fontSmall,
             fontWeight = FontWeight.Bold,
             color = MaterialTheme.colorScheme.onPrimary
         )
