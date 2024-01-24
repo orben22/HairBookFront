@@ -1,5 +1,6 @@
 package com.example.hairbookfront.ui.barber.barberDetails
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.hairbookfront.data.datastore.DataStorePreferences
@@ -18,8 +19,9 @@ import javax.inject.Inject
 @HiltViewModel
 class BarberDetailsViewModel @Inject constructor(
     private val dataStorePreferences: DataStorePreferences,
-    private val apiRepositoryBarber: ApiRepositoryBarber
+    private val apiRepositoryBarber: ApiRepositoryBarber,
 ) : ViewModel() {
+    private val _accessToken = MutableStateFlow("")
     private val _firstName = MutableStateFlow("")
     val firstName: StateFlow<String>
         get() = _firstName
@@ -42,12 +44,15 @@ class BarberDetailsViewModel @Inject constructor(
     fun getYearsOfExperience(): Flow<Int> {
         return dataStorePreferences.getYearsOfExperience()
     }
+
     fun getFirstName(): Flow<String> {
         return dataStorePreferences.getFirstName()
     }
+
     fun getLastName(): Flow<String> {
         return dataStorePreferences.getLastName()
     }
+
     fun getEmail(): Flow<String> {
         return dataStorePreferences.getEmail()
     }
@@ -57,7 +62,8 @@ class BarberDetailsViewModel @Inject constructor(
         viewModelScope.launch {
             dataStorePreferences.getAccessToken().collectLatest { accessToken ->
                 Timber.d(accessToken)
-                apiRepositoryBarber.getMyBarberShops(accessToken)
+                _accessToken.value = accessToken
+                apiRepositoryBarber.getMyBarberShops(_accessToken.value)
                     .collectLatest { response ->
                         Timber.d("response: $response")
                         when (response) {
