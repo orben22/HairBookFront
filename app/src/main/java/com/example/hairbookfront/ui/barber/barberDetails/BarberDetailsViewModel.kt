@@ -1,12 +1,14 @@
 package com.example.hairbookfront.ui.barber.barberDetails
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.hairbookfront.data.datastore.DataStorePreferences
 import com.example.hairbookfront.domain.entities.BarberShop
-import com.example.hairbookfront.domain.repository.ApiRepository
+import com.example.hairbookfront.domain.repository.ApiRepositoryBarber
 import com.example.hairbookfront.util.ResourceState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collectLatest
@@ -17,8 +19,9 @@ import javax.inject.Inject
 @HiltViewModel
 class BarberDetailsViewModel @Inject constructor(
     private val dataStorePreferences: DataStorePreferences,
-    private val apiRepository: ApiRepository
+    private val apiRepositoryBarber: ApiRepositoryBarber,
 ) : ViewModel() {
+    private val _accessToken = MutableStateFlow("")
     private val _firstName = MutableStateFlow("")
     val firstName: StateFlow<String>
         get() = _firstName
@@ -38,41 +41,47 @@ class BarberDetailsViewModel @Inject constructor(
     val myshops: StateFlow<List<BarberShop>>
         get() = _myshops
 
+    fun getYearsOfExperience(): Flow<Int> {
+        return dataStorePreferences.getYearsOfExperience()
+    }
+
+    fun getFirstName(): Flow<String> {
+        return dataStorePreferences.getFirstName()
+    }
+
+    fun getLastName(): Flow<String> {
+        return dataStorePreferences.getLastName()
+    }
+
+    fun getEmail(): Flow<String> {
+        return dataStorePreferences.getEmail()
+    }
+
+
     init {
         viewModelScope.launch {
             dataStorePreferences.getAccessToken().collectLatest { accessToken ->
-                apiRepository.getMyBarberShops("Bearer $accessToken").collectLatest { response ->
-                    Timber.d("response: $response")
-                    when (response) {
-                        is ResourceState.LOADING -> {
-                            Timber.d("Loading")
-                        }
+                Timber.d(accessToken)
+                _accessToken.value = accessToken
+                apiRepositoryBarber.getMyBarberShops(_accessToken.value)
+                    .collectLatest { response ->
+                        Timber.d("response: $response")
+                        when (response) {
+                            is ResourceState.LOADING -> {
+                                Timber.d("Loading")
+                            }
 
-                        is ResourceState.SUCCESS -> {
-                            Timber.d("Success")
-                            _myshops.emit(response.data)
-                        }
+                            is ResourceState.SUCCESS -> {
+                                Timber.d("Success")
+                                _myshops.emit(response.data)
+                            }
 
-                        is ResourceState.ERROR -> {
-                            Timber.d("Error")
+                            is ResourceState.ERROR -> {
+                                Timber.d("Error")
+                            }
                         }
                     }
-                }
             }
-            dataStorePreferences.getFirstName().collectLatest { it ->
-                _firstName.emit(it)
-            }
-            dataStorePreferences.getLastName().collectLatest { it ->
-                _lastName.emit(it)
-            }
-            dataStorePreferences.getYearsOfExperience().collectLatest { it ->
-                _exp.emit(it)
-            }
-            dataStorePreferences.getEmail().collectLatest { it ->
-                _email.emit(it)
-            }
-
         }
     }
-
 }

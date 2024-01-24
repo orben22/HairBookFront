@@ -1,10 +1,6 @@
-package com.example.hairbookfront.data.remote
+package com.example.hairbookfront.data.remote.ApiServices
 
-import com.example.hairbookfront.domain.entities.BarberShop
 import com.example.hairbookfront.domain.entities.Booking
-import com.example.hairbookfront.domain.entities.LoginRequest
-import com.example.hairbookfront.domain.entities.User
-import com.example.hairbookfront.domain.entities.UserSignUpRequest
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.DELETE

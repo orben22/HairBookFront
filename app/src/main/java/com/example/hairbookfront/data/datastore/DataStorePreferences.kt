@@ -14,6 +14,7 @@ import com.example.hairbookfront.domain.entities.User
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
+import timber.log.Timber
 import javax.inject.Inject
 
 class DataStorePreferences @Inject constructor(private val dataStore: DataStore<Preferences>) {
@@ -76,7 +77,7 @@ class DataStorePreferences @Inject constructor(private val dataStore: DataStore<
         return dataStore.data.catch {
             emit(emptyPreferences())
         }.map { preferences ->
-            preferences[yearsOfExperience] ?: 0
+            preferences[yearsOfExperience] ?: 2
         }
     }
 
@@ -123,28 +124,25 @@ class DataStorePreferences @Inject constructor(private val dataStore: DataStore<
             preferences[userId] = user.userId ?: ""
             preferences[accessToken] = user.accessToken ?: ""
             preferences[email] = user.email
-
-            when (val userDetails = user.details) {
-                is BarberDTO -> storeBarberDetails(preferences, userDetails)
-                is CustomerDTO -> storeCustomerDetails(preferences, userDetails)
-            }
         }
     }
 
-    private fun storeBarberDetails(preferences: MutablePreferences, barberDetails: BarberDTO) {
-        preferences[firstName] = barberDetails.firstName
-        preferences[lastName] = barberDetails.lastName
-        preferences[yearsOfExperience] = barberDetails.yearsOfExperience
+    suspend fun storeBarberDetails(barberDetails: BarberDTO) {
+        Timber.d("barberDetails!!!!!!!!!: $barberDetails")
+        dataStore.edit { preferences ->
+            preferences[firstName] = barberDetails.firstName
+            preferences[lastName] = barberDetails.lastName
+            preferences[yearsOfExperience] = barberDetails.yearsOfExperience
+        }
     }
 
-    private fun storeCustomerDetails(
-        preferences: MutablePreferences,
-        customerDetails: CustomerDTO
-    ) {
-        preferences[firstName] = customerDetails.firstName
-        preferences[lastName] = customerDetails.lastName
-        preferences[age] = customerDetails.age
-        preferences[phoneNumber] = customerDetails.phoneNumber
+    suspend fun storeCustomerDetails(customerDetails: CustomerDTO) {
+        dataStore.edit { preferences ->
+            preferences[firstName] = customerDetails.firstName
+            preferences[lastName] = customerDetails.lastName
+            preferences[age] = customerDetails.age
+            preferences[phoneNumber] = customerDetails.phoneNumber
+        }
     }
 
 }

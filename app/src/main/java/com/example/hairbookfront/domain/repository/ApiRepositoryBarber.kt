@@ -1,75 +1,27 @@
 package com.example.hairbookfront.domain.repository
 
-import com.example.hairbookfront.data.remote.HairBookDataSource
+import com.example.hairbookfront.data.remote.DataSources.HairBookDataSourceBarber
+import com.example.hairbookfront.domain.entities.BarberDTO
 import com.example.hairbookfront.domain.entities.BarberShop
 import com.example.hairbookfront.domain.entities.Booking
 import com.example.hairbookfront.domain.entities.Review
 import com.example.hairbookfront.domain.entities.Service
-import com.example.hairbookfront.domain.entities.User
-import com.example.hairbookfront.domain.entities.UserSignUpRequest
 import com.example.hairbookfront.util.ResourceState
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
-class ApiRepository @Inject constructor(private val hairBookDataSource: HairBookDataSource) {
+class ApiRepositoryBarber @Inject constructor(
+    private val hairBookDataSourceBarber: HairBookDataSourceBarber
+) {
 
-    suspend fun login(
-        email: String,
-        password: String
-    ): Flow<ResourceState<User>> {
-        return flow {
-            emit(ResourceState.LOADING())
-            val response = hairBookDataSource.login(email, password)
-            if (response.isSuccessful && response.body() != null) {
-                emit(ResourceState.SUCCESS(response.body()!!))
-            } else {
-                emit(ResourceState.ERROR("Error Logging in user"))
-            }
-        }.catch { e ->
-            emit(ResourceState.ERROR(e.localizedMessage ?: "Something went wrong with api"))
-        }
-    }
-
-    suspend fun getAllShops(
+    suspend fun getMyBarberShops(
         accessToken: String
     ): Flow<ResourceState<List<BarberShop>>> {
         return flow {
             emit(ResourceState.LOADING())
-            val response = hairBookDataSource.getAllShops(accessToken)
-            if (response.isSuccessful && response.body() != null) {
-                emit(ResourceState.SUCCESS(response.body()!!))
-            } else {
-                emit(ResourceState.ERROR("Error Logging in user"))
-            }
-        }.catch { e ->
-            emit(ResourceState.ERROR(e.localizedMessage ?: "Something went wrong with api"))
-        }
-    }
-
-    suspend fun signUp(
-        signUpRequest: UserSignUpRequest
-    ): Flow<ResourceState<User>> {
-        return flow {
-            emit(ResourceState.LOADING())
-            val response = hairBookDataSource.signUp(signUpRequest)
-            if (response.isSuccessful && response.body() != null) {
-                emit(ResourceState.SUCCESS(response.body()!!))
-            } else {
-                emit(ResourceState.ERROR("Error Sign Up"))
-            }
-        }.catch { e ->
-            emit(ResourceState.ERROR(e.localizedMessage ?: "Something went wrong with api"))
-        }
-    }
-
-suspend fun getMyBarberShops(
-        accessToken: String
-    ): Flow<ResourceState<List<BarberShop>>> {
-        return flow {
-            emit(ResourceState.LOADING())
-            val response = hairBookDataSource.getMyBarberShops(accessToken)
+            val response = hairBookDataSourceBarber.getMyBarberShops(accessToken)
             if (response.isSuccessful && response.body() != null) {
                 emit(ResourceState.SUCCESS(response.body()!!))
             } else {
@@ -79,13 +31,12 @@ suspend fun getMyBarberShops(
             emit(ResourceState.ERROR(e.localizedMessage ?: "Something went wrong with api"))
         }
     }
-
     suspend fun getBarberDetails(
         accessToken: String
-    ): Flow<ResourceState<User>> {
+    ): Flow<ResourceState<BarberDTO>> {
         return flow {
             emit(ResourceState.LOADING())
-            val response = hairBookDataSource.getBarberDetails(accessToken)
+            val response = hairBookDataSourceBarber.getBarberDetails(accessToken)
             if (response.isSuccessful && response.body() != null) {
                 emit(ResourceState.SUCCESS(response.body()!!))
             } else {
@@ -101,7 +52,7 @@ suspend fun getMyBarberShops(
     ): Flow<ResourceState<BarberShop>> {
         return flow {
             emit(ResourceState.LOADING())
-            val response = hairBookDataSource.createBarberShop(barberShop)
+            val response = hairBookDataSourceBarber.createBarberShop(barberShop)
             if (response.isSuccessful && response.body() != null) {
                 emit(ResourceState.SUCCESS(response.body()!!))
             } else {
@@ -118,7 +69,7 @@ suspend fun getMyBarberShops(
     ): Flow<ResourceState<BarberShop>> {
         return flow {
             emit(ResourceState.LOADING())
-            val response = hairBookDataSource.getBarberShopById(accessToken,barberShopId)
+            val response = hairBookDataSourceBarber.getBarberShopById(accessToken,barberShopId)
             if (response.isSuccessful && response.body() != null) {
                 emit(ResourceState.SUCCESS(response.body()!!))
             } else {
@@ -135,7 +86,7 @@ suspend fun getMyBarberShops(
     ): Flow<ResourceState<String>> {
         return flow {
             emit(ResourceState.LOADING())
-            val response = hairBookDataSource.deleteBarberShop(accessToken,barberShopId)
+            val response = hairBookDataSourceBarber.deleteBarberShop(accessToken,barberShopId)
             if (response.isSuccessful && response.body() != null) {
                 emit(ResourceState.SUCCESS(response.body()!!))
             } else {
@@ -153,7 +104,7 @@ suspend fun getMyBarberShops(
     ): Flow<ResourceState<BarberShop>> {
         return flow {
             emit(ResourceState.LOADING())
-            val response = hairBookDataSource.updateBarberShop(accessToken,barberShopId,barberShop)
+            val response = hairBookDataSourceBarber.updateBarberShop(accessToken,barberShopId,barberShop)
             if (response.isSuccessful && response.body() != null) {
                 emit(ResourceState.SUCCESS(response.body()!!))
             } else {
@@ -170,7 +121,7 @@ suspend fun getMyBarberShops(
     ): Flow<ResourceState<List<Review>>> {
         return flow {
             emit(ResourceState.LOADING())
-            val response = hairBookDataSource.getReviews(accessToken,barberShopId)
+            val response = hairBookDataSourceBarber.getReviews(accessToken,barberShopId)
             if (response.isSuccessful && response.body() != null) {
                 emit(ResourceState.SUCCESS(response.body()!!))
             } else {
@@ -189,7 +140,7 @@ suspend fun getMyBarberShops(
     ): Flow<ResourceState<Booking>> {
         return flow {
             emit(ResourceState.LOADING())
-            val response = hairBookDataSource.getClosestBooking(accessToken,barberShopId)
+            val response = hairBookDataSourceBarber.getClosestBooking(accessToken,barberShopId)
             if (response.isSuccessful && response.body() != null) {
                 emit(ResourceState.SUCCESS(response.body()!!))
             } else {
@@ -206,7 +157,7 @@ suspend fun getMyBarberShops(
     ): Flow<ResourceState<List<Booking>>> {
         return flow {
             emit(ResourceState.LOADING())
-            val response = hairBookDataSource.getMyBookings(accessToken,barberShopId)
+            val response = hairBookDataSourceBarber.getMyBookings(accessToken,barberShopId)
             if (response.isSuccessful && response.body() != null) {
                 emit(ResourceState.SUCCESS(response.body()!!))
             } else {
@@ -224,7 +175,7 @@ suspend fun getMyBarberShops(
     ): Flow<ResourceState<Service>> {
         return flow {
             emit(ResourceState.LOADING())
-            val response = hairBookDataSource.createService(accessToken,barberShopId,service)
+            val response = hairBookDataSourceBarber.createService(accessToken,barberShopId,service)
             if (response.isSuccessful && response.body() != null) {
                 emit(ResourceState.SUCCESS(response.body()!!))
             } else {
@@ -243,7 +194,7 @@ suspend fun getMyBarberShops(
     ): Flow<ResourceState<Service>> {
         return flow {
             emit(ResourceState.LOADING())
-            val response = hairBookDataSource.updateService(accessToken,barberShopId,serviceId,service)
+            val response = hairBookDataSourceBarber.updateService(accessToken,barberShopId,serviceId,service)
             if (response.isSuccessful && response.body() != null) {
                 emit(ResourceState.SUCCESS(response.body()!!))
             } else {
@@ -254,14 +205,14 @@ suspend fun getMyBarberShops(
         }
     }
 
-suspend fun deleteService(
+    suspend fun deleteService(
         accessToken: String,
         barberShopId: String,
         serviceId: String
     ): Flow<ResourceState<String>> {
         return flow {
             emit(ResourceState.LOADING())
-            val response = hairBookDataSource.deleteService(accessToken,barberShopId,serviceId)
+            val response = hairBookDataSourceBarber.deleteService(accessToken,barberShopId,serviceId)
             if (response.isSuccessful && response.body() != null) {
                 emit(ResourceState.SUCCESS(response.body()!!))
             } else {
@@ -278,7 +229,7 @@ suspend fun deleteService(
     ): Flow<ResourceState<List<Service>>> {
         return flow {
             emit(ResourceState.LOADING())
-            val response = hairBookDataSource.getServices(accessToken,barberShopId)
+            val response = hairBookDataSourceBarber.getServices(accessToken,barberShopId)
             if (response.isSuccessful && response.body() != null) {
                 emit(ResourceState.SUCCESS(response.body()!!))
             } else {
@@ -288,89 +239,4 @@ suspend fun deleteService(
             emit(ResourceState.ERROR(e.localizedMessage ?: "Something went wrong with api"))
         }
     }
-
-    suspend fun bookHaircut(
-        accessToken: String,
-        booking: Booking
-    ): Flow<ResourceState<Booking>> {
-        return flow {
-            emit(ResourceState.LOADING())
-            val response = hairBookDataSource.bookHaircut(accessToken, booking)
-            if (response.isSuccessful && response.body() != null) {
-                emit(ResourceState.SUCCESS(response.body()!!))
-            } else {
-                emit(ResourceState.ERROR("Error booking haircut"))
-            }
-        }.catch { e ->
-            emit(ResourceState.ERROR(e.localizedMessage ?: "Something went wrong with api"))
-        }
-    }
-
-    suspend fun updateBooking(
-        accessToken: String,
-        bookingId: String,
-        booking: Booking
-    ): Flow<ResourceState<Booking>> {
-        return flow {
-            emit(ResourceState.LOADING())
-            val response = hairBookDataSource.updateBooking(accessToken, bookingId, booking)
-            if (response.isSuccessful && response.body() != null) {
-                emit(ResourceState.SUCCESS(response.body()!!))
-            } else {
-                emit(ResourceState.ERROR("Error updating booking"))
-            }
-        }.catch { e ->
-            emit(ResourceState.ERROR(e.localizedMessage ?: "Something went wrong with api"))
-        }
-    }
-
-    suspend fun deleteBooking(
-        accessToken: String,
-        bookingId: String
-    ): Flow<ResourceState<String>> {
-        return flow {
-            emit(ResourceState.LOADING())
-            val response = hairBookDataSource.deleteBooking(accessToken, bookingId)
-            if (response.isSuccessful && response.body() != null) {
-                emit(ResourceState.SUCCESS(response.body()!!))
-            } else {
-                emit(ResourceState.ERROR("Error deleting booking"))
-            }
-        }.catch { e ->
-            emit(ResourceState.ERROR(e.localizedMessage ?: "Something went wrong with api"))
-        }
-    }
-
-    suspend fun getUserBookings(
-        accessToken: String
-    ): Flow<ResourceState<List<Booking>>> {
-        return flow {
-            emit(ResourceState.LOADING())
-            val response = hairBookDataSource.getUserBookings(accessToken)
-            if (response.isSuccessful && response.body() != null) {
-                emit(ResourceState.SUCCESS(response.body()!!))
-            } else {
-                emit(ResourceState.ERROR("Error getting user bookings"))
-            }
-        }.catch { e ->
-            emit(ResourceState.ERROR(e.localizedMessage ?: "Something went wrong with api"))
-        }
-    }
-
-    suspend fun getClosestBooking(
-        accessToken: String
-    ): Flow<ResourceState<Booking>> {
-        return flow {
-            emit(ResourceState.LOADING())
-            val response = hairBookDataSource.getClosestBooking(accessToken)
-            if (response.isSuccessful && response.body() != null) {
-                emit(ResourceState.SUCCESS(response.body()!!))
-            } else {
-                emit(ResourceState.ERROR("Error getting closest booking"))
-            }
-        }.catch { e ->
-            emit(ResourceState.ERROR(e.localizedMessage ?: "Something went wrong with api"))
-        }
-    }
-
 }

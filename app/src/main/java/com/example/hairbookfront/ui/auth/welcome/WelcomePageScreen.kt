@@ -48,25 +48,12 @@ fun WelcomePageScreen(
     val emailError = welcomeViewModel.emailError.collectAsStateWithLifecycle()
     val passwordError = welcomeViewModel.passwordError.collectAsStateWithLifecycle()
     val showOrHidePassword = welcomeViewModel.showOrHidePassword.collectAsStateWithLifecycle()
-    val loggedIn = welcomeViewModel.loggedIn.collectAsStateWithLifecycle()
-    val userDetails = welcomeViewModel.userDetails.collectAsStateWithLifecycle()
     val showDialog = welcomeViewModel.showDialog.collectAsStateWithLifecycle()
     val dialogText = welcomeViewModel.dialogText.collectAsStateWithLifecycle()
     val signUpScreen = welcomeViewModel.signUpScreen.collectAsStateWithLifecycle()
-
-    when (userDetails.value) {
-        is ResourceState.LOADING -> {
-            Loader()
-        }
-
-        is ResourceState.SUCCESS -> {
-            navController?.navigate(Routes.CustomerHomeScreen.route)
-        }
-
-        is ResourceState.ERROR -> {
-            val error = (userDetails.value as ResourceState.ERROR)
-            Timber.d("ERROR Logging in user $error")
-        }
+    val homeScreen = welcomeViewModel.homeScreen.collectAsStateWithLifecycle()
+    if (homeScreen.value != "") {
+        navController?.navigate(homeScreen.value)
     }
     LaunchedEffect(Unit) {
         welcomeViewModel
@@ -160,29 +147,4 @@ fun WelcomePageScreen(
             }
         }
     )
-}
-
-
-@Preview(
-    showBackground = true,
-    showSystemUi = true,
-    uiMode = Configuration.UI_MODE_NIGHT_YES
-)
-@Composable
-fun WelcomePagePreviewDark() {
-    HairBookFrontTheme {
-        WelcomePageScreen(navController = null)
-    }
-}
-
-@Preview(
-    showBackground = true,
-    showSystemUi = true,
-    uiMode = Configuration.UI_MODE_NIGHT_NO
-)
-@Composable
-fun WelcomePagePreviewLight() {
-    HairBookFrontTheme {
-        WelcomePageScreen(navController = null)
-    }
 }

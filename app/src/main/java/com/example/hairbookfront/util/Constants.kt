@@ -7,5 +7,8 @@ object Constants {
 
     const val HAIR_BOOK_APPLICATION = "HairBookApp"
 
+    const val CustomerRole = "Customer"
+    const val BarberRole = "Barber"
+
 
 }

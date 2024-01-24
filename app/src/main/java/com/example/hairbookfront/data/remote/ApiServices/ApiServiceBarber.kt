@@ -1,10 +1,10 @@
-package com.example.hairbookfront.data.remote
+package com.example.hairbookfront.data.remote.ApiServices
 
+import com.example.hairbookfront.domain.entities.BarberDTO
 import com.example.hairbookfront.domain.entities.BarberShop
 import com.example.hairbookfront.domain.entities.Booking
 import com.example.hairbookfront.domain.entities.Review
 import com.example.hairbookfront.domain.entities.Service
-import com.example.hairbookfront.domain.entities.User
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.DELETE
@@ -23,7 +23,7 @@ interface ApiServiceBarber {
     @GET("barber/get-barber-details")
     suspend fun getBarberDetails(
         @Header("Authorization") authToken: String
-    ): Response<User>
+    ): Response<BarberDTO>
 
     @POST("barber/create-barbershop")
     suspend fun createBarberShop(
@@ -94,5 +94,7 @@ interface ApiServiceBarber {
         @Header("Authorization") authToken: String,
         @Query("barberShopId") barberShopId: String
     ): Response<List<Service>>
+
+
 
 }
