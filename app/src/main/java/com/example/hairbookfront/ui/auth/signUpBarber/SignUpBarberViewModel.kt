@@ -5,13 +5,10 @@ import androidx.lifecycle.viewModelScope
 import com.example.hairbookfront.data.datastore.DataStorePreferences
 import com.example.hairbookfront.domain.entities.BarberDTO
 import com.example.hairbookfront.domain.entities.BarberSignUpRequest
-import com.example.hairbookfront.domain.entities.CustomerSignUpRequest
 import com.example.hairbookfront.domain.entities.User
 import com.example.hairbookfront.domain.repository.ApiRepositoryAuth
-import com.example.hairbookfront.domain.repository.ApiRepositoryBarber
 import com.example.hairbookfront.ui.navgraph.Routes
 import com.example.hairbookfront.util.ResourceState
-import com.squareup.moshi.Moshi
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -24,7 +21,7 @@ import java.util.regex.Pattern
 import javax.inject.Inject
 
 @HiltViewModel
-class signUpBarberViewModel @Inject constructor(
+class SignUpBarberViewModel @Inject constructor(
     private val hairBookRepositoryAuth: ApiRepositoryAuth,
     private val dataStorePreferences: DataStorePreferences,
 ) : ViewModel() {

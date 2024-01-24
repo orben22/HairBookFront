@@ -26,7 +26,6 @@ import javax.inject.Inject
 class WelcomeViewModel @Inject constructor(
     private val hairBookRepository: ApiRepositoryAuth,
     private val dataStorePreferences: DataStorePreferences,
-    private val moshi: Moshi
 ) : ViewModel() {
 
     //customer@customer.com customer_password

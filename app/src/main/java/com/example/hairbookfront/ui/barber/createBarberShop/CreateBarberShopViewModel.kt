@@ -27,7 +27,6 @@ class CreateBarberShopViewModel @Inject constructor(
     private val dataStorePreferences: DataStorePreferences,
 ) : ViewModel() {
 
-
     private val _barberShopName = MutableStateFlow("")
     val barberShopName: StateFlow<String>
         get() = _barberShopName
