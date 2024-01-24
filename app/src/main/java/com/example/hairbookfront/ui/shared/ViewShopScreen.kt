@@ -26,6 +26,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.hairbookfront.theme.HairBookFrontTheme
 import com.example.hairbookfront.ui.Dimens
+import com.example.hairbookfront.ui.common.BottomAppBarHaiBook
 import com.example.hairbookfront.ui.common.TopAppBarHairBook
 
 @Composable
@@ -44,28 +45,15 @@ fun ViewShop(
 //    val saturdayHours by viewShopViewModel.saturdayHours.collectAsStateWithLifecycle()
     Scaffold(
         bottomBar = {
-            BottomAppBar(
-                actions = {
-                    IconButton(onClick = { /* do something */ }) {
-                        Icon(Icons.Filled.Star, contentDescription = "Localized description")
-                    }
-                    IconButton(onClick = { /* do something */ }) {
-                        Icon(
-                            Icons.Filled.Edit,
-                            contentDescription = "Localized description",
-                        )
-                    }
-                },
-                floatingActionButton = {
-                    FloatingActionButton(
-                        onClick = { /* do something */ },
-                        containerColor = BottomAppBarDefaults.bottomAppBarFabColor,
-                        elevation = FloatingActionButtonDefaults.bottomAppBarFabElevation()
-                    ) {
-                        Icon(Icons.Filled.Add, "Localized description")
-                    }
-                }
-            )},
+            BottomAppBarHaiBook(
+                onClick1 = { /* do something */ },
+                onClick2 = { /* do something */ },
+                flaotingOnClick = { /* do something */ },
+                icon1 = Icons.Filled.Edit,
+                icon2 = Icons.Filled.Check,
+                floatingIcon = Icons.Filled.Add
+            )
+            },
 
 
 //            BottomAppBar(
