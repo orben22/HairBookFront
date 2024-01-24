@@ -1,5 +1,10 @@
 package com.example.hairbookfront.ui.common
 
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Edit
@@ -10,44 +15,49 @@ import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.unit.dp
 
 @Composable
 fun BottomAppBarHaiBook(
-    onClick1: () -> Unit,
-    onClick2: () -> Unit,
-    flaotingOnClick: () -> Unit,
-    icon1: ImageVector?,
-    icon2: ImageVector?,
-    floatingIcon: ImageVector?
+    onClickFunctions: List<() -> Unit>,
+    onClickFlaoting: () -> Unit,
+    numberOfIcons: Int,
+    icons: List<ImageVector>,
+    textToIcon: List<String>,
+    floatingIcon: ImageVector?,
+    textToFloatingIcon: String
 
 ) {
     BottomAppBar(
+
         actions = {
-            IconButton(onClick = onClick1) {
-                if (icon1 != null) {
-                    Icon(imageVector = icon1, contentDescription = null)
+            for (i in 1..numberOfIcons) {
+                Column ()
+                {
+                    IconButton(onClick = onClickFunctions[i - 1]) {
+                        Icon(imageVector = icons[i - 1], contentDescription = null)
+                    }
+                    Spacer(modifier = Modifier.height(16.dp))
+                    Text(text=textToIcon[i-1])
                 }
             }
-            IconButton(onClick = onClick2) {
-                if (icon2 != null) {
-                    Icon(
-                        imageVector = icon2, contentDescription = null
-                    )
+            Column (
+
+            ){
+                FloatingActionButton(
+                    onClick = onClickFlaoting
+                ) {
+                    if (floatingIcon != null) {
+                        Icon(floatingIcon, null)
+                    }
                 }
+                Spacer(modifier = Modifier.height(16.dp))
+                Text(text = textToFloatingIcon)
             }
         },
-        floatingActionButton = {
-            FloatingActionButton(
-                onClick = flaotingOnClick,
-                containerColor = BottomAppBarDefaults.bottomAppBarFabColor,
-                elevation = FloatingActionButtonDefaults.bottomAppBarFabElevation()
-            ) {
-                if (floatingIcon != null) {
-                    Icon(floatingIcon, null)
-                }
-            }
-        }
     )
 }
