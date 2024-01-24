@@ -7,6 +7,7 @@ import com.example.hairbookfront.domain.entities.BarberDTO
 import com.example.hairbookfront.domain.entities.BarberSignUpRequest
 import com.example.hairbookfront.domain.entities.CustomerSignUpRequest
 import com.example.hairbookfront.domain.repository.ApiRepositoryAuth
+import com.example.hairbookfront.domain.repository.ApiRepositoryBarber
 import com.example.hairbookfront.util.ResourceState
 import com.squareup.moshi.Moshi
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -21,7 +22,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class signUpBarberViewModel @Inject constructor(
-    private val hairBookRepository: ApiRepositoryAuth,
+    private val hairBookRepositoryAuth: ApiRepositoryAuth,
     private val dataStorePreferences: DataStorePreferences,
     private val moshi: Moshi
 ) : ViewModel() {
@@ -189,7 +190,7 @@ class signUpBarberViewModel @Inject constructor(
             _emailError.value = false
             _passwordError.value = false
             viewModelScope.launch {
-                hairBookRepository.signUpBarber(
+                hairBookRepositoryAuth.signUpBarber(
                     BarberSignUpRequest(
                         email = email.value,
                         password = password.value,
