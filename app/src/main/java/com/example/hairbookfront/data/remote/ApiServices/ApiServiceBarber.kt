@@ -27,6 +27,7 @@ interface ApiServiceBarber {
 
     @POST("barber/create-barbershop")
     suspend fun createBarberShop(
+        @Header("Authorization") authToken: String,
         @Body barberShop: BarberShop
     ): Response<BarberShop>
 
@@ -94,7 +95,6 @@ interface ApiServiceBarber {
         @Header("Authorization") authToken: String,
         @Query("barberShopId") barberShopId: String
     ): Response<List<Service>>
-
 
 
 }

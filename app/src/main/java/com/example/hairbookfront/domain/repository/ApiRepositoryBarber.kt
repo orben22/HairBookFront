@@ -31,6 +31,7 @@ class ApiRepositoryBarber @Inject constructor(
             emit(ResourceState.ERROR(e.localizedMessage ?: "Something went wrong with api"))
         }
     }
+
     suspend fun getBarberDetails(
         accessToken: String
     ): Flow<ResourceState<BarberDTO>> {
@@ -48,11 +49,12 @@ class ApiRepositoryBarber @Inject constructor(
     }
 
     suspend fun createBarberShop(
+        accessToken: String,
         barberShop: BarberShop
     ): Flow<ResourceState<BarberShop>> {
         return flow {
             emit(ResourceState.LOADING())
-            val response = hairBookDataSourceBarber.createBarberShop(barberShop)
+            val response = hairBookDataSourceBarber.createBarberShop(accessToken, barberShop)
             if (response.isSuccessful && response.body() != null) {
                 emit(ResourceState.SUCCESS(response.body()!!))
             } else {
@@ -69,7 +71,7 @@ class ApiRepositoryBarber @Inject constructor(
     ): Flow<ResourceState<BarberShop>> {
         return flow {
             emit(ResourceState.LOADING())
-            val response = hairBookDataSourceBarber.getBarberShopById(accessToken,barberShopId)
+            val response = hairBookDataSourceBarber.getBarberShopById(accessToken, barberShopId)
             if (response.isSuccessful && response.body() != null) {
                 emit(ResourceState.SUCCESS(response.body()!!))
             } else {
@@ -86,7 +88,7 @@ class ApiRepositoryBarber @Inject constructor(
     ): Flow<ResourceState<String>> {
         return flow {
             emit(ResourceState.LOADING())
-            val response = hairBookDataSourceBarber.deleteBarberShop(accessToken,barberShopId)
+            val response = hairBookDataSourceBarber.deleteBarberShop(accessToken, barberShopId)
             if (response.isSuccessful && response.body() != null) {
                 emit(ResourceState.SUCCESS(response.body()!!))
             } else {
@@ -104,7 +106,8 @@ class ApiRepositoryBarber @Inject constructor(
     ): Flow<ResourceState<BarberShop>> {
         return flow {
             emit(ResourceState.LOADING())
-            val response = hairBookDataSourceBarber.updateBarberShop(accessToken,barberShopId,barberShop)
+            val response =
+                hairBookDataSourceBarber.updateBarberShop(accessToken, barberShopId, barberShop)
             if (response.isSuccessful && response.body() != null) {
                 emit(ResourceState.SUCCESS(response.body()!!))
             } else {
@@ -121,7 +124,7 @@ class ApiRepositoryBarber @Inject constructor(
     ): Flow<ResourceState<List<Review>>> {
         return flow {
             emit(ResourceState.LOADING())
-            val response = hairBookDataSourceBarber.getReviews(accessToken,barberShopId)
+            val response = hairBookDataSourceBarber.getReviews(accessToken, barberShopId)
             if (response.isSuccessful && response.body() != null) {
                 emit(ResourceState.SUCCESS(response.body()!!))
             } else {
@@ -140,7 +143,7 @@ class ApiRepositoryBarber @Inject constructor(
     ): Flow<ResourceState<Booking>> {
         return flow {
             emit(ResourceState.LOADING())
-            val response = hairBookDataSourceBarber.getClosestBooking(accessToken,barberShopId)
+            val response = hairBookDataSourceBarber.getClosestBooking(accessToken, barberShopId)
             if (response.isSuccessful && response.body() != null) {
                 emit(ResourceState.SUCCESS(response.body()!!))
             } else {
@@ -157,7 +160,7 @@ class ApiRepositoryBarber @Inject constructor(
     ): Flow<ResourceState<List<Booking>>> {
         return flow {
             emit(ResourceState.LOADING())
-            val response = hairBookDataSourceBarber.getMyBookings(accessToken,barberShopId)
+            val response = hairBookDataSourceBarber.getMyBookings(accessToken, barberShopId)
             if (response.isSuccessful && response.body() != null) {
                 emit(ResourceState.SUCCESS(response.body()!!))
             } else {
@@ -175,7 +178,8 @@ class ApiRepositoryBarber @Inject constructor(
     ): Flow<ResourceState<Service>> {
         return flow {
             emit(ResourceState.LOADING())
-            val response = hairBookDataSourceBarber.createService(accessToken,barberShopId,service)
+            val response =
+                hairBookDataSourceBarber.createService(accessToken, barberShopId, service)
             if (response.isSuccessful && response.body() != null) {
                 emit(ResourceState.SUCCESS(response.body()!!))
             } else {
@@ -194,7 +198,12 @@ class ApiRepositoryBarber @Inject constructor(
     ): Flow<ResourceState<Service>> {
         return flow {
             emit(ResourceState.LOADING())
-            val response = hairBookDataSourceBarber.updateService(accessToken,barberShopId,serviceId,service)
+            val response = hairBookDataSourceBarber.updateService(
+                accessToken,
+                barberShopId,
+                serviceId,
+                service
+            )
             if (response.isSuccessful && response.body() != null) {
                 emit(ResourceState.SUCCESS(response.body()!!))
             } else {
@@ -212,7 +221,8 @@ class ApiRepositoryBarber @Inject constructor(
     ): Flow<ResourceState<String>> {
         return flow {
             emit(ResourceState.LOADING())
-            val response = hairBookDataSourceBarber.deleteService(accessToken,barberShopId,serviceId)
+            val response =
+                hairBookDataSourceBarber.deleteService(accessToken, barberShopId, serviceId)
             if (response.isSuccessful && response.body() != null) {
                 emit(ResourceState.SUCCESS(response.body()!!))
             } else {
@@ -229,7 +239,7 @@ class ApiRepositoryBarber @Inject constructor(
     ): Flow<ResourceState<List<Service>>> {
         return flow {
             emit(ResourceState.LOADING())
-            val response = hairBookDataSourceBarber.getServices(accessToken,barberShopId)
+            val response = hairBookDataSourceBarber.getServices(accessToken, barberShopId)
             if (response.isSuccessful && response.body() != null) {
                 emit(ResourceState.SUCCESS(response.body()!!))
             } else {

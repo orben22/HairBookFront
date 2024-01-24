@@ -24,6 +24,8 @@ sealed class Routes(val route: String) {
     //Barber
     data object BarberDetailsScreen : Routes("barberDetailsScreen")
 
+    data object CreateBarberShopScreen : Routes("createBarberShopScreen")
+
     //Shared
     data object EditOrCreateBookingScreen : Routes("editOrCreateBookingScreen")
 

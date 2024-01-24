@@ -175,7 +175,7 @@ class WelcomeViewModel @Inject constructor(
                 when (it) {
                     is ResourceState.SUCCESS -> {
                         dataStorePreferences.storeBarberDetails(it.data)
-                        _homeScreen.value = Routes.BarberDetailsScreen.route
+                        _homeScreen.value = Routes.CreateBarberShopScreen.route
                     }
 
                     is ResourceState.ERROR -> sendMessage(it.error)

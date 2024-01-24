@@ -12,7 +12,7 @@ interface HairBookDataSourceBarber {
 
     suspend fun getBarberDetails(accessToken: String): Response<BarberDTO>
 
-    suspend fun createBarberShop(barberShop: BarberShop): Response<BarberShop>
+    suspend fun createBarberShop(accessToken: String,barberShop: BarberShop): Response<BarberShop>
 
     suspend fun getBarberShopById(accessToken: String, barberShopId: String): Response<BarberShop>
 
