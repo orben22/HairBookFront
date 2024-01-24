@@ -17,7 +17,6 @@ sealed class Routes(val route: String) {
 
     data object CustomerDetailsScreen : Routes("customerDetailsScreen")
 
-    data object CustomerBookingHistoryScreen : Routes("customerBookingHistoryScreen")
 
     data object CustomerReviewsHistoryScreen : Routes("customerReviewsHistoryScreen")
 
@@ -25,12 +24,26 @@ sealed class Routes(val route: String) {
     //Barber
     data object BarberDetailsScreen : Routes("barberDetailsScreen")
 
+    //Shared
+    data object EditOrCreateBookingScreen : Routes("editOrCreateBookingScreen")
+
+    data object EditOrCreateReviewScreen : Routes("editOrCreateReviewScreen")
+
+    data object ViewShopScreen : Routes("viewShopScreen")
+
+    data object ReadReviewScreen : Routes("readReviewScreen")
+
+    data object BookingHistoryScreen : Routes("bookingHistoryScreen")
+
+
+
     // Sub graphs
     data object AuthGraph : Routes("authGraph")
 
     data object CustomerGraph : Routes("customerGraph")
 
     data object BarberGraph : Routes("barberGraph")
+
 
 
 }

@@ -1,29 +1,20 @@
-package com.example.hairbookfront.ui.shared
+package com.example.hairbookfront.ui.shared.viewShop
 
 import android.content.res.Configuration
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material.icons.filled.Star
-import androidx.compose.material3.BottomAppBar
-import androidx.compose.material3.BottomAppBarDefaults
-import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.FloatingActionButtonDefaults
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavHostController
 import com.example.hairbookfront.theme.HairBookFrontTheme
 import com.example.hairbookfront.ui.Dimens
 import com.example.hairbookfront.ui.common.BottomAppBarHaiBook
@@ -32,7 +23,7 @@ import com.example.hairbookfront.ui.common.TopAppBarHairBook
 @Composable
 fun ViewShop(
 //    viewShopViewModel: ViewShopViewModel = hiltViewModel(),
-//    navController: NavHostController?
+    navController: NavHostController? = null
 ) {
 //    val barberShopName by viewShopViewModel.barberShopName.collectAsStateWithLifecycle()
 //    val openDays by viewShopViewModel.openDays.collectAsStateWithLifecycle()
@@ -53,7 +44,7 @@ fun ViewShop(
                 icon2 = Icons.Filled.Check,
                 floatingIcon = Icons.Filled.Add
             )
-            },
+        },
 
 
 //            BottomAppBar(

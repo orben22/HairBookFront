@@ -1,4 +1,4 @@
-package com.example.hairbookfront.ui.shared
+package com.example.hairbookfront.ui.shared.viewShop
 
 import androidx.lifecycle.ViewModel
 import com.example.hairbookfront.domain.repository.ApiRepositoryAuth
