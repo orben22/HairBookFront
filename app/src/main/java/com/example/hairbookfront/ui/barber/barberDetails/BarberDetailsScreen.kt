@@ -2,15 +2,21 @@ package com.example.hairbookfront.ui.barber.barberDetails
 
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.KeyboardArrowDown
+import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.Button
+import androidx.compose.material3.Divider
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -19,8 +25,11 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -32,6 +41,7 @@ import com.example.hairbookfront.R
 import com.example.hairbookfront.ui.Dimens.distanceFromLeft
 import com.example.hairbookfront.ui.Dimens.distanceFromBottom
 import com.example.hairbookfront.ui.common.BarberShopList
+import com.example.hairbookfront.ui.common.TopAppBarHairBook
 import timber.log.Timber
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -48,24 +58,8 @@ fun BarberDetailsScreen(
     val myShops by barberDetailsViewModel.myshops.collectAsStateWithLifecycle()
     Timber.d("experience: $yearsOfExperience")
     Scaffold(
-        topBar = {
-            TopAppBar(
-                title = {
-                    Text(text = "Barber Details")
-                },
-                navigationIcon = {
-                    IconButton(onClick = { /* Handle navigation back */ }) {
-                        Icon(imageVector = Icons.Default.ArrowBack, contentDescription = null)
-                    }
-                },
-                actions = {
-                  IconButton(onClick = { /*TODO*/ }) {
-                      Icon(imageVector = Icons.Default.KeyboardArrowDown, contentDescription = null)
-                  }
-                }
-            )
-        },
-        bottomBar = {
+        topBar = { TopAppBarHairBook(text = "Barber Details", dropDownMenu = true) },
+         bottomBar = {
             Button(
                 onClick = {
                     // Handle "Show Booking History" button click (Redirect to barber booking history)
@@ -118,3 +112,5 @@ fun BarberDetailsScreen(
         }
     )
 }
+
+
