@@ -4,6 +4,7 @@ import android.content.res.Configuration
 import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.hairbookfront.domain.entities.Review
 import com.example.hairbookfront.theme.HairBookFrontTheme
@@ -12,11 +13,10 @@ import com.example.hairbookfront.ui.common.TopAppBarHairBook
 
 @Composable
 fun ReadReviewsScreen(
-    //    viewModel: ReadReviewsViewModel = hiltViewModel(),
+    viewModel: ReadReviewsViewModel = hiltViewModel(),
     navController: NavController? = null,
 ) {
     Column {
-
         TopAppBarHairBook(text = "Reviews")
         ReviewsList(reviews = listOf(review1, review2, review3, review4, review5, review6))
     }
@@ -43,7 +43,7 @@ val review2 = Review(
     barbershopId = "barbershopId"
 )
 
-val review3=Review(
+val review3 = Review(
     reviewId = "1",
     firstName = "firstName",
     lastName = "lastName",
@@ -54,7 +54,7 @@ val review3=Review(
     barbershopId = "barbershopId"
 )
 
-val review4=Review(
+val review4 = Review(
     reviewId = "1",
     firstName = "firstName",
     lastName = "lastName",
@@ -65,7 +65,7 @@ val review4=Review(
     barbershopId = "barbershopId"
 )
 
-val review5=Review(
+val review5 = Review(
     reviewId = "1",
     firstName = "firstName",
     lastName = "lastName",
@@ -76,7 +76,7 @@ val review5=Review(
     barbershopId = "barbershopId"
 )
 
-val review6=Review(
+val review6 = Review(
     reviewId = "1",
     firstName = "firstName",
     lastName = "lastName",

@@ -150,7 +150,6 @@ fun CreateBarberShopScreen(
         ) {
             Icon(Icons.Filled.Add, "Floating action button.")
         }
-
     },
         content = { innerPadding ->
             Column(

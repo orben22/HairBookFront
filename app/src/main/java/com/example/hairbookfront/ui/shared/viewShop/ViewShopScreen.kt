@@ -10,6 +10,7 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -17,11 +18,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
 import com.example.hairbookfront.theme.HairBookFrontTheme
 import com.example.hairbookfront.ui.Dimens
-import com.example.hairbookfront.ui.common.BottomAppBarHaiBook
+import com.example.hairbookfront.ui.common.BottomAppBarHairBook
 import com.example.hairbookfront.ui.common.TopAppBarHairBook
 
 @Composable
-fun ViewShop(
+fun ViewShopScreen(
 //    viewShopViewModel: ViewShopViewModel = hiltViewModel(),
     navController: NavHostController? = null
 ) {
@@ -36,11 +37,11 @@ fun ViewShop(
 //    val saturdayHours by viewShopViewModel.saturdayHours.collectAsStateWithLifecycle()
     Scaffold(
         bottomBar = {
-            BottomAppBarHaiBook(
+            BottomAppBarHairBook(
                 onClickFunctions = listOf(
                     { /* do something */ },
                     { /* do something */ }
-                ), onClickFlaoting = { /* do something */ },
+                ), onClickFloating = { /* do something */ },
                 numberOfIcons = 2,
                 icons = listOf(
                     Icons.Filled.Check,
@@ -51,42 +52,11 @@ fun ViewShop(
                     "Write Review"
                 ),
                 floatingIcon = Icons.Filled.Add,
-                textToFloatingIcon = "Book Haircut"
             )
         },
-
-
-//            BottomAppBar(
-//                actions = {
-//                    Row (
-//                        modifier = Modifier
-//                            .fillMaxWidth()
-//                            .padding(),
-//                        horizontalArrangement = Arrangement.SpaceBetween,
-//                        verticalAlignment = Alignment.CenterVertically
-//                    ){
-//                        IconButton(onClick = { /* do something */ }) {
-//                            Row {
-//
-//                                Icon(
-//                                    Icons.Filled.Check,
-//                                    contentDescription = "Localized description",
-//                                )
-//                                Text(text = "Book Haircut")
-//                            }
-//                        }
-//                        IconButton(onClick = { /* do something */ }) {
-//                            Icon(
-//                                Icons.Filled.Edit,
-//                                contentDescription = "Localized description",
-//                            )
-//                        }
-//                    }
-//                }
-//            )
         topBar = {
             TopAppBarHairBook(
-                text = "Hello"
+                text = "Shop name"
             )
         },
         content = { innerPadding ->
@@ -104,6 +74,11 @@ fun ViewShop(
                 verticalArrangement = Arrangement.Center
             ) {
 
+                Text(text = "Description")
+                Text(text = "Address")
+                Text(text = "Phone Number")
+                Text(text = "Opening days")
+
             }
         }
     )
@@ -113,7 +88,7 @@ fun ViewShop(
 @Composable
 fun SignUpBarberScreenPreviewDark() {
     HairBookFrontTheme {
-        ViewShop()
+        ViewShopScreen()
     }
 }
 
@@ -121,7 +96,7 @@ fun SignUpBarberScreenPreviewDark() {
 @Composable
 fun SignUpBarberScreenPreviewLight() {
     HairBookFrontTheme {
-        ViewShop()
+        ViewShopScreen()
     }
 }
 

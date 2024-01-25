@@ -41,6 +41,7 @@ import com.example.hairbookfront.R
 import com.example.hairbookfront.ui.Dimens.distanceFromLeft
 import com.example.hairbookfront.ui.Dimens.distanceFromBottom
 import com.example.hairbookfront.ui.common.BarberShopList
+import com.example.hairbookfront.ui.common.BottomAppBarHairBook
 import com.example.hairbookfront.ui.common.TopAppBarHairBook
 import timber.log.Timber
 
@@ -60,17 +61,7 @@ fun BarberDetailsScreen(
     Scaffold(
         topBar = { TopAppBarHairBook(text = "Barber Details", dropDownMenu = true) },
          bottomBar = {
-            Button(
-                onClick = {
-                    // Handle "Show Booking History" button click (Redirect to barber booking history)
-                },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(bottom = 20.dp, start = distanceFromLeft, end = distanceFromLeft)
-                    .height(IntrinsicSize.Min)
-            ) {
-                Text(text = stringResource(R.string.booking_history))
-            }
+            BottomAppBarHairBook()
         },
         content = { innerPadding ->
             Column(
@@ -86,7 +77,6 @@ fun BarberDetailsScreen(
                 horizontalAlignment = Alignment.Start,
                 verticalArrangement = Arrangement.Center
             ) {
-                // User Information (You can use your own user data here if available)
                 Text(
                     modifier = Modifier.padding(bottom = 10.dp),
                     text = "Full Name: $firstname $lastname",
