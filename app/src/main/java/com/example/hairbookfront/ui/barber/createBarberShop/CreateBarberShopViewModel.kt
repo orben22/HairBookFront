@@ -264,7 +264,7 @@ class CreateBarberShopViewModel @Inject constructor(
     private fun createBarberShop() {
         viewModelScope.launch {
             val barberName = getBarberName()
-            val workingDays = _daysOfWeek.value.map { if (it) 1.0 else 0.0 }
+            val workingDays = _daysOfWeek.value.map { if (it) 1.0f else 0.0f }
             val sundayHours = if (_daysOfWeek.value[0]) generateWorkingHours(
                 _startTimeSunday.value,
                 _endTimeSunday.value
@@ -306,7 +306,7 @@ class CreateBarberShopViewModel @Inject constructor(
                 thursdayHours = thursdayHours,
                 fridayHours = fridayHours,
                 saturdayHours = saturdayHours,
-                totalRating = 0.0,
+                totalRating = 0.0f,
                 location = _barberShopAddress.value,
                 description = _barberShopDescription.value
             )

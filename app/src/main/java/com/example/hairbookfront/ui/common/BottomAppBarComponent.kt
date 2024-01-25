@@ -11,9 +11,11 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.BottomAppBar
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
+import androidx.compose.material3.TooltipDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -54,11 +56,11 @@ fun BottomAppBarComponent(
                         }
                     }
                 }
-                FloatingActionButton(
-                    onClick = onClickFloating,
-                    modifier = Modifier.padding(end = 10.dp)
-                ) {
-                    if (floatingIcon != null) {
+                if (floatingIcon != null) {
+                    FloatingActionButton(
+                        onClick = onClickFloating,
+                        modifier = Modifier.padding(end = 10.dp)
+                    ) {
                         Icon(floatingIcon, null)
                     }
                 }

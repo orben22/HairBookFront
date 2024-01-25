@@ -1,8 +1,11 @@
 package com.example.hairbookfront.ui.common
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -61,60 +64,45 @@ fun ReviewItem(
         ),
         modifier = Modifier
             .fillMaxWidth()
-            .padding(
-                top = Dimens.smallPadding1,
-                bottom = Dimens.smallPadding1,
-                start = Dimens.smallPadding3,
-                end = Dimens.smallPadding3
-            )
+            .padding(Dimens.mediumPadding1)
     ) {
-        Text(
-            modifier = Modifier.padding(
-                top = Dimens.smallPadding1,
-                start = Dimens.smallPadding3
-            ),
-            text = "From: " + review.firstName + " " + review.lastName,
-            fontWeight = FontWeight.Bold,
-            fontSize = Dimens.fontSmall,
-        )
-        Text(
-            modifier = Modifier.padding(
-                top = Dimens.smallPadding1,
-                start = Dimens.smallPadding3
-            ),
-            text = review.review,
-            fontSize = Dimens.fontLarge,
-        )
-        Text(
-            modifier = Modifier.padding(
-                top = Dimens.smallPadding1,
-                start = Dimens.smallPadding3
-            ),
-            text = "Rating: " + review.rating,
-            fontSize = Dimens.fontSmall,
-            fontWeight = FontWeight.Bold,
-        )
-        Text(
-            modifier = Modifier.padding(
-                top = Dimens.smallPadding1,
-                start = Dimens.smallPadding3, bottom = Dimens.smallPadding1
-            ),
-            text = "Time: " + review.timestamp,
-            fontSize = Dimens.fontSmall,
-            fontWeight = FontWeight.Bold,
-        )
-        if (editable) {
+        Column(modifier = Modifier.padding(Dimens.mediumPadding1)) {
+            Text(
+                text = "From: " + review.firstName + " " + review.lastName,
+                fontWeight = FontWeight.Bold,
+                fontSize = Dimens.fontMedium,
+            )
+            Spacer(modifier = Modifier.height(Dimens.smallPadding1))
+            Text(
+                text = review.review,
+                fontSize = Dimens.fontMedium,
+            )
+            Spacer(modifier = Modifier.height(Dimens.smallPadding1))
             Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(Dimens.smallPadding3),
+                modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                IconButton(onClick = { onClickFunctions[0]() }) {
-                    Icon(imageVector = Icons.Default.Edit, contentDescription = "Edit")
-                }
-                IconButton(onClick = { onClickFunctions[1]() }) {
-                    Icon(imageVector = Icons.Default.Delete, contentDescription = "Remove")
+                Text(
+                    text = "Time: " + review.timestamp,
+                    fontSize = Dimens.fontSmall,
+                    fontWeight = FontWeight.Bold,
+                )
+                RatingComponent(rating = review.rating)
+            }
+            Spacer(modifier = Modifier.height(Dimens.smallPadding1))
+            if (editable) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(Dimens.smallPadding3),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    IconButton(onClick = { onClickFunctions[0]() }) {
+                        Icon(imageVector = Icons.Default.Edit, contentDescription = "Edit")
+                    }
+                    IconButton(onClick = { onClickFunctions[1]() }) {
+                        Icon(imageVector = Icons.Default.Delete, contentDescription = "Remove")
+                    }
                 }
             }
         }
@@ -131,7 +119,7 @@ fun ReviewItemPreview() {
                 firstName = "firstName",
                 lastName = "lastName",
                 review = "review",
-                rating = "rating",
+                rating = 5f,
                 timestamp = "timestamp",
                 userId = "userId",
                 barbershopId = "barbershopId"

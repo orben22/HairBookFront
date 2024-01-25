@@ -5,7 +5,7 @@ data class BarberShop(
     val barbershopName: String,
     val barberName: String,
     val phoneNumber: String,
-    val workingDays: List<Double>,
+    val workingDays: List<Float>,
     val sundayHours: List<String>?,
     val mondayHours: List<String>?,
     val tuesdayHours: List<String>?,
@@ -13,7 +13,7 @@ data class BarberShop(
     val thursdayHours: List<String>?,
     val fridayHours: List<String>?,
     val saturdayHours: List<String>?,
-    val totalRating: Double,
+    val totalRating: Float,
     val location: String,
     val description: String,
 ) {
