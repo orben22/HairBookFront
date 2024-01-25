@@ -23,6 +23,8 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -41,6 +43,7 @@ import com.example.hairbookfront.ui.common.BottomAppBarComponent
 import com.example.hairbookfront.ui.common.RatingComponent
 import com.example.hairbookfront.ui.common.ReviewsList
 import com.example.hairbookfront.ui.common.TopAppBarComponent
+import timber.log.Timber
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 
@@ -50,7 +53,16 @@ fun ViewShopScreen(
     viewShopViewModel: ViewShopViewModel = hiltViewModel(),
     navController: NavHostController? = null
 ) {
+    val dataLoaded by viewShopViewModel.dataLoaded.collectAsStateWithLifecycle()
     val barberShop by viewShopViewModel.barberShop.collectAsStateWithLifecycle()
+
+//    if (!dataLoaded) {
+//        viewShopViewModel.dataLoaded()
+//        viewShopViewModel.getShopData()
+//    }
+    LaunchedEffect(Unit) {
+        Timber.d("ViewShopScreen recomposed")
+    }
     Scaffold(
         topBar = {
             TopAppBarComponent(text = "View Shop")

@@ -8,6 +8,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -20,6 +21,7 @@ import com.example.hairbookfront.ui.common.BarberShopList
 import com.example.hairbookfront.ui.common.TopAppBarComponent
 import com.example.hairbookfront.theme.HairBookFrontTheme
 import com.example.hairbookfront.ui.common.BottomAppBarComponent
+import timber.log.Timber
 
 @Composable
 fun CustomerHomeScreen(
@@ -29,8 +31,11 @@ fun CustomerHomeScreen(
     val searchText by customerViewModel.searchText.collectAsStateWithLifecycle()
     val barberShops by customerViewModel.barberShops.collectAsStateWithLifecycle()
     val screen by customerViewModel.screen.collectAsStateWithLifecycle()
-    if (screen != "") {
-        navController?.navigate(screen)
+    LaunchedEffect(screen) {
+        if (screen != "") {
+            Timber.d("navigating....")
+            navController?.navigate(screen)
+        }
     }
     Scaffold(
         topBar = {
