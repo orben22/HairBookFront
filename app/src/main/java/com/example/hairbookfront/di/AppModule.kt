@@ -60,18 +60,14 @@ object AppModule {
     @Singleton
     fun providesRetrofit(moshi: Moshi): Retrofit {
         val httpLoggingInterceptor = HttpLoggingInterceptor().apply {
-            // Logs request and response lines and their respective headers and bodies (if present).
             level = HttpLoggingInterceptor.Level.BODY
         }
-        // add the interceptor to OkHttpClient
         val httpClient = OkHttpClient.Builder().apply {
             addInterceptor(httpLoggingInterceptor)
         }
-
         httpClient.apply {
             readTimeout(60, TimeUnit.SECONDS)
         }
-
         return Retrofit.Builder()
             .baseUrl(Constants.BASE_URL)
             .client(httpClient.build())

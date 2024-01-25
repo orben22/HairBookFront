@@ -4,10 +4,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.hairbookfront.data.datastore.DataStorePreferences
 import com.example.hairbookfront.domain.entities.BarberShop
-import com.example.hairbookfront.domain.repository.ApiRepositoryAuth
 import com.example.hairbookfront.domain.repository.ApiRepositoryCustomer
+import com.example.hairbookfront.ui.navgraph.Routes
 import com.example.hairbookfront.util.ResourceState
-import com.squareup.moshi.Moshi
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -26,7 +25,6 @@ import kotlinx.coroutines.flow.debounce
 class CustomerHomeViewModel @Inject constructor(
     private val hairBookRepository: ApiRepositoryCustomer,
     private val dataStorePreferences: DataStorePreferences,
-    private val moshi: Moshi
 ) : ViewModel() {
 
     private val _searchText = MutableStateFlow("")
@@ -49,11 +47,22 @@ class CustomerHomeViewModel @Inject constructor(
         started = SharingStarted.WhileSubscribed(500),
         initialValue = _barberShops.value
     )
+    private val _screen = MutableStateFlow("")
+    val screen: StateFlow<String>
+        get() = _screen
 
     fun onSearchTextChanged(text: String) {
         _searchText.value = text
     }
 
+    fun onBarberShopClicked(barberShop: BarberShop) {
+        Timber.d("Clicked barbershop with ID: ${barberShop.barbershopId}")
+        _screen.value = Routes.ViewShopScreen.route
+        viewModelScope.launch {
+            barberShop.barbershopId?.let { dataStorePreferences.setShopId(it) }
+        }
+
+    }
 
     init {
         viewModelScope.launch {

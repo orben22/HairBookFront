@@ -14,6 +14,10 @@ class HairBookDataSourceImplCustomer @Inject constructor(
         return apiServiceCustomer.getAllShops("Bearer $accessToken")
     }
 
+    override suspend fun getShopById(accessToken: String, barbershopId: String): Response<BarberShop> {
+        return apiServiceCustomer.getShopById("Bearer $accessToken", barbershopId)
+    }
+
     override suspend fun getDetailsCustomer(accessToken: String): Response<CustomerDTO> {
         return apiServiceCustomer.getDetailsCustomer(accessToken)
     }

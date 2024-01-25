@@ -8,5 +8,7 @@ interface HairBookDataSourceCustomer {
 
     suspend fun getAllShops(accessToken: String): Response<List<BarberShop>>
 
+    suspend fun getShopById(accessToken: String, barbershopId: String): Response<BarberShop>
+
     suspend fun getDetailsCustomer(accessToken: String): Response<CustomerDTO>
 }

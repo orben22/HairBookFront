@@ -1,51 +1,82 @@
 package com.example.hairbookfront.ui.shared.viewShop
 
 import androidx.lifecycle.ViewModel
-import com.example.hairbookfront.domain.repository.ApiRepositoryAuth
+import androidx.lifecycle.viewModelScope
+import com.example.hairbookfront.data.datastore.DataStorePreferences
+import com.example.hairbookfront.domain.entities.BarberShop
+import com.example.hairbookfront.domain.repository.ApiRepositoryCustomer
+import com.example.hairbookfront.util.ResourceState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
 class ViewShopViewModel @Inject constructor(
-    private val hairBookRepository: ApiRepositoryAuth
+    private val hairBookRepository: ApiRepositoryCustomer,
+    private val dataStorePreferences: DataStorePreferences,
 ) : ViewModel() {
-    private val _barberShopName = MutableStateFlow("")
-    val barberShopName: StateFlow<String>
-        get() = _barberShopName
 
-    private val _openDays = MutableStateFlow(listOf(0, 0, 0, 0, 0, 0, 0))
-    val openDays: MutableStateFlow<List<Int>>
-        get() = _openDays
+    private val _accessToken = MutableStateFlow("")
+    val accessToken: StateFlow<String>
+        get() = _accessToken
 
-    private val _sundayHours = MutableStateFlow(listOf("10:00", "10:30", "11:00"))
-    val sundayHours: MutableStateFlow<List<String>>
-        get() = _sundayHours
+    private val _barberShop = MutableStateFlow(
+        BarberShop(
+            "",
+            "",
+            "",
+            "",
+            listOf(),
+            listOf(),
+            listOf(),
+            listOf(),
+            listOf(),
+            listOf(),
+            listOf(),
+            listOf(),
+            5f,
+            "",
+            "",
+        )
+    )
+    val barberShop: StateFlow<BarberShop>
+        get() = _barberShop
+    private val _shopId = MutableStateFlow("")
+    val shopId: StateFlow<String>
+        get() = _shopId
 
-    private val _mondayHours = MutableStateFlow(listOf("10:00", "10:30", "11:00"))
-    val mondayHours: MutableStateFlow<List<String>>
-        get() = _mondayHours
+    private val _role = MutableStateFlow("")
+    val role: StateFlow<String>
+        get() = _role
 
-    private val _tuesdayHours = MutableStateFlow(listOf("10:00", "10:30", "11:00"))
-    val tuesdayHours: MutableStateFlow<List<String>>
-        get() = _tuesdayHours
 
-    private val _wednesdayHours = MutableStateFlow(listOf("10:00", "10:30", "11:00"))
-    val wednesdayHours: MutableStateFlow<List<String>>
-        get() = _wednesdayHours
+    init {
+        viewModelScope.launch {
+            _shopId.emit(dataStorePreferences.getShopId().first())
+            _role.emit(dataStorePreferences.getRole().first())
+            _accessToken.emit(dataStorePreferences.getAccessToken().first())
+            hairBookRepository.getShopById(_accessToken.value, _shopId.value)
+                .collectLatest { resourceState ->
+                    when (resourceState) {
+                        is ResourceState.SUCCESS -> {
+                            _barberShop.value = resourceState.data
+                        }
+                        is ResourceState.ERROR -> {
+                            Timber.d(resourceState.error)
+                        }
 
-    private val _thursdayHours = MutableStateFlow(listOf("10:00", "10:30", "11:00"))
-    val thursdayHours: MutableStateFlow<List<String>>
-        get() = _thursdayHours
-
-    private val _fridayHours = MutableStateFlow(listOf("10:00", "10:30", "11:00"))
-    val fridayHours: MutableStateFlow<List<String>>
-        get() = _fridayHours
-
-    private val _saturdayHours = MutableStateFlow(listOf("10:00", "10:30", "11:00"))
-    val saturdayHours: MutableStateFlow<List<String>>
-        get() = _saturdayHours
-
+                        is ResourceState.LOADING -> {
+                            Timber.d("Loading")
+                        }
+                    }
+                }
+        }
+    }
 
 }

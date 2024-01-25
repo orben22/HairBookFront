@@ -28,6 +28,10 @@ fun CustomerHomeScreen(
 ) {
     val searchText by customerViewModel.searchText.collectAsStateWithLifecycle()
     val barberShops by customerViewModel.barberShops.collectAsStateWithLifecycle()
+    val screen by customerViewModel.screen.collectAsStateWithLifecycle()
+    if (screen != "") {
+        navController?.navigate(screen)
+    }
     Scaffold(
         topBar = {
             TopAppBarComponent("HairBook")
@@ -47,7 +51,10 @@ fun CustomerHomeScreen(
                     icon = Icons.Outlined.Search,
                     onValueChange = customerViewModel::onSearchTextChanged,
                 )
-                BarberShopList(barberShops)
+                BarberShopList(
+                    barberShops,
+                    onBarberShopClick = customerViewModel::onBarberShopClicked
+                )
             }
         }
 

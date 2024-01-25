@@ -11,6 +11,7 @@ import androidx.datastore.preferences.core.stringPreferencesKey
 import com.example.hairbookfront.domain.entities.BarberDTO
 import com.example.hairbookfront.domain.entities.CustomerDTO
 import com.example.hairbookfront.domain.entities.User
+import com.example.hairbookfront.util.Constants
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
@@ -29,6 +30,7 @@ class DataStorePreferences @Inject constructor(private val dataStore: DataStore<
         private const val ROLE = "Role"
         private const val USER_ID = "UserId"
         private const val ACCESS_TOKEN = "AccessToken"
+        private const val SHOP_ID = "ShopId"
         val firstName = stringPreferencesKey(FIRST_NAME)
         val lastName = stringPreferencesKey(LAST_NAME)
         val age = floatPreferencesKey(AGE)
@@ -38,8 +40,23 @@ class DataStorePreferences @Inject constructor(private val dataStore: DataStore<
         val userId = stringPreferencesKey(USER_ID)
         val accessToken = stringPreferencesKey(ACCESS_TOKEN)
         val email = stringPreferencesKey(EMAIL)
+        val shopId = stringPreferencesKey(SHOP_ID)
     }
 
+
+    fun getShopId(): Flow<String> {
+        return dataStore.data.catch {
+            emit(emptyPreferences())
+        }.map { preferences ->
+            preferences[shopId] ?: ""
+        }
+    }
+
+    suspend fun setShopId(id: String) {
+        dataStore.edit { preferences ->
+            preferences[shopId] = id
+        }
+    }
 
     fun getFirstName(): Flow<String> {
         return dataStore.data.catch {
@@ -128,11 +145,11 @@ class DataStorePreferences @Inject constructor(private val dataStore: DataStore<
     }
 
     suspend fun storeBarberDetails(barberDetails: BarberDTO) {
-        Timber.d("barberDetails!!!!!!!!!: $barberDetails")
         dataStore.edit { preferences ->
             preferences[firstName] = barberDetails.firstName
             preferences[lastName] = barberDetails.lastName
             preferences[yearsOfExperience] = barberDetails.yearsOfExperience
+            preferences[role] = Constants.BarberRole
         }
     }
 
@@ -142,6 +159,7 @@ class DataStorePreferences @Inject constructor(private val dataStore: DataStore<
             preferences[lastName] = customerDetails.lastName
             preferences[age] = customerDetails.age
             preferences[phoneNumber] = customerDetails.phoneNumber
+            preferences[role] = Constants.CustomerRole
         }
     }
 

@@ -28,6 +28,22 @@ class ApiRepositoryCustomer @Inject constructor(
         }
     }
 
+    suspend fun getShopById(
+        accessToken: String,
+        barbershopId: String
+    ): Flow<ResourceState<BarberShop>> {
+        return flow {
+            emit(ResourceState.LOADING())
+            val response = hairBookDataSourceCustomer.getShopById(accessToken, barbershopId)
+            if (response.isSuccessful && response.body() != null) {
+                emit(ResourceState.SUCCESS(response.body()!!))
+            } else {
+                emit(ResourceState.ERROR("Error, can't get barber shop by id"))
+            }
+        }.catch { e ->
+            emit(ResourceState.ERROR(e.localizedMessage ?: "Something went wrong with api"))
+        }
+    }
     suspend fun getDetailsCustomer(
         accessToken: String
     ): Flow<ResourceState<CustomerDTO>> {

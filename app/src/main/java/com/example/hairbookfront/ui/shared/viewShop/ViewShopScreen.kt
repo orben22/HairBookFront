@@ -23,11 +23,14 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import com.example.hairbookfront.R
 import com.example.hairbookfront.domain.entities.BarberShop
@@ -44,25 +47,10 @@ import java.time.format.DateTimeFormatter
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun ViewShopScreen(
+    viewShopViewModel: ViewShopViewModel = hiltViewModel(),
     navController: NavHostController? = null
 ) {
-    val barberShop = BarberShop(
-        barbershopId = "1",
-        barbershopName = "barbershopName",
-        barberName = "barberName",
-        phoneNumber = "phoneNumber",
-        workingDays = listOf(1.0f, 1.0f, 0f, 0f, 0f, 0f, 0f),
-        sundayHours = listOf("10:00", "10:30", "11:00"),
-        mondayHours = listOf("10:00", "10:30", "11:00", "11:30"),
-        tuesdayHours = listOf(),
-        wednesdayHours = listOf(),
-        thursdayHours = listOf(),
-        fridayHours = listOf(),
-        saturdayHours = listOf(),
-        totalRating = 4.5f,
-        location = "location",
-        description = "description",
-    )
+    val barberShop by viewShopViewModel.barberShop.collectAsStateWithLifecycle()
     Scaffold(
         topBar = {
             TopAppBarComponent(text = "View Shop")
@@ -111,7 +99,7 @@ fun ViewShopScreen(
                 WorkingHours(daysOfWeek[i], hoursOfWeek[i], barberShop.workingDays[i] == 1.0f)
             }
             Spacer(modifier = Modifier.height(16.dp))
-            Text(text ="Reviews", style = MaterialTheme.typography.headlineMedium)
+            Text(text = "Reviews", style = MaterialTheme.typography.headlineMedium)
             ReviewsList(
                 reviews = listOf(
                     Review(

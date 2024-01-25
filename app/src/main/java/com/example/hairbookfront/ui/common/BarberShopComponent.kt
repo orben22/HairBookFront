@@ -1,5 +1,6 @@
 package com.example.hairbookfront.ui.common
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -22,18 +23,26 @@ import com.example.hairbookfront.domain.entities.BarberShop
 import com.example.hairbookfront.ui.Dimens
 
 @Composable
-fun BarberShopList(barberShops: List<BarberShop>?, editable: Boolean = false) {
+fun BarberShopList(
+    barberShops: List<BarberShop>?,
+    editable: Boolean = false,
+    onBarberShopClick: (BarberShop) -> Unit = {}
+) {
     barberShops?.let {
         LazyColumn {
             items(barberShops) { barberShop ->
-                BarberShopItem(barberShop = barberShop, editable)
+                BarberShopItem(barberShop = barberShop, editable, onBarberShopClick)
             }
         }
     }
 }
 
 @Composable
-fun BarberShopItem(barberShop: BarberShop, editable: Boolean) {
+fun BarberShopItem(
+    barberShop: BarberShop,
+    editable: Boolean,
+    onBarberShopClick: (BarberShop) -> Unit
+) {
     ElevatedCard(
         elevation = CardDefaults.cardElevation(
             defaultElevation = Dimens.smallPadding1
@@ -46,6 +55,7 @@ fun BarberShopItem(barberShop: BarberShop, editable: Boolean) {
                 start = Dimens.smallPadding3,
                 end = Dimens.smallPadding3
             )
+            .clickable { onBarberShopClick(barberShop) }
     ) {
         Text(
             modifier = Modifier.padding(
