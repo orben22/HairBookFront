@@ -53,7 +53,6 @@ class SignUpBarberViewModel @Inject constructor(
     val yearsOfExperience: StateFlow<String>
         get() = _yearsOfExperience
 
-    // Additional StateFlow for indicating whether the years of experience input is valid
     private val _yearsOfExperienceError = MutableStateFlow(false)
     val yearsOfExperienceError: StateFlow<Boolean>
         get() = _yearsOfExperienceError
@@ -231,7 +230,7 @@ class SignUpBarberViewModel @Inject constructor(
                 is ResourceState.SUCCESS -> {
                     dataStorePreferences.storeBarberDetails(it.data)
                     sendMessage("Welcome ${it.data.firstName}")
-                    _homeScreen.value = Routes.BarberDetailsScreen.route
+                    _homeScreen.value = Routes.CreateBarberShopScreen.route
                 }
 
                 is ResourceState.ERROR -> sendMessage(it.error)

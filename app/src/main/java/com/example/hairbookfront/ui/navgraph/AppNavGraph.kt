@@ -28,7 +28,7 @@ import com.example.hairbookfront.ui.shared.bookingHistory.BookingHistoryScreen
 import com.example.hairbookfront.ui.shared.editOrCreateBooking.EditOrCreateBookingScreen
 import com.example.hairbookfront.ui.shared.editOrCreateReview.EditOrCreateReviewScreen
 import com.example.hairbookfront.ui.shared.readReviews.ReadReviewsScreen
-import com.example.hairbookfront.ui.shared.viewShop.ViewShop
+import com.example.hairbookfront.ui.shared.viewShop.ViewShopScreen
 
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -79,7 +79,7 @@ fun AppNavGraph(
                 EditOrCreateBookingScreen(navController = navController)
             }
             composable(route = Routes.ViewShopScreen.route) {
-                ViewShop(navController = navController)
+                ViewShopScreen(navController = navController)
             }
             composable(route = Routes.ReadReviewScreen.route) {
                 ReadReviewsScreen(navController = navController)
@@ -108,7 +108,7 @@ fun AppNavGraph(
                 EditOrCreateBookingScreen(navController = navController)
             }
             composable(route = Routes.ViewShopScreen.route) {
-                ViewShop(navController = navController)
+                ViewShopScreen(navController = navController)
             }
             composable(route = Routes.ReadReviewScreen.route) {
                 ReadReviewsScreen(navController = navController)

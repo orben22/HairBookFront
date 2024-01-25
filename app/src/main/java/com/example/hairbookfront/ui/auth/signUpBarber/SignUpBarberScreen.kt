@@ -38,7 +38,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun SignUpBarberScreen(
     signUpBarberViewModel: SignUpBarberViewModel = hiltViewModel(),
-    navController: NavHostController?
+    navController: NavHostController? = null
 ) {
     val context = LocalContext.current
     val firstName by signUpBarberViewModel.firstName.collectAsStateWithLifecycle()

@@ -2,17 +2,13 @@ package com.example.hairbookfront.ui.shared.readReviews
 
 import android.content.res.Configuration
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.hairbookfront.domain.entities.Review
 import com.example.hairbookfront.theme.HairBookFrontTheme
 import com.example.hairbookfront.ui.common.ReviewsList
 import com.example.hairbookfront.ui.common.TopAppBarHairBook
-import com.example.hairbookfront.ui.shared.editOrCreateReview.EditOrCreateReviewViewModel
-import com.example.hairbookfront.ui.shared.viewShop.ViewShop
 
 @Composable
 fun ReadReviewsScreen(
