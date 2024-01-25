@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.hairbookfront.data.datastore.DataStorePreferences
 import com.example.hairbookfront.domain.entities.BarberShop
 import com.example.hairbookfront.domain.repository.ApiRepositoryBarber
+import com.example.hairbookfront.ui.navgraph.Routes
 import com.example.hairbookfront.util.ResourceState
 import com.squareup.moshi.Moshi
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -66,6 +67,10 @@ class CreateBarberShopViewModel @Inject constructor(
     private val _endTimeFriday = MutableStateFlow("")
     private val _startTimeSaturday = MutableStateFlow("")
     private val _endTimeSaturday = MutableStateFlow("")
+
+    private val _homeScreen = MutableStateFlow("")
+    val homeScreen: StateFlow<String>
+        get() = _homeScreen
 
     val setStartTimeFunctions = listOf(
         { time: String -> setStartTimeSunday(time) },
@@ -314,6 +319,7 @@ class CreateBarberShopViewModel @Inject constructor(
                     }
 
                     is ResourceState.SUCCESS -> {
+                        _homeScreen.emit(Routes.BarberDetailsScreen.route)
                         Timber.d("Success")
                     }
 

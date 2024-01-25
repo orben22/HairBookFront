@@ -18,24 +18,43 @@ import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import com.example.hairbookfront.domain.entities.BarberShop
 import com.example.hairbookfront.domain.entities.Review
+import com.example.hairbookfront.theme.HairBookFrontTheme
 import com.example.hairbookfront.ui.Dimens
 
 @Composable
-fun ReviewsList(reviews: List<Review>?, editable: Boolean = false) {
+fun ReviewsList(
+    reviews: List<Review>?, editable: Boolean = false,
+    onClickFunctions: List<() -> Unit> = listOf(
+        { },
+        { }
+    )
+) {
     reviews?.let {
         LazyColumn {
             items(reviews) { review ->
-                ReviewItem(review = review, editable)
+                ReviewItem(
+                    review = review,
+                    editable = editable,
+                    onClickFunctions = onClickFunctions
+                )
             }
         }
     }
 }
 
 @Composable
-fun ReviewItem(review: Review, editable: Boolean) {
+fun ReviewItem(
+    review: Review, editable: Boolean,
+    onClickFunctions: List<() -> Unit> = listOf(
+        { },
+        { }
+    ),
+) {
     OutlinedCard(
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surface
@@ -54,10 +73,9 @@ fun ReviewItem(review: Review, editable: Boolean) {
                 top = Dimens.smallPadding1,
                 start = Dimens.smallPadding3
             ),
-            text = "From: "+review.firstName+" "+review.lastName,
+            text = "From: " + review.firstName + " " + review.lastName,
             fontWeight = FontWeight.Bold,
             fontSize = Dimens.fontSmall,
-            color = MaterialTheme.colorScheme.onPrimary
         )
         Text(
             modifier = Modifier.padding(
@@ -66,7 +84,6 @@ fun ReviewItem(review: Review, editable: Boolean) {
             ),
             text = review.review,
             fontSize = Dimens.fontLarge,
-            color = MaterialTheme.colorScheme.onPrimary
         )
         Text(
             modifier = Modifier.padding(
@@ -76,17 +93,15 @@ fun ReviewItem(review: Review, editable: Boolean) {
             text = "Rating: " + review.rating,
             fontSize = Dimens.fontSmall,
             fontWeight = FontWeight.Bold,
-            color = MaterialTheme.colorScheme.onPrimary
         )
         Text(
             modifier = Modifier.padding(
                 top = Dimens.smallPadding1,
                 start = Dimens.smallPadding3, bottom = Dimens.smallPadding1
             ),
-            text = "Time: "+ review.timestamp,
+            text = "Time: " + review.timestamp,
             fontSize = Dimens.fontSmall,
             fontWeight = FontWeight.Bold,
-            color = MaterialTheme.colorScheme.onPrimary
         )
         if (editable) {
             Row(
@@ -95,13 +110,33 @@ fun ReviewItem(review: Review, editable: Boolean) {
                     .padding(Dimens.smallPadding3),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                IconButton(onClick = { /* TODO: Handle edit action */ }) {
+                IconButton(onClick = { onClickFunctions[0]() }) {
                     Icon(imageVector = Icons.Default.Edit, contentDescription = "Edit")
                 }
-                IconButton(onClick = { /* TODO: Handle edit action */ }) {
+                IconButton(onClick = { onClickFunctions[1]() }) {
                     Icon(imageVector = Icons.Default.Delete, contentDescription = "Remove")
                 }
             }
         }
+    }
+}
+
+@Preview
+@Composable
+fun ReviewItemPreview() {
+    HairBookFrontTheme {
+        ReviewItem(
+            review = Review(
+                reviewId = "1",
+                firstName = "firstName",
+                lastName = "lastName",
+                review = "review",
+                rating = "rating",
+                timestamp = "timestamp",
+                userId = "userId",
+                barbershopId = "barbershopId"
+            ),
+            editable = true
+        )
     }
 }

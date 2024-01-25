@@ -35,7 +35,6 @@ import com.example.hairbookfront.ui.common.TopAppBarHairBook
 import com.example.hairbookfront.theme.HairBookFrontTheme
 import com.example.hairbookfront.ui.common.ClickableText
 import com.example.hairbookfront.ui.common.CustomButton
-import com.example.hairbookfront.ui.common.Loader
 import com.example.hairbookfront.ui.navgraph.Routes
 import com.example.hairbookfront.util.ResourceState
 import kotlinx.coroutines.launch

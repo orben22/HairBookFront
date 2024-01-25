@@ -1,7 +1,6 @@
 package com.example.hairbookfront.ui.navgraph
 
 import com.example.hairbookfront.ui.barber.barberDetails.BarberDetailsViewModel
-import WelcomePageScreen
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
@@ -17,6 +16,7 @@ import androidx.navigation.navigation
 import com.example.hairbookfront.presentation.CreateBarberShop.CreateBarberShopScreen
 import com.example.hairbookfront.ui.auth.signUpBarber.SignUpBarberScreen
 import com.example.hairbookfront.ui.auth.signUpCustomer.SignUpCustomerScreen
+import com.example.hairbookfront.ui.auth.welcome.WelcomePageScreen
 import com.example.hairbookfront.ui.auth.welcome.WelcomeViewModel
 import com.example.hairbookfront.ui.barber.barberDetails.BarberDetailsScreen
 import com.example.hairbookfront.ui.customer.customerDetails.CustomerDetailsScreen

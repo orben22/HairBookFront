@@ -1,4 +1,5 @@
-import android.content.res.Configuration
+package com.example.hairbookfront.ui.auth.welcome
+
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
@@ -14,28 +15,19 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavHostController
 import com.example.hairbookfront.ui.Dimens.mediumPadding2
 import com.example.hairbookfront.ui.Dimens.smallPadding3
-import com.example.hairbookfront.theme.HairBookFrontTheme
 import com.example.hairbookfront.ui.Dimens.largePadding3
 import com.example.hairbookfront.ui.common.TextFieldPassword
 import com.example.hairbookfront.ui.common.AppTextField
 import com.example.hairbookfront.ui.common.CustomButton
 import com.example.hairbookfront.ui.common.ClickableText
-import com.example.hairbookfront.ui.auth.welcome.WelcomeViewModel
-import com.example.hairbookfront.ui.navgraph.Routes
-import com.example.hairbookfront.util.ResourceState
-import kotlinx.coroutines.launch
-import timber.log.Timber
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.hairbookfront.ui.common.AppDialog
-import com.example.hairbookfront.ui.common.Loader
 
 @Composable
 fun WelcomePageScreen(
