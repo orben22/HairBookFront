@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
@@ -18,8 +17,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.outlined.LocationOn
 import androidx.compose.material.icons.outlined.Phone
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CheckboxDefaults
@@ -33,9 +30,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -48,16 +42,14 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import com.example.hairbookfront.ui.Dimens
-import com.example.hairbookfront.ui.common.AppTextField
-import com.example.hairbookfront.ui.common.TopAppBarHairBook
+import com.example.hairbookfront.ui.common.TextFieldComponent
+import com.example.hairbookfront.ui.common.TopAppBarComponent
 import com.example.hairbookfront.ui.barber.createBarberShop.CreateBarberShopViewModel
-import com.example.hairbookfront.ui.navgraph.Routes
 import com.maxkeppeker.sheets.core.models.base.rememberSheetState
 import com.maxkeppeler.sheets.clock.ClockDialog
 import com.maxkeppeler.sheets.clock.models.ClockConfig
 import com.maxkeppeler.sheets.clock.models.ClockSelection
 import java.time.LocalTime
-import java.time.format.DateTimeFormatter
 
 @OptIn(ExperimentalMaterial3Api::class)
 @RequiresApi(Build.VERSION_CODES.O)
@@ -140,7 +132,7 @@ fun CreateBarberShopScreen(
     }
 
     Scaffold(topBar = {
-        TopAppBarHairBook(text = "Create BarberShop")
+        TopAppBarComponent(text = "Create BarberShop")
     }, floatingActionButton = {
         FloatingActionButton(
             onClick = { viewModel.isValidInput() },
@@ -154,7 +146,7 @@ fun CreateBarberShopScreen(
                 .padding(innerPadding),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            AppTextField(
+            TextFieldComponent(
                 value = barberShopName,
                 placeholderText = "BarberShop Name",
                 icon = null,
@@ -165,7 +157,7 @@ fun CreateBarberShopScreen(
                 ),
                 isError = barberShopError
             )
-            AppTextField(
+            TextFieldComponent(
                 value = description,
                 placeholderText = "Write a description",
                 icon = null,
@@ -176,7 +168,7 @@ fun CreateBarberShopScreen(
                 ),
                 isError = descriptionError
             )
-            AppTextField(
+            TextFieldComponent(
                 value = location,
                 placeholderText = "Location",
                 icon = Icons.Outlined.LocationOn,
@@ -187,7 +179,7 @@ fun CreateBarberShopScreen(
                 ),
                 isError = locationError
             )
-            AppTextField(
+            TextFieldComponent(
                 value = barberShopPhoneNumber,
                 placeholderText = "Phone Number",
                 icon = Icons.Outlined.Phone,

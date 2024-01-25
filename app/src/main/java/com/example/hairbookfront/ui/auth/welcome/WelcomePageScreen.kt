@@ -22,12 +22,12 @@ import androidx.navigation.NavHostController
 import com.example.hairbookfront.ui.Dimens.mediumPadding2
 import com.example.hairbookfront.ui.Dimens.smallPadding3
 import com.example.hairbookfront.ui.Dimens.largePadding3
-import com.example.hairbookfront.ui.common.TextFieldPassword
-import com.example.hairbookfront.ui.common.AppTextField
-import com.example.hairbookfront.ui.common.CustomButton
+import com.example.hairbookfront.ui.common.TextFieldPasswordComponent
+import com.example.hairbookfront.ui.common.TextFieldComponent
+import com.example.hairbookfront.ui.common.ButtonComponent
 import com.example.hairbookfront.ui.common.ClickableText
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.example.hairbookfront.ui.common.AppDialog
+import com.example.hairbookfront.ui.common.DialogComponent
 
 @Composable
 fun WelcomePageScreen(
@@ -92,21 +92,21 @@ fun WelcomePageScreen(
                     fontSize = 40.sp,
                     fontWeight = FontWeight.Bold
                 )
-                AppTextField(
+                TextFieldComponent(
                     value = email.value,
                     placeholderText = "Email",
                     icon = Icons.Outlined.Email,
                     onValueChange = { welcomeViewModel.emailChanged(it) },
                     isError = emailError.value
                 )
-                TextFieldPassword(
+                TextFieldPasswordComponent(
                     password = password.value,
                     onValueChange = { welcomeViewModel.passwordChanged(it) },
                     isError = passwordError.value,
                     onIconClicked = { welcomeViewModel.showOrHidePassword() },
                     passwordVisibility = showOrHidePassword.value
                 )
-                CustomButton(text = "Sign In", onClick = {
+                ButtonComponent(text = "Sign In", onClick = {
                     welcomeViewModel.login()
                 }, icon = null)
                 Row {
@@ -124,7 +124,7 @@ fun WelcomePageScreen(
                 }
 
                 if (showDialog.value) {
-                    AppDialog(
+                    DialogComponent(
                         dialogTitle = "Sign Up",
                         dialogText = "Are you a Barber or a Customer?",
                         numberOfConfirmButtons = 2,

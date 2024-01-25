@@ -18,8 +18,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
 import com.example.hairbookfront.theme.HairBookFrontTheme
 import com.example.hairbookfront.ui.Dimens
-import com.example.hairbookfront.ui.common.BottomAppBarHairBook
-import com.example.hairbookfront.ui.common.TopAppBarHairBook
+import com.example.hairbookfront.ui.common.BottomAppBarComponent
+import com.example.hairbookfront.ui.common.TopAppBarComponent
 
 @Composable
 fun ViewShopScreen(
@@ -37,7 +37,7 @@ fun ViewShopScreen(
 //    val saturdayHours by viewShopViewModel.saturdayHours.collectAsStateWithLifecycle()
     Scaffold(
         bottomBar = {
-            BottomAppBarHairBook(
+            BottomAppBarComponent(
                 onClickFunctions = listOf(
                     { /* do something */ },
                     { /* do something */ }
@@ -55,7 +55,7 @@ fun ViewShopScreen(
             )
         },
         topBar = {
-            TopAppBarHairBook(
+            TopAppBarComponent(
                 text = "Shop name"
             )
         },

@@ -12,7 +12,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import com.example.hairbookfront.ui.Dimens
 
 @Composable
-fun AppTextField(
+fun TextFieldComponent(
     value: String,
     placeholderText: String,
     icon: ImageVector?,

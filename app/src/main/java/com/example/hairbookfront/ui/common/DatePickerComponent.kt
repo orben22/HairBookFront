@@ -13,22 +13,17 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.unit.dp
 import com.maxkeppeker.sheets.core.models.base.rememberSheetState
 import com.maxkeppeler.sheets.calendar.CalendarDialog
 import com.maxkeppeler.sheets.calendar.models.CalendarConfig
 import com.maxkeppeler.sheets.calendar.models.CalendarSelection
-import com.maxkeppeler.sheets.clock.ClockDialog
-import com.maxkeppeler.sheets.clock.models.ClockConfig
-import com.maxkeppeler.sheets.clock.models.ClockSelection
 import java.time.DayOfWeek
 import java.time.LocalDate
-import java.time.LocalTime
 
 @RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AppTimePicker(
+fun DatePickerComponent(
     getDisabledDates: () -> List<LocalDate>,
 ) {
     val context = LocalContext.current

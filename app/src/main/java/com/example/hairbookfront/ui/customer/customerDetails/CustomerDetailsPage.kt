@@ -13,11 +13,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.example.hairbookfront.ui.common.AppDialog
-import com.example.hairbookfront.ui.common.CustomButton
-import com.example.hairbookfront.ui.common.TopAppBarHairBook
-import com.example.hairbookfront.ui.common.BookingCard
-import com.example.hairbookfront.ui.common.BottomAppBarHairBook
+import com.example.hairbookfront.ui.common.DialogComponent
+import com.example.hairbookfront.ui.common.ButtonComponent
+import com.example.hairbookfront.ui.common.TopAppBarComponent
+import com.example.hairbookfront.ui.common.BookingCardComponent
+import com.example.hairbookfront.ui.common.BottomAppBarComponent
 
 @Composable
 fun CustomerDetailsScreen(
@@ -34,10 +34,10 @@ fun CustomerDetailsScreen(
     val showOrHideDeleteDialog by customerDetailsViewModel.showOrHideDeleteDialogState.collectAsState()
     Scaffold(
         topBar = {
-            TopAppBarHairBook("Customer Details")
+            TopAppBarComponent("Customer Details")
         },
         bottomBar = {
-            BottomAppBarHairBook()
+            BottomAppBarComponent()
         },
         content = { innerPadding ->
             Column(
@@ -88,7 +88,7 @@ fun CustomerDetailsScreen(
 
                 // Card: Upcoming Booking
                 if (booking != null) {
-                    BookingCard(true, booking!!, numberOfOptions = 2, optionFunctions = listOf(
+                    BookingCardComponent(true, booking!!, numberOfOptions = 2, optionFunctions = listOf(
                         { },
                         { customerDetailsViewModel.showOrHideDeleteDialog() }
                     ))
@@ -103,7 +103,7 @@ fun CustomerDetailsScreen(
                     )
                 }
                 if (showOrHideDeleteDialog) {
-                    AppDialog(
+                    DialogComponent(
                         dialogTitle = "Delete confirmation",
                         dialogText = "Are you sure you want to delete this booking?",
                         confirmFunctions = listOf(customerDetailsViewModel::deleteBooking)
@@ -113,14 +113,14 @@ fun CustomerDetailsScreen(
                 Column(modifier = Modifier.weight(1f)) {
 
                     // Button: Show My Reviews
-                    CustomButton(
+                    ButtonComponent(
                         text = "Show My Reviews",
                         onClick = { /*TODO*/ },
                         icon = Icons.Filled.Star
                     )
 
                     // Button: Show Booking History
-                    CustomButton(
+                    ButtonComponent(
                         text = "Show Booking History",
                         onClick = { /*TODO*/ },
                         icon = null

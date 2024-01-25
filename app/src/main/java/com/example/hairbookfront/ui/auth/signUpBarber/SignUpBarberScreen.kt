@@ -27,11 +27,11 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavHostController
-import com.example.hairbookfront.ui.common.AppTextField
+import com.example.hairbookfront.ui.common.TextFieldComponent
 import com.example.hairbookfront.ui.common.ClickableText
-import com.example.hairbookfront.ui.common.CustomButton
-import com.example.hairbookfront.ui.common.TextFieldPassword
-import com.example.hairbookfront.ui.common.TopAppBarHairBook
+import com.example.hairbookfront.ui.common.ButtonComponent
+import com.example.hairbookfront.ui.common.TextFieldPasswordComponent
+import com.example.hairbookfront.ui.common.TopAppBarComponent
 import com.example.hairbookfront.ui.navgraph.Routes
 import kotlinx.coroutines.launch
 
@@ -74,8 +74,8 @@ fun SignUpBarberScreen(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            TopAppBarHairBook(text = "Barber Sign Up")
-            AppTextField(
+            TopAppBarComponent(text = "Barber Sign Up")
+            TextFieldComponent(
                 value = firstName,
                 placeholderText = "First Name",
                 icon = Icons.Outlined.AccountCircle,
@@ -86,7 +86,7 @@ fun SignUpBarberScreen(
                     keyboardType = KeyboardType.Text
                 )
             )
-            AppTextField(
+            TextFieldComponent(
                 value = lastName,
                 placeholderText = "Last Name",
                 icon = Icons.Outlined.AccountCircle,
@@ -97,7 +97,7 @@ fun SignUpBarberScreen(
                     keyboardType = KeyboardType.Text
                 )
             )
-            AppTextField(
+            TextFieldComponent(
                 value = yearsOfExperience,
                 placeholderText = "Years of Experience",
                 icon = Icons.Outlined.Build,
@@ -107,21 +107,21 @@ fun SignUpBarberScreen(
                 ),
                 isError = yearsOfExperienceError
             )
-            AppTextField(
+            TextFieldComponent(
                 value = email,
                 placeholderText = "Email",
                 icon = Icons.Outlined.Email,
                 onValueChange = { signUpBarberViewModel.emailChanged(it) },
                 isError = emailError
             )
-            TextFieldPassword(
+            TextFieldPasswordComponent(
                 password = password,
                 onValueChange = { signUpBarberViewModel.passwordChanged(it) },
                 isError = passwordError,
                 onIconClicked = { signUpBarberViewModel.showOrHidePassword() },
                 passwordVisibility = showOrHidePassword
             )
-            CustomButton(
+            ButtonComponent(
                 text = "Sign Up",
                 onClick = {
                     signUpBarberViewModel.viewModelScope.launch {

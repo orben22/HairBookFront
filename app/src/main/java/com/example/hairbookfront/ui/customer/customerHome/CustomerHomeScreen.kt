@@ -15,11 +15,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
-import com.example.hairbookfront.ui.common.AppTextField
+import com.example.hairbookfront.ui.common.TextFieldComponent
 import com.example.hairbookfront.ui.common.BarberShopList
-import com.example.hairbookfront.ui.common.TopAppBarHairBook
+import com.example.hairbookfront.ui.common.TopAppBarComponent
 import com.example.hairbookfront.theme.HairBookFrontTheme
-import com.example.hairbookfront.ui.common.BottomAppBarHairBook
+import com.example.hairbookfront.ui.common.BottomAppBarComponent
 
 @Composable
 fun CustomerHomeScreen(
@@ -30,9 +30,9 @@ fun CustomerHomeScreen(
     val barberShops by customerViewModel.barberShops.collectAsStateWithLifecycle()
     Scaffold(
         topBar = {
-            TopAppBarHairBook("HairBook")
+            TopAppBarComponent("HairBook")
         },
-        bottomBar = { BottomAppBarHairBook() },
+        bottomBar = { BottomAppBarComponent() },
         content = { innerPadding ->
             Column(
                 modifier = Modifier
@@ -40,8 +40,8 @@ fun CustomerHomeScreen(
                     .padding(innerPadding),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                TopAppBarHairBook(text = "Search Shop")
-                AppTextField(
+                TopAppBarComponent(text = "Search Shop")
+                TextFieldComponent(
                     value = searchText,
                     placeholderText = "Search",
                     icon = Icons.Outlined.Search,

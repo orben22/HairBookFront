@@ -9,7 +9,7 @@ import androidx.navigation.NavController
 import com.example.hairbookfront.domain.entities.Review
 import com.example.hairbookfront.theme.HairBookFrontTheme
 import com.example.hairbookfront.ui.common.ReviewsList
-import com.example.hairbookfront.ui.common.TopAppBarHairBook
+import com.example.hairbookfront.ui.common.TopAppBarComponent
 
 @Composable
 fun ReadReviewsScreen(
@@ -17,7 +17,7 @@ fun ReadReviewsScreen(
     navController: NavController? = null,
 ) {
     Column {
-        TopAppBarHairBook(text = "Reviews")
+        TopAppBarComponent(text = "Reviews")
         ReviewsList(reviews = listOf(review1, review2, review3, review4, review5, review6))
     }
 }

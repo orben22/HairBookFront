@@ -1,6 +1,5 @@
 package com.example.hairbookfront.ui.auth.signUpCustomer
 
-import android.content.res.Configuration
 import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -23,22 +22,18 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavHostController
-import com.example.hairbookfront.ui.common.AppTextField
-import com.example.hairbookfront.ui.common.TextFieldPassword
-import com.example.hairbookfront.ui.common.TopAppBarHairBook
-import com.example.hairbookfront.theme.HairBookFrontTheme
+import com.example.hairbookfront.ui.common.TextFieldComponent
+import com.example.hairbookfront.ui.common.TextFieldPasswordComponent
+import com.example.hairbookfront.ui.common.TopAppBarComponent
 import com.example.hairbookfront.ui.common.ClickableText
-import com.example.hairbookfront.ui.common.CustomButton
+import com.example.hairbookfront.ui.common.ButtonComponent
 import com.example.hairbookfront.ui.navgraph.Routes
-import com.example.hairbookfront.util.ResourceState
 import kotlinx.coroutines.launch
-import timber.log.Timber
 
 
 @Composable
@@ -83,8 +78,8 @@ fun SignUpCustomerScreen(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            TopAppBarHairBook(text = "Customer Sign Up")
-            AppTextField(
+            TopAppBarComponent(text = "Customer Sign Up")
+            TextFieldComponent(
                 value = firstName,
                 placeholderText = "First Name",
                 icon = Icons.Outlined.AccountCircle,
@@ -95,7 +90,7 @@ fun SignUpCustomerScreen(
                     keyboardType = KeyboardType.Text
                 )
             )
-            AppTextField(
+            TextFieldComponent(
                 value = lastName,
                 placeholderText = "Last Name",
                 icon = Icons.Outlined.AccountCircle,
@@ -106,7 +101,7 @@ fun SignUpCustomerScreen(
                     keyboardType = KeyboardType.Text
                 )
             )
-            AppTextField(
+            TextFieldComponent(
                 value = age,
                 placeholderText = "Age",
                 icon = null,
@@ -116,7 +111,7 @@ fun SignUpCustomerScreen(
                 ),
                 isError = ageError
             )
-            AppTextField(
+            TextFieldComponent(
                 value = phoneNumber,
                 placeholderText = "Phone Number",
                 icon = Icons.Outlined.Call,
@@ -124,21 +119,21 @@ fun SignUpCustomerScreen(
                 keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
                 isError = phoneNumberError
             )
-            AppTextField(
+            TextFieldComponent(
                 value = email,
                 placeholderText = "Email",
                 icon = Icons.Outlined.Email,
                 onValueChange = { signUpCustomerViewModel.emailChanged(it) },
                 isError = emailError
             )
-            TextFieldPassword(
+            TextFieldPasswordComponent(
                 password = password,
                 onValueChange = { signUpCustomerViewModel.passwordChanged(it) },
                 isError = passwordError,
                 onIconClicked = { signUpCustomerViewModel.showOrHidePassword() },
                 passwordVisibility = showOrHidePassword
             )
-            CustomButton(
+            ButtonComponent(
                 text = "Sign Up",
                 onClick = {
                     signUpCustomerViewModel.viewModelScope.launch {

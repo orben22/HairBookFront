@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.MaterialTheme
@@ -22,11 +21,10 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
-import com.example.hairbookfront.R
 import com.example.hairbookfront.domain.entities.Booking
 
 @Composable
-fun BookingCard(
+fun BookingCardComponent(
     isCustomer: Boolean, booking: Booking, numberOfOptions: Int = 2,
     optionsIcons: List<ImageVector> = listOf(Icons.Filled.Edit, Icons.Filled.Delete),
     optionFunctions: List<() -> Unit>
@@ -70,7 +68,7 @@ fun BookingCard(
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 for (i in 1..numberOfOptions) {
-                    CustomButton(
+                    ButtonComponent(
                         text = "",
                         icon = optionsIcons[i - 1],
                         onClick = {

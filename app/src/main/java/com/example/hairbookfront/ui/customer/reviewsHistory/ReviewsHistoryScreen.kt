@@ -7,8 +7,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.example.hairbookfront.ui.common.BottomAppBarHairBook
-import com.example.hairbookfront.ui.common.TopAppBarHairBook
+import com.example.hairbookfront.ui.common.BottomAppBarComponent
+import com.example.hairbookfront.ui.common.TopAppBarComponent
 
 
 @Composable
@@ -18,10 +18,10 @@ fun ReviewsHistoryScreen(
 ) {
     Scaffold(
         topBar = {
-            TopAppBarHairBook(text = "Reviews History")
+            TopAppBarComponent(text = "Reviews History")
         },
         bottomBar = {
-            BottomAppBarHairBook()
+            BottomAppBarComponent()
         },
         content = { innerPadding ->
             Column(modifier = Modifier.padding(innerPadding)) {

@@ -2,7 +2,6 @@ package com.example.hairbookfront.ui.common
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
@@ -16,7 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 
 @Composable
-fun CustomButton(
+fun ButtonComponent(
     text: String,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
@@ -29,7 +28,7 @@ fun CustomButton(
     ) {
         if (icon != null) {
             Icon(imageVector = icon, contentDescription = null)
-            Spacer(modifier = Modifier.width(5.dp)) // Adjust spacing between icon and text
+            Spacer(modifier = Modifier.width(5.dp))
         }
         Text(text = text)
     }

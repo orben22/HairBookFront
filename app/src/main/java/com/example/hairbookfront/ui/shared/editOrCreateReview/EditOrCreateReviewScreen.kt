@@ -7,8 +7,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.example.hairbookfront.ui.common.BottomAppBarHairBook
-import com.example.hairbookfront.ui.common.TopAppBarHairBook
+import com.example.hairbookfront.ui.common.BottomAppBarComponent
+import com.example.hairbookfront.ui.common.TopAppBarComponent
 
 
 @Composable
@@ -19,10 +19,10 @@ fun EditOrCreateReviewScreen(
 
     Scaffold(
         topBar = {
-            TopAppBarHairBook(text = "Post Review")
+            TopAppBarComponent(text = "Post Review")
         },
         bottomBar = {
-            BottomAppBarHairBook()
+            BottomAppBarComponent()
         },
         content = { innerPadding ->
             Column(modifier = Modifier.padding(innerPadding)) {

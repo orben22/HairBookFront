@@ -21,7 +21,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun BottomAppBarHairBook(
+fun BottomAppBarComponent(
     onClickFunctions: List<() -> Unit> = listOf({ }, { }),
     onClickFloating: () -> Unit = {},
     numberOfIcons: Int = 2,
