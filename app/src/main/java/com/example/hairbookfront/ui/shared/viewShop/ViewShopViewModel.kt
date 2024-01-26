@@ -67,8 +67,15 @@ class ViewShopViewModel @Inject constructor(
     private val _shopId = MutableStateFlow("")
 
     private val _role = MutableStateFlow("")
+    val role: StateFlow<String>
+        get() = _role
 
     init {
+        viewModelScope.launch {
+            dataStorePreferences.getRole().collectLatest { role ->
+                _role.emit(role)
+            }
+        }
         getShopData()
     }
 
@@ -102,6 +109,7 @@ class ViewShopViewModel @Inject constructor(
                 }
         }
     }
+
     fun expandedFun() {
         _isExpanded.value = !_isExpanded.value
     }
@@ -120,6 +128,12 @@ class ViewShopViewModel @Inject constructor(
     fun viewReview() {
         viewModelScope.launch {
             _screen.emit(Routes.ReadReviewScreen.route)
+        }
+    }
+
+    fun viewHistory() {
+        viewModelScope.launch {
+            _screen.emit(Routes.BookingHistoryScreen.route)
         }
     }
 }

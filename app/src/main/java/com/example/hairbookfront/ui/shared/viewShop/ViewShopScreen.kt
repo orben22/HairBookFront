@@ -56,7 +56,7 @@ fun ViewShopScreen(
     val barberShop by viewShopViewModel.barberShop.collectAsStateWithLifecycle()
     val screen by viewShopViewModel.screen.collectAsStateWithLifecycle()
     val expanded by viewShopViewModel.isExpanded.collectAsStateWithLifecycle()
-
+    val role by viewShopViewModel.role.collectAsState()
     LaunchedEffect(screen) {
         if (screen != "") {
             navController?.navigate(screen)
@@ -72,7 +72,7 @@ fun ViewShopScreen(
             )
         },
         bottomBar = {
-            BottomAppBarComponent(onClickFunctions = listOf({}, viewShopViewModel::viewReview), onClickFloating = {
+            BottomAppBarComponent( onClickFunctions = if (role == "barber") listOf(viewShopViewModel::viewHistory, viewShopViewModel::viewReview) else listOf(viewShopViewModel::viewReview), onClickFloating = {
                 viewShopViewModel.onFloatingActionButtonClicked()
             }, floatingIcon = Icons.Filled.Add)
         }
