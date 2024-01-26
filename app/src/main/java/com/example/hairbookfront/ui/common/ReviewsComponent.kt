@@ -167,7 +167,7 @@ fun ReviewItemPreview() {
                 rating = 5f,
                 timestamp = "timestamp",
                 userId = "userId",
-                barbershopId = "barbershopId"
+                barberShopId = "barberShopId"
             ),
             editable = true,
             isEditing = true,

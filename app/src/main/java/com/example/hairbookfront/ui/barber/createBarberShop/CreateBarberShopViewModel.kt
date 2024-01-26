@@ -294,8 +294,8 @@ class CreateBarberShopViewModel @Inject constructor(
                 _endTimeSaturday.value
             ) else listOf()
             val barberShop = BarberShop(
-                barbershopId = null,
-                barbershopName = _barberShopName.value,
+                barberShopId = null,
+                barberShopName = _barberShopName.value,
                 barberName = barberName,
                 phoneNumber = _barberShopPhoneNumber.value,
                 workingDays = workingDays,

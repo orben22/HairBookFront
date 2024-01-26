@@ -1,6 +1,5 @@
 package com.example.hairbookfront.ui.navgraph
 
-import com.example.hairbookfront.ui.barber.barberDetails.BarberDetailsViewModel
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
@@ -17,14 +16,11 @@ import com.example.hairbookfront.presentation.CreateBarberShop.CreateBarberShopS
 import com.example.hairbookfront.ui.auth.signUpBarber.SignUpBarberScreen
 import com.example.hairbookfront.ui.auth.signUpCustomer.SignUpCustomerScreen
 import com.example.hairbookfront.ui.auth.welcome.WelcomePageScreen
-import com.example.hairbookfront.ui.auth.welcome.WelcomeViewModel
 import com.example.hairbookfront.ui.barber.barberDetails.BarberDetailsScreen
 import com.example.hairbookfront.ui.customer.customerDetails.CustomerDetailsScreen
-import com.example.hairbookfront.ui.customer.customerDetails.CustomerDetailsViewModel
 import com.example.hairbookfront.ui.customer.customerHome.CustomerHomeScreen
-import com.example.hairbookfront.ui.customer.customerHome.CustomerHomeViewModel
 import com.example.hairbookfront.ui.customer.reviewsHistory.ReviewsHistoryScreen
-import com.example.hairbookfront.ui.shared.bookingHistory.BookingHistoryScreen
+import com.example.hairbookfront.ui.shared.MyBookings.MyBookingsScreen
 import com.example.hairbookfront.ui.shared.editOrCreateBooking.EditOrCreateBookingScreen
 import com.example.hairbookfront.ui.shared.editOrCreateReview.EditOrCreateReviewScreen
 import com.example.hairbookfront.ui.shared.readReviews.ReadReviewsScreen
@@ -81,8 +77,8 @@ fun AppNavGraph(
             composable(route = Routes.ReadReviewScreen.route) {
                 ReadReviewsScreen(navController = navController)
             }
-            composable(route = Routes.BookingHistoryScreen.route) {
-                BookingHistoryScreen(navController = navController)
+            composable(route = Routes.MyBookingsScreen.route) {
+                MyBookingsScreen(navController = navController)
             }
         }
 
@@ -109,8 +105,8 @@ fun AppNavGraph(
             composable(route = Routes.ReadReviewScreen.route) {
                 ReadReviewsScreen(navController = navController)
             }
-            composable(route = Routes.BookingHistoryScreen.route) {
-                BookingHistoryScreen(navController = navController)
+            composable(route = Routes.MyBookingsScreen.route) {
+                MyBookingsScreen(navController = navController)
             }
         }
 

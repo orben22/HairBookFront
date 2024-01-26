@@ -249,4 +249,21 @@ class ApiRepositoryBarber @Inject constructor(
             emit(ResourceState.ERROR(e.localizedMessage ?: "Something went wrong with api"))
         }
     }
+    suspend fun deleteBooking(
+        accessToken: String,
+        barberShopId: String,
+        bookingId : String
+    ): Flow<ResourceState<String>> {
+        return flow {
+            emit(ResourceState.LOADING())
+            val response = hairBookDataSourceBarber.deleteBooking(accessToken, barberShopId, bookingId )
+            if (response.isSuccessful && response.body() != null) {
+                emit(ResourceState.SUCCESS(response.body()!!))
+            } else {
+                emit(ResourceState.ERROR("Error deleting booking"))
+            }
+        }.catch { e ->
+            emit(ResourceState.ERROR(e.localizedMessage ?: "Something went wrong with api"))
+        }
+    }
 }

@@ -8,5 +8,5 @@ data class Booking(
     val service: Service,
     val date: String,
     val userId: String,
-    val barbershopId: String
+    val barberShopId: String
 )

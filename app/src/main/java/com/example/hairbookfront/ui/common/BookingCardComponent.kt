@@ -7,6 +7,8 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
@@ -21,13 +23,31 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
+import com.example.hairbookfront.domain.entities.BarberShop
 import com.example.hairbookfront.domain.entities.Booking
 
+
+@Composable
+fun BookingsList(
+    isCustomer: Boolean,
+    bookings: List<Booking>?,
+    numberOfOptions: Int = 2,
+    optionsIcons: List<ImageVector> = listOf(Icons.Filled.Edit,Icons.Filled.Delete),
+    optionFunctions: List<(Booking) -> Unit>
+) {
+    bookings?.let {
+        LazyColumn {
+            items(bookings) { booking ->
+                BookingCardComponent(isCustomer = isCustomer,booking = booking,numberOfOptions=numberOfOptions,optionsIcons=optionsIcons, optionFunctions = optionFunctions)
+            }
+        }
+    }
+}
 @Composable
 fun BookingCardComponent(
     isCustomer: Boolean, booking: Booking, numberOfOptions: Int = 2,
-    optionsIcons: List<ImageVector> = listOf(Icons.Filled.Edit, Icons.Filled.Delete),
-    optionFunctions: List<() -> Unit>
+    optionsIcons: List<ImageVector> = listOf(Icons.Filled.Edit,Icons.Filled.Delete),
+    optionFunctions: List<(Booking) -> Unit>
 ) {
     ElevatedCard(
         modifier = Modifier
@@ -53,13 +73,13 @@ fun BookingCardComponent(
                 color = Color.Black
             )
             Spacer(modifier = Modifier.height(8.dp))
-            Text(text = "Shop Name:  ${booking.barberShopName}", color = Color.Black)
+            Text(text = "Shop Name: ${booking.barberShopName}", color = Color.Black)
             if (isCustomer) {
-                Text(text = "Barber Name:${booking.barberName} ", color = Color.Black)
-            } else Text(text = "Customer Name ${booking.customerName}")
+                Text(text = "Barber Name: ${booking.barberName} ", color = Color.Black)
+            } else Text(text = "Customer Name: ${booking.customerName}")
             Text(text = "Service: ${booking.service.serviceName}", color = Color.Black)
             Text(text = "Price: ${booking.service.price}", color = Color.Black)
-            Text(text = "duration: ${booking.service.duration}", color = Color.Black)
+            Text(text = "Duration: ${booking.service.duration}", color = Color.Black)
             Text(text = "Date: ${booking.date}", color = Color.Black)
             Spacer(modifier = Modifier.height(16.dp))
             Row(
@@ -72,7 +92,7 @@ fun BookingCardComponent(
                         text = "",
                         icon = optionsIcons[i - 1],
                         onClick = {
-                            optionFunctions[i - 1]()
+                            optionFunctions[i - 1](booking)
                         }
                     )
                 }

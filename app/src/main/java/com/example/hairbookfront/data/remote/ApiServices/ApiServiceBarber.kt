@@ -96,5 +96,11 @@ interface ApiServiceBarber {
         @Query("barberShopId") barberShopId: String
     ): Response<List<Service>>
 
+    @DELETE("barber/delete-booking")
+    suspend fun deleteBooking(
+        @Header("Authorization") authToken: String,
+        @Query("barberShopId") barberShopId: String,
+        @Query("bookingId") bookingId: String
+    ): Response<String>
 
 }

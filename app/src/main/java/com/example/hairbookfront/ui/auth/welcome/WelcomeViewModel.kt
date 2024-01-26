@@ -162,7 +162,7 @@ class WelcomeViewModel @Inject constructor(
                 when (it) {
                     is ResourceState.SUCCESS -> {
                         dataStorePreferences.storeCustomerDetails(it.data)
-                        _homeScreen.value = Routes.CustomerHomeScreen.route
+                        _homeScreen.value = Routes.MyBookingsScreen.route
                     }
 
                     is ResourceState.ERROR -> sendMessage(it.error)

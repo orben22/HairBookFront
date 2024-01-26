@@ -66,10 +66,10 @@ class CustomerHomeViewModel @Inject constructor(
     }
 
     fun onBarberShopClicked(barberShop: BarberShop) {
-        Timber.d("Clicked barbershop with ID: ${barberShop.barbershopId}")
+        Timber.d("Clicked barbershop with ID: ${barberShop.barberShopId}")
         _screen.value = Routes.ViewShopScreen.route
         viewModelScope.launch {
-            barberShop.barbershopId?.let { dataStorePreferences.setShopId(it) }
+            barberShop.barberShopId?.let { dataStorePreferences.setShopId(it) }
         }
 
     }

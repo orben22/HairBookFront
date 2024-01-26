@@ -8,6 +8,6 @@ data class Review(
     val rating: Float,
     val timestamp: String,
     val userId: String,
-    val barbershopId: String,
+    val barberShopId: String,
 )
 

@@ -100,3 +100,4 @@ val services = listOf(
     Service("HairCut", 10f, 30f, "1", "4")
 )
 
+/** MAKE SURE TO INIT setBookingIdForEditing FOR REDIRECTING**/

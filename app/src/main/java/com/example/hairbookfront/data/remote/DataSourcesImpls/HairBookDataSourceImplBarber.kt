@@ -108,4 +108,12 @@ class HairBookDataSourceImplBarber @Inject constructor(
         return apiServiceBarber.getServices("Bearer $accessToken", barberShopId)
     }
 
+    override suspend fun deleteBooking(
+        accessToken: String,
+        barberShopId: String,
+        bookingId : String
+    ): Response<String> {
+        return apiServiceBarber.deleteBooking("Bearer $accessToken", barberShopId, bookingId)
+    }
+
 }

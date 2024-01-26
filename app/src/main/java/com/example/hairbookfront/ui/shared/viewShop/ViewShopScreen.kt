@@ -79,7 +79,7 @@ fun ViewShopScreen(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Spacer(modifier = Modifier.height(16.dp))
-            Text(text = barberShop.barbershopName, style = MaterialTheme.typography.headlineLarge)
+            Text(text = barberShop.barberShopName, style = MaterialTheme.typography.headlineLarge)
             Spacer(modifier = Modifier.height(16.dp))
             Text(
                 text = "Address: ${barberShop.location}",
@@ -122,7 +122,7 @@ fun ViewShopScreen(
                         rating = 3.6f,
                         timestamp = "timestamp",
                         userId = "userId",
-                        barbershopId = "barbershopId"
+                        barberShopId = "barberShopId"
                     )
                 ),
                 editable = false

@@ -62,7 +62,7 @@ fun BarberShopItem(
                 top = Dimens.smallPadding1,
                 start = Dimens.smallPadding3
             ),
-            text = barberShop.barbershopName,
+            text = barberShop.barberShopName,
             fontWeight = FontWeight.Bold,
             fontSize = Dimens.fontLarge,
             color = MaterialTheme.colorScheme.onPrimary
@@ -91,7 +91,7 @@ fun BarberShopItem(
                 top = Dimens.smallPadding1,
                 start = Dimens.smallPadding3, bottom = Dimens.smallPadding1
             ),
-            text = "Barber: ${barberShop.barbershopName}",
+            text = "Barber: ${barberShop.barberShopName}",
             fontSize = Dimens.fontMedium,
             fontWeight = FontWeight.Bold,
             color = MaterialTheme.colorScheme.onPrimary

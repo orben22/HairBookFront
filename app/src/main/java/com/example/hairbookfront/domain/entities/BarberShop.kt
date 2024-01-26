@@ -1,8 +1,8 @@
 package com.example.hairbookfront.domain.entities
 
 data class BarberShop(
-    val barbershopId: String?,
-    val barbershopName: String,
+    val barberShopId: String?,
+    val barberShopName: String,
     val barberName: String,
     val phoneNumber: String,
     val workingDays: List<Float>,
@@ -19,9 +19,9 @@ data class BarberShop(
 ) {
     fun doesMatchSearchQuery(query: String): Boolean {
         val matchingCombinations = listOf(
-            barbershopName,
-            "${barbershopName.first()}",
-            barbershopName.lowercase(),
+            barberShopName,
+            "${barberShopName.first()}",
+            barberShopName.lowercase(),
             barberName,
             "${barberName.first()}",
             barberName.lowercase(),

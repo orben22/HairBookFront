@@ -35,7 +35,7 @@ sealed class Routes(val route: String) {
 
     data object ReadReviewScreen : Routes("readReviewScreen")
 
-    data object BookingHistoryScreen : Routes("bookingHistoryScreen")
+    data object MyBookingsScreen : Routes("myBookingsScreen")
 
 
 

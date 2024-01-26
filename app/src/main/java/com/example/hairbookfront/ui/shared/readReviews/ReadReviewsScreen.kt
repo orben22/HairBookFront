@@ -30,7 +30,7 @@ val review1 = Review(
     rating = 3f,
     timestamp = "timestamp",
     userId = "userId",
-    barbershopId = "barbershopId"
+    barberShopId = "barberShopId"
 )
 val review2 = Review(
     reviewId = "1",
@@ -40,7 +40,7 @@ val review2 = Review(
     rating = 4f,
     timestamp = "timestamp",
     userId = "userId",
-    barbershopId = "barbershopId"
+    barberShopId = "barberShopId"
 )
 
 val review3 = Review(
@@ -51,7 +51,7 @@ val review3 = Review(
     rating = 5f,
     timestamp = "timestamp",
     userId = "userId",
-    barbershopId = "barbershopId"
+    barberShopId = "barberShopId"
 )
 
 val review4 = Review(
@@ -62,7 +62,7 @@ val review4 = Review(
     rating = 2f,
     timestamp = "timestamp",
     userId = "userId",
-    barbershopId = "barbershopId"
+    barberShopId = "barberShopId"
 )
 
 val review5 = Review(
@@ -73,7 +73,7 @@ val review5 = Review(
     rating = 2.6f,
     timestamp = "timestamp",
     userId = "userId",
-    barbershopId = "barbershopId"
+    barberShopId = "barberShopId"
 )
 
 val review6 = Review(
@@ -84,7 +84,7 @@ val review6 = Review(
     rating = 2.1f,
     timestamp = "timestamp",
     userId = "userId",
-    barbershopId = "barbershopId"
+    barberShopId = "barberShopId"
 )
 
 @Preview(showBackground = true, showSystemUi = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
