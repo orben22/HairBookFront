@@ -116,4 +116,10 @@ class ViewShopViewModel @Inject constructor(
             _screen.emit(Routes.WelcomeScreen.route)
         }
     }
+
+    fun viewReview() {
+        viewModelScope.launch {
+            _screen.emit(Routes.ReadReviewScreen.route)
+        }
+    }
 }

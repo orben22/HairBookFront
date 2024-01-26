@@ -72,7 +72,7 @@ fun ViewShopScreen(
             )
         },
         bottomBar = {
-            BottomAppBarComponent(onClickFloating = {
+            BottomAppBarComponent(onClickFunctions = listOf(viewShopViewModel::viewReview,{}), onClickFloating = {
                 viewShopViewModel.onFloatingActionButtonClicked()
             }, floatingIcon = Icons.Filled.Add)
         }
