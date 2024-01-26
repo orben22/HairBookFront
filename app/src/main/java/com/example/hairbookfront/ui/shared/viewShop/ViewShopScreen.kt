@@ -15,6 +15,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.outlined.Star
 import androidx.compose.material3.Icon
@@ -43,6 +44,7 @@ import com.example.hairbookfront.ui.common.BottomAppBarComponent
 import com.example.hairbookfront.ui.common.RatingComponent
 import com.example.hairbookfront.ui.common.ReviewsList
 import com.example.hairbookfront.ui.common.TopAppBarComponent
+import com.example.hairbookfront.util.Constants
 import timber.log.Timber
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
@@ -55,7 +57,8 @@ fun ViewShopScreen(
 ) {
     val barberShop by viewShopViewModel.barberShop.collectAsStateWithLifecycle()
     val screen by viewShopViewModel.screen.collectAsStateWithLifecycle()
-
+    val expanded by viewShopViewModel.isExpanded.collectAsStateWithLifecycle()
+    val role by viewShopViewModel.role.collectAsState()
     LaunchedEffect(screen) {
         if (screen != "") {
             navController?.navigate(screen)
@@ -63,12 +66,36 @@ fun ViewShopScreen(
     }
     Scaffold(
         topBar = {
-            TopAppBarComponent(text = "View Shop")
+            TopAppBarComponent(text = "View Shop",
+                onDismissRequest = viewShopViewModel::dismissMenu,
+                expanded = expanded,
+                expandFunction = viewShopViewModel::expandedFun,
+                onClickMenus = listOf(viewShopViewModel::signOut,{})
+            )
         },
         bottomBar = {
-            BottomAppBarComponent(onClickFloating = {
-                viewShopViewModel.onFloatingActionButtonClicked()
-            }, floatingIcon = Icons.Filled.Add)
+            if (role==Constants.CustomerRole) {
+                BottomAppBarComponent(onClickFunctions = listOf(viewShopViewModel::writeReview, viewShopViewModel::viewReview),
+                    onClickFloating = {
+                        viewShopViewModel.onFloatingActionButtonClicked()
+                    }, icons = listOf(
+                        Icons.Filled.Edit,
+                        Icons.Filled.List
+                    ),
+                    floatingIcon = Icons.Filled.Add,
+                    numberOfIcons = 2,
+                    textToIcon = listOf("Write Review", "Read Review")
+                )
+            }
+            else {
+                BottomAppBarComponent(onClickFunctions = listOf(viewShopViewModel::viewHistory, viewShopViewModel::viewReview),
+                    textToIcon = listOf("Booking History", "Read Reviews"),
+                    icons = listOf(
+                        Icons.Filled.List,
+                        Icons.Filled.Star
+                    ),
+                )
+            }
         }
     ) { innerPadding ->
         Column(

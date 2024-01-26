@@ -15,6 +15,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -34,22 +35,38 @@ import com.example.hairbookfront.ui.common.ServiceCard
 import com.example.hairbookfront.ui.common.TimeSlotsPicker
 import com.example.hairbookfront.ui.common.TopAppBarComponent
 import com.maxkeppeker.sheets.core.models.base.rememberSheetState
+import timber.log.Timber
 
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun EditOrCreateBookingScreen(
-    viewModel: EditOrCreateBookingViewModel = hiltViewModel(),
+    editOrCreateBookingViewModel: EditOrCreateBookingViewModel = hiltViewModel(),
     navController: NavController? = null,
 ) {
-    val selectedService by viewModel.selectedService.collectAsStateWithLifecycle()
-    val selectedDate by viewModel.selectedDate.collectAsState()
-    val selectedTimeSlot by viewModel.selectedTimeSlot.collectAsState()
+    val selectedService by editOrCreateBookingViewModel.selectedService.collectAsStateWithLifecycle()
+    val selectedDate by editOrCreateBookingViewModel.selectedDate.collectAsState()
+    val selectedTimeSlot by editOrCreateBookingViewModel.selectedTimeSlot.collectAsState()
     val calendarState = rememberSheetState()
+    val screen by editOrCreateBookingViewModel.screen.collectAsStateWithLifecycle()
+    val expanded by editOrCreateBookingViewModel.isExpanded.collectAsStateWithLifecycle()
+
+    LaunchedEffect(screen) {
+        if (screen != "") {
+            Timber.d("navigating....$screen")
+            navController?.navigate(screen)
+        }
+    }
 
     Scaffold(
         topBar = {
-            TopAppBarComponent(text = "Book hair cut")
+            TopAppBarComponent(text = "Edit/Create Booking",
+                onDismissRequest = editOrCreateBookingViewModel::dismissMenu,
+                expanded = expanded,
+                expandFunction = editOrCreateBookingViewModel::expandedFun,
+                onClickMenus = listOf(editOrCreateBookingViewModel::signOut,{})
+
+                )
         },
         bottomBar = {
             BottomAppBarComponent()
@@ -68,7 +85,7 @@ fun EditOrCreateBookingScreen(
                     services[serviceIndex],
                     services[serviceIndex].serviceId == selectedService?.serviceId,
                     onServiceClick = { clickedService ->
-                        viewModel.onServiceSelected(clickedService)
+                        editOrCreateBookingViewModel.onServiceSelected(clickedService)
                     }
                 )
             }
@@ -83,13 +100,13 @@ fun EditOrCreateBookingScreen(
             }
             item {
                 if (selectedDate != "") {
-                    TimeSlotsPicker(selectedTimeSlot, viewModel::onTimeSlotSelected)
+                    TimeSlotsPicker(selectedTimeSlot, editOrCreateBookingViewModel::onTimeSlotSelected)
                 }
             }
         }
         DatePickerComponent(getDisabledDates = { listOf() },
             calendarState = calendarState,
-            onDateSelected = { viewModel.onDateSelected(it) })
+            onDateSelected = { editOrCreateBookingViewModel.onDateSelected(it) })
     }
 }
 

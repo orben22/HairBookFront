@@ -30,10 +30,10 @@ class WelcomeViewModel @Inject constructor(
 
     //customer@customer.com customer_password
     // barber@example.com barber_password
-    private val _email = MutableStateFlow("customer@customer.com")
+    private val _email = MutableStateFlow("barber@example.com")
     val email: StateFlow<String>
         get() = _email
-    private val _password = MutableStateFlow("customer_password")
+    private val _password = MutableStateFlow("barber_password")
     val password: StateFlow<String>
         get() = _password
 
@@ -174,7 +174,7 @@ class WelcomeViewModel @Inject constructor(
                 when (it) {
                     is ResourceState.SUCCESS -> {
                         dataStorePreferences.storeBarberDetails(it.data)
-                        _homeScreen.value = Routes.BarberDetailsScreen.route
+                        _homeScreen.value = Routes.CreateBarberShopScreen.route
                     }
 
                     is ResourceState.ERROR -> sendMessage(it.error)
