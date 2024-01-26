@@ -63,14 +63,14 @@ fun EditOrCreateBookingScreen(
             item {
                 Text(text = "Select a service")
             }
-            // Directly create the ServiceCard for each service
             items(services.size) { serviceIndex ->
                 ServiceCard(
                     services[serviceIndex],
-                    services[serviceIndex].serviceId == selectedService?.serviceId
-                ) { clickedService ->
-                    viewModel.onServiceSelected(clickedService)
-                }
+                    services[serviceIndex].serviceId == selectedService?.serviceId,
+                    onServiceClick = { clickedService ->
+                        viewModel.onServiceSelected(clickedService)
+                    }
+                )
             }
             item {
                 Button(onClick = { calendarState.show() }) {
