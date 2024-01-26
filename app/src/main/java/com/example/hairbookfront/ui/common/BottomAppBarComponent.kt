@@ -29,7 +29,7 @@ fun BottomAppBarComponent(
     numberOfIcons: Int = 2,
     icons: List<ImageVector> = listOf(Icons.Filled.Star, Icons.Filled.Edit),
     textToIcon: List<String> = listOf("Booking History", "Write Review"),
-    floatingIcon: ImageVector? = Icons.Filled.Add,
+    floatingIcon: ImageVector? = null,
 ) {
     BottomAppBar(
         actions = {

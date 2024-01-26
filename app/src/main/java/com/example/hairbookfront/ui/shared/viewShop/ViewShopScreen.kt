@@ -68,7 +68,7 @@ fun ViewShopScreen(
         bottomBar = {
             BottomAppBarComponent(onClickFloating = {
                 viewShopViewModel.onFloatingActionButtonClicked()
-            })
+            }, floatingIcon = Icons.Filled.Add)
         }
     ) { innerPadding ->
         Column(
