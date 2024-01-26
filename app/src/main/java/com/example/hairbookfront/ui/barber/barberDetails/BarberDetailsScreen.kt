@@ -10,6 +10,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -37,9 +38,23 @@ fun BarberDetailsScreen(
     val lastname by barberDetailsViewModel.getLastName().collectAsState(initial = "")
     val email by barberDetailsViewModel.getEmail().collectAsState(initial = "")
     val myShops by barberDetailsViewModel.myshops.collectAsStateWithLifecycle()
+    val screen by barberDetailsViewModel.screen.collectAsStateWithLifecycle()
+    val expanded by barberDetailsViewModel.isExpanded.collectAsStateWithLifecycle()
     Timber.d("experience: $yearsOfExperience")
+    LaunchedEffect(screen) {
+        if (screen != "") {
+            Timber.d("navigating....$screen")
+            navController?.navigate(screen)
+        }
+    }
     Scaffold(
-        topBar = { TopAppBarComponent(text = "Barber Details", dropDownMenu = true) },
+        topBar = { TopAppBarComponent(text = "Barber Details",
+            onDismissRequest = barberDetailsViewModel::dismissMenu,
+            expanded = expanded,
+            expandFunction = barberDetailsViewModel::expandedFun,
+            onClickMenus = listOf(barberDetailsViewModel::signOut,{})
+            )
+                 },
          bottomBar = {
             BottomAppBarComponent()
         },

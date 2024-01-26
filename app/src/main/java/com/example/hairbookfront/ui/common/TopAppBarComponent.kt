@@ -13,7 +13,7 @@ import androidx.compose.runtime.Composable
 @Composable
 fun TopAppBarComponent(
     text: String,
-    dropDownMenu: Boolean = false,
+    dropDownMenu: Boolean = true,
     onClickBackArrow: () -> Unit = { },
     suggestions: List<String> = listOf("Sign Out", "About"),
     expanded: Boolean = false,
