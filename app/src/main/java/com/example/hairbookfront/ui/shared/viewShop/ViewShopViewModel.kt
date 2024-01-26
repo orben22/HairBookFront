@@ -136,4 +136,10 @@ class ViewShopViewModel @Inject constructor(
             _screen.emit(Routes.BookingHistoryScreen.route)
         }
     }
+
+    fun writeReview() {
+        viewModelScope.launch {
+            _screen.emit(Routes.EditOrCreateReviewScreen.route)
+        }
+    }
 }
