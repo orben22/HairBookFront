@@ -3,21 +3,38 @@ package com.example.hairbookfront.ui.shared.readReviews
 import android.content.res.Configuration
 import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.example.hairbookfront.domain.entities.Review
 import com.example.hairbookfront.theme.HairBookFrontTheme
 import com.example.hairbookfront.ui.common.ReviewsList
 import com.example.hairbookfront.ui.common.TopAppBarComponent
+import timber.log.Timber
 
 @Composable
 fun ReadReviewsScreen(
-    viewModel: ReadReviewsViewModel = hiltViewModel(),
+    readReviewsViewModel: ReadReviewsViewModel = hiltViewModel(),
     navController: NavController? = null,
 ) {
+    val screen by readReviewsViewModel.screen.collectAsStateWithLifecycle()
+    val expanded by readReviewsViewModel.isExpanded.collectAsStateWithLifecycle()
+    LaunchedEffect(screen) {
+        if (screen != "") {
+            Timber.d("navigating....$screen")
+            navController?.navigate(screen)
+        }
+    }
     Column {
-        TopAppBarComponent(text = "Reviews")
+        TopAppBarComponent(text = "Reviews",
+            onDismissRequest = readReviewsViewModel::dismissMenu,
+            expanded = expanded,
+            expandFunction = readReviewsViewModel::expandedFun,
+            onClickMenus = listOf(readReviewsViewModel::signOut,{})
+        )
         ReviewsList(reviews = listOf(review1, review2, review3, review4, review5, review6))
     }
 }

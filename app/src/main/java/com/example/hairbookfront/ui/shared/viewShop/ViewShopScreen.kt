@@ -55,6 +55,7 @@ fun ViewShopScreen(
 ) {
     val barberShop by viewShopViewModel.barberShop.collectAsStateWithLifecycle()
     val screen by viewShopViewModel.screen.collectAsStateWithLifecycle()
+    val expanded by viewShopViewModel.isExpanded.collectAsStateWithLifecycle()
 
     LaunchedEffect(screen) {
         if (screen != "") {
@@ -63,7 +64,12 @@ fun ViewShopScreen(
     }
     Scaffold(
         topBar = {
-            TopAppBarComponent(text = "View Shop")
+            TopAppBarComponent(text = "View Shop",
+                onDismissRequest = viewShopViewModel::dismissMenu,
+                expanded = expanded,
+                expandFunction = viewShopViewModel::expandedFun,
+                onClickMenus = listOf(viewShopViewModel::signOut,{})
+            )
         },
         bottomBar = {
             BottomAppBarComponent(onClickFloating = {

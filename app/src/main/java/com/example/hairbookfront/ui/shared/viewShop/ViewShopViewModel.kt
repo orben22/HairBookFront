@@ -3,6 +3,7 @@ package com.example.hairbookfront.ui.shared.viewShop
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.hairbookfront.data.datastore.DataStorePreferences
+import com.example.hairbookfront.domain.SignOutHandler
 import com.example.hairbookfront.domain.entities.BarberShop
 import com.example.hairbookfront.domain.repository.ApiRepositoryCustomer
 import com.example.hairbookfront.ui.navgraph.Routes
@@ -23,12 +24,17 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ViewShopViewModel @Inject constructor(
+    private val signOutHandler: SignOutHandler,
     private val hairBookRepository: ApiRepositoryCustomer,
     private val dataStorePreferences: DataStorePreferences,
 ) : ViewModel() {
 
     private val _accessToken = MutableStateFlow("")
     private val _dataLoaded = MutableStateFlow(false)
+
+    private val _isExpanded = MutableStateFlow(false)
+    val isExpanded: StateFlow<Boolean>
+        get() = _isExpanded
 
     private val _screen = MutableStateFlow("")
     val screen: StateFlow<String>
@@ -94,6 +100,20 @@ class ViewShopViewModel @Inject constructor(
                         }
                     }
                 }
+        }
+    }
+    fun expandedFun() {
+        _isExpanded.value = !_isExpanded.value
+    }
+
+    fun dismissMenu() {
+        _isExpanded.value = false
+    }
+
+    fun signOut() {
+        viewModelScope.launch {
+            signOutHandler.signOut(_accessToken.value)
+            _screen.emit(Routes.WelcomeScreen.route)
         }
     }
 }
