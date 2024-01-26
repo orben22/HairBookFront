@@ -3,6 +3,7 @@ package com.example.hairbookfront.ui.customer.customerHome
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.hairbookfront.data.datastore.DataStorePreferences
+import com.example.hairbookfront.domain.SignOutHandler
 import com.example.hairbookfront.domain.entities.BarberShop
 import com.example.hairbookfront.domain.repository.ApiRepositoryCustomer
 import com.example.hairbookfront.ui.navgraph.Routes
@@ -23,9 +24,18 @@ import kotlinx.coroutines.flow.debounce
 @OptIn(FlowPreview::class)
 @HiltViewModel
 class CustomerHomeViewModel @Inject constructor(
+    private val signOutHandler: SignOutHandler,
     private val hairBookRepository: ApiRepositoryCustomer,
     private val dataStorePreferences: DataStorePreferences,
 ) : ViewModel() {
+
+    private val _accessToken = MutableStateFlow("")
+    val accessToken: StateFlow<String>
+        get() = _accessToken
+
+    private val _isExpanded = MutableStateFlow(false)
+    val isExpanded: StateFlow<Boolean>
+        get() = _isExpanded
 
     private val _searchText = MutableStateFlow("")
     val searchText: StateFlow<String>
@@ -64,9 +74,25 @@ class CustomerHomeViewModel @Inject constructor(
 
     }
 
+    fun expandedFun() {
+        _isExpanded.value = !_isExpanded.value
+    }
+
+    fun dismissMenu(){
+        _isExpanded.value = false
+    }
+
+    fun signOut() {
+        viewModelScope.launch {
+            signOutHandler.signOut(_accessToken.value)
+            _screen.emit(Routes.WelcomeScreen.route)
+        }
+    }
+
     init {
         viewModelScope.launch {
             dataStorePreferences.getAccessToken().collectLatest { accessToken ->
+                _accessToken.emit(accessToken)
                 hairBookRepository.getAllShops(accessToken).collectLatest { response ->
                     Timber.d("response: $response")
                     when (response) {

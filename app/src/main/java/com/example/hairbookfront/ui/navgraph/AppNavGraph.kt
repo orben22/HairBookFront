@@ -45,8 +45,7 @@ fun AppNavGraph(
             startDestination = Routes.WelcomeScreen.route
         ) {
             composable(route = Routes.WelcomeScreen.route) {
-                val viewModel = it.sharedViewModel<WelcomeViewModel>(navController)
-                WelcomePageScreen(viewModel, navController = navController)
+                WelcomePageScreen(navController = navController)
             }
             composable(route = Routes.SignupCustomerScreen.route) {
                 SignUpCustomerScreen(navController = navController)
@@ -62,12 +61,10 @@ fun AppNavGraph(
             startDestination = Routes.CustomerHomeScreen.route
         ) {
             composable(route = Routes.CustomerHomeScreen.route) {
-                val viewModel = it.sharedViewModel<CustomerHomeViewModel>(navController)
-                CustomerHomeScreen(viewModel, navController = navController)
+                CustomerHomeScreen(navController = navController)
             }
             composable(route = Routes.CustomerDetailsScreen.route) {
-                val viewModel = it.sharedViewModel<CustomerDetailsViewModel>(navController)
-                CustomerDetailsScreen(viewModel, navController = navController)
+                CustomerDetailsScreen(navController = navController)
             }
             composable(route = Routes.CustomerReviewsHistoryScreen.route) {
                 ReviewsHistoryScreen(navController = navController)
@@ -95,8 +92,7 @@ fun AppNavGraph(
             startDestination = Routes.BarberDetailsScreen.route
         ) {
             composable(route = Routes.BarberDetailsScreen.route) {
-                val viewModel = it.sharedViewModel<BarberDetailsViewModel>(navController)
-                BarberDetailsScreen(viewModel)
+                BarberDetailsScreen(navController = navController)
             }
             composable(route = Routes.CreateBarberShopScreen.route) {
                 CreateBarberShopScreen(navController = navController)

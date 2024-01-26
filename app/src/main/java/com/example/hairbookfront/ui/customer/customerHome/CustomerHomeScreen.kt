@@ -31,6 +31,7 @@ fun CustomerHomeScreen(
     val searchText by customerViewModel.searchText.collectAsStateWithLifecycle()
     val barberShops by customerViewModel.barberShops.collectAsStateWithLifecycle()
     val screen by customerViewModel.screen.collectAsStateWithLifecycle()
+    val expanded by customerViewModel.isExpanded.collectAsStateWithLifecycle()
     LaunchedEffect(screen) {
         if (screen != "") {
             Timber.d("navigating....")
@@ -39,7 +40,12 @@ fun CustomerHomeScreen(
     }
     Scaffold(
         topBar = {
-            TopAppBarComponent("HairBook")
+            TopAppBarComponent("HairBook",
+                onDismissRequest = customerViewModel::dismissMenu,
+                expanded = expanded,
+                expandFunction = customerViewModel::expandedFun,
+                onClickMenus = listOf(customerViewModel::signOut,{})
+            )
         },
         bottomBar = { BottomAppBarComponent() },
         content = { innerPadding ->

@@ -4,8 +4,10 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.hairbookfront.data.datastore.DataStorePreferences
+import com.example.hairbookfront.domain.SignOutHandler
 import com.example.hairbookfront.domain.entities.BarberShop
 import com.example.hairbookfront.domain.repository.ApiRepositoryBarber
+import com.example.hairbookfront.ui.navgraph.Routes
 import com.example.hairbookfront.util.ResourceState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
@@ -18,10 +20,22 @@ import javax.inject.Inject
 
 @HiltViewModel
 class BarberDetailsViewModel @Inject constructor(
+    private val signOutHandler: SignOutHandler,
     private val dataStorePreferences: DataStorePreferences,
     private val apiRepositoryBarber: ApiRepositoryBarber,
 ) : ViewModel() {
     private val _accessToken = MutableStateFlow("")
+    val accessToken: StateFlow<String>
+        get() = _accessToken
+
+    private val _isExpanded = MutableStateFlow(false)
+    val isExpanded: StateFlow<Boolean>
+        get() = _isExpanded
+
+    private val _screen = MutableStateFlow("")
+    val screen: StateFlow<String>
+        get() = _screen
+
     private val _firstName = MutableStateFlow("")
     val firstName: StateFlow<String>
         get() = _firstName
@@ -57,12 +71,27 @@ class BarberDetailsViewModel @Inject constructor(
         return dataStorePreferences.getEmail()
     }
 
+    fun expandedFun() {
+        _isExpanded.value = !_isExpanded.value
+    }
+
+    fun dismissMenu(){
+        _isExpanded.value = false
+    }
+
+    fun signOut() {
+        viewModelScope.launch {
+            signOutHandler.signOut(_accessToken.value)
+            _screen.emit(Routes.WelcomeScreen.route)
+        }
+    }
+
 
     init {
         viewModelScope.launch {
             dataStorePreferences.getAccessToken().collectLatest { accessToken ->
                 Timber.d(accessToken)
-                _accessToken.value = accessToken
+                _accessToken.emit(accessToken)
                 apiRepositoryBarber.getMyBarberShops(_accessToken.value)
                     .collectLatest { response ->
                         Timber.d("response: $response")
