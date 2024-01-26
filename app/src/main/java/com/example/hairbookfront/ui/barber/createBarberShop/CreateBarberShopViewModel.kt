@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.hairbookfront.data.datastore.DataStorePreferences
 import com.example.hairbookfront.domain.entities.BarberShop
+import com.example.hairbookfront.domain.entities.Service
 import com.example.hairbookfront.domain.repository.ApiRepositoryBarber
 import com.example.hairbookfront.ui.navgraph.Routes
 import com.example.hairbookfront.util.ResourceState
@@ -28,6 +29,8 @@ class CreateBarberShopViewModel @Inject constructor(
     private val dataStorePreferences: DataStorePreferences,
 ) : ViewModel() {
 
+    private val _shopId = MutableStateFlow("")
+    private val _accessToken = MutableStateFlow("")
     private val _barberShopName = MutableStateFlow("")
     val barberShopName: StateFlow<String>
         get() = _barberShopName
@@ -207,6 +210,157 @@ class CreateBarberShopViewModel @Inject constructor(
     val barberShopDescriptionError: StateFlow<Boolean>
         get() = _barberShopDescriptionError
 
+    private val _services = MutableStateFlow<List<Service>>(listOf())
+    val services: StateFlow<List<Service>>
+        get() = _services
+
+    private val _showDialog = MutableStateFlow(false)
+    val showDialog: StateFlow<Boolean>
+        get() = _showDialog
+
+    private val _serviceName = MutableStateFlow("")
+    val serviceName: StateFlow<String>
+        get() = _serviceName
+
+    private val _servicePrice = MutableStateFlow("")
+    val servicePrice: StateFlow<String>
+        get() = _servicePrice
+
+    private val _serviceDuration = MutableStateFlow("")
+    val serviceDuration: StateFlow<String>
+        get() = _serviceDuration
+
+    fun setServiceName(it: String) {
+        _serviceName.value = it
+    }
+
+    fun setServicePrice(it: String) {
+        _servicePrice.value = it
+    }
+
+    fun setServiceDuration(it: String) {
+        _serviceDuration.value = it
+    }
+
+    private val _serviceNameError = MutableStateFlow(false)
+    val serviceNameError: StateFlow<Boolean>
+        get() = _serviceNameError
+    private val _serviceDurationError = MutableStateFlow(false)
+    val serviceDurationError: StateFlow<Boolean>
+        get() = _serviceDurationError
+    private val _servicePriceError = MutableStateFlow(false)
+    val servicePriceError: StateFlow<Boolean>
+        get() = _servicePriceError
+
+    private val _isEditing = MutableStateFlow(false)
+    val isEditing: StateFlow<Boolean>
+        get() = _isEditing
+
+    private val _editingService = MutableStateFlow<Service?>(null)
+    val editingService: StateFlow<Service?>
+        get() = _editingService
+
+    fun onEditClicked(service: Service) {
+        _serviceName.value = service.serviceName
+        _servicePrice.value = service.price.toString()
+        _serviceDuration.value = service.duration.toString()
+        Timber.d("onEditClicked service: $service")
+        _editingService.value = service
+    }
+
+
+    fun onDeleteClicked(serviceId: String) {
+        val serviceToRemove = _services.value.find { it.serviceId == serviceId }
+
+        if (serviceToRemove != null) {
+            _services.value = _services.value.toMutableList().apply { remove(serviceToRemove) }
+        }
+    }
+
+    private var serviceIdCounter = MutableStateFlow(0)
+
+    private fun addService() {
+        val serviceName = _serviceName.value
+        val servicePrice = _servicePrice.value
+        val serviceDuration = _serviceDuration.value
+        val barberShopId = "1"
+        val serviceId = serviceIdCounter.value++.toString()
+        val service = Service(
+            serviceName = serviceName,
+            price = servicePrice.toFloat(),
+            duration = serviceDuration.toFloat(),
+            barberShopId = barberShopId,
+            serviceId = serviceId
+        )
+        Timber.d("Service: $service")
+        _services.value = _services.value.toMutableList().apply { add(service) }
+        _serviceName.value = ""
+        _servicePrice.value = ""
+        _serviceDuration.value = ""
+        _showDialog.value = false
+    }
+
+    fun onAcceptClicked(service: Service) {
+        service.serviceName = _serviceName.value
+        service.price = _servicePrice.value.toFloat()
+        service.duration = _serviceDuration.value.toFloat()
+        _editingService.value = null
+    }
+
+    private suspend fun createServices() {
+        for (service in _services.value) {
+            Timber.d("service: $service")
+            hairBookRepositoryBarber.createService(
+                _accessToken.value,
+                barberShopId = _shopId.value,
+                service
+            )
+                .collectLatest {
+                    when (it) {
+                        is ResourceState.LOADING -> {
+                            Timber.d("Loading")
+                        }
+
+                        is ResourceState.SUCCESS -> {
+                        }
+
+                        is ResourceState.ERROR -> {
+                            Timber.d("Error")
+                        }
+                    }
+                }
+        }
+        _homeScreen.emit(Routes.BarberDetailsScreen.route)
+    }
+
+    fun validateServiceInput() {
+        Timber.d(
+            "validateServiceInput _serviceName.value: ${_serviceName.value} " +
+                    "_servicePrice.value: ${_servicePrice.value} " +
+                    "_serviceDuration.value: ${_serviceDuration.value}"
+        )
+        if (_serviceName.value.isEmpty()) {
+            _serviceNameError.value = true
+        }
+        if (_servicePrice.value.isEmpty()) {
+            _servicePriceError.value = true
+        }
+        if (_serviceDuration.value.isEmpty()) {
+            _serviceDurationError.value = true
+        }
+        if (_serviceName.value.isNotEmpty() && _servicePrice.value.isNotEmpty() && _serviceDuration.value.isNotEmpty()) {
+            addService()
+        }
+    }
+
+    fun onDismiss() {
+        _showDialog.value = false
+    }
+
+    fun onButtonClick() {
+        _showDialog.value = true
+    }
+
 
     fun isValidInput() {
         when {
@@ -232,6 +386,10 @@ class CreateBarberShopViewModel @Inject constructor(
 
             !isValidWorkingHours() -> {
                 sendMessage("Start and end time need to be different")
+            }
+
+            _services.value.isEmpty() -> {
+                sendMessage("Please add at least one service")
             }
 
             else -> {
@@ -311,24 +469,25 @@ class CreateBarberShopViewModel @Inject constructor(
                 description = _barberShopDescription.value
             )
             Timber.d("Barber Shop: $barberShop")
-            val accessToken = dataStorePreferences.getAccessToken().first()
-            hairBookRepositoryBarber.createBarberShop(accessToken, barberShop).collectLatest {
-                when (it) {
-                    is ResourceState.LOADING -> {
-                        Timber.d("Loading")
-                    }
+            _accessToken.value = dataStorePreferences.getAccessToken().first()
+            hairBookRepositoryBarber.createBarberShop(_accessToken.value, barberShop)
+                .collectLatest {
+                    when (it) {
+                        is ResourceState.LOADING -> {
+                            Timber.d("Loading")
+                        }
 
-                    is ResourceState.SUCCESS -> {
-                        _homeScreen.emit(Routes.BarberDetailsScreen.route)
-                        Timber.d("Success")
-                    }
+                        is ResourceState.SUCCESS -> {
+                            _shopId.emit(it.data.barbershopId.toString())
+                            createServices()
+                            Timber.d("Success")
+                        }
 
-                    is ResourceState.ERROR -> {
-                        Timber.d("Error")
+                        is ResourceState.ERROR -> {
+                            Timber.d("Error")
+                        }
                     }
                 }
-            }
-
         }
     }
 

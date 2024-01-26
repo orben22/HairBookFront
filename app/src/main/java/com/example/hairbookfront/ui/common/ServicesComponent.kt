@@ -10,7 +10,13 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.Card
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -21,16 +27,25 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.example.hairbookfront.domain.entities.Service
+import com.example.hairbookfront.util.Constants
 
 @Composable
 fun ServiceCard(
     service: Service,
     isSelected: Boolean,
     onServiceClick: (Service) -> Unit,
+    serviceName: String="",
+    servicePrice: String="",
+    serviceDuration: String="",
     isEditable: Boolean = false,
     onServiceNameChange: (String) -> Unit = {},
     onPriceChange: (String) -> Unit = {},
-    onDurationChange: (String) -> Unit = {}
+    onDurationChange: (String) -> Unit = {},
+    mode: String = "Customer",
+    onEditClick: (Service) -> Unit = {},
+    onDeleteClick: () -> Unit = {},
+    onAcceptClick: (Service) -> Unit = {},
+    onDiscardClick: () -> Unit = {}
 ) {
     Card(
         modifier = Modifier
@@ -50,9 +65,8 @@ fun ServiceCard(
         ) {
             if (isEditable) {
                 TextField(
-                    value = service.serviceName,
+                    value = serviceName,
                     onValueChange = onServiceNameChange,
-                    label = { Text("Service Name") }
                 )
             } else {
                 Text(text = service.serviceName, style = MaterialTheme.typography.headlineLarge)
@@ -64,21 +78,41 @@ fun ServiceCard(
             ) {
                 if (isEditable) {
                     TextField(
-                        value = service.price.toString(),
+                        value = servicePrice,
                         onValueChange = onPriceChange,
-                        label = { Text("Price") }
                     )
                     TextField(
-                        value = service.duration.toString(),
+                        value = serviceDuration,
                         onValueChange = onDurationChange,
-                        label = { Text("Duration") }
                     )
                 } else {
                     Text(text = "Price: ${service.price}")
                     Text(text = "Duration: ${service.duration}")
                 }
             }
+
+            if (mode == Constants.BarberRole) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceEvenly
+                ) {
+                    if (isEditable) {
+                        IconButton(onClick = { onAcceptClick(service) }) {
+                            Icon(imageVector = Icons.Default.Check, contentDescription = "Accept")
+                        }
+                        IconButton(onClick = { onDiscardClick() }) {
+                            Icon(imageVector = Icons.Default.Delete, contentDescription = "Discard")
+                        }
+                    } else {
+                        IconButton(onClick = { onEditClick(service) }) {
+                            Icon(imageVector = Icons.Default.Edit, contentDescription = "Edit")
+                        }
+                        IconButton(onClick = { onDeleteClick() }) {
+                            Icon(imageVector = Icons.Default.Delete, contentDescription = "Delete")
+                        }
+                    }
+                }
+            }
         }
     }
 }
-

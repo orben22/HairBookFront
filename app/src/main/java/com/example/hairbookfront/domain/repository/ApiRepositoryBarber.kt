@@ -174,7 +174,7 @@ class ApiRepositoryBarber @Inject constructor(
     suspend fun createService(
         accessToken: String,
         barberShopId: String,
-        service: Service
+        service: Service,
     ): Flow<ResourceState<Service>> {
         return flow {
             emit(ResourceState.LOADING())

@@ -54,7 +54,8 @@ fun ReviewsList(
                     isEditing = isEditing,
                     onReviewChange = onReviewChange,
                     onRatingChange = onRatingChange,
-                    mode = mode
+                    mode = mode,
+                    isError = isError
                 )
             }
         }
