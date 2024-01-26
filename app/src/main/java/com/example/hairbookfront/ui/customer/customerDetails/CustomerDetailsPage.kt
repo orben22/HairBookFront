@@ -5,6 +5,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -12,12 +13,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.example.hairbookfront.ui.common.DialogComponent
 import com.example.hairbookfront.ui.common.ButtonComponent
 import com.example.hairbookfront.ui.common.TopAppBarComponent
 import com.example.hairbookfront.ui.common.BookingCardComponent
 import com.example.hairbookfront.ui.common.BottomAppBarComponent
+import timber.log.Timber
 
 @Composable
 fun CustomerDetailsScreen(
@@ -32,9 +35,22 @@ fun CustomerDetailsScreen(
     val phoneNumber by customerDetailsViewModel.getPhoneNumber().collectAsState(initial = "")
     val booking by customerDetailsViewModel.closestBooking.collectAsState()
     val showOrHideDeleteDialog by customerDetailsViewModel.showOrHideDeleteDialogState.collectAsState()
+    val screen by customerDetailsViewModel.screen.collectAsStateWithLifecycle()
+    val expanded by customerDetailsViewModel.isExpanded.collectAsStateWithLifecycle()
+    LaunchedEffect(screen) {
+        if (screen != "") {
+            Timber.d("navigating....")
+            navController?.navigate(screen)
+        }
+    }
     Scaffold(
         topBar = {
-            TopAppBarComponent("Customer Details")
+            TopAppBarComponent("Customer Details",
+onDismissRequest = customerDetailsViewModel::dismissMenu,
+                expanded = expanded,
+                expandFunction = customerDetailsViewModel::expandedFun,
+                onClickMenus = listOf(customerDetailsViewModel::signOut, {})
+                )
         },
         bottomBar = {
             BottomAppBarComponent()

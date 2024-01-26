@@ -3,10 +3,12 @@ package com.example.hairbookfront.ui.customer.customerDetails
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.hairbookfront.data.datastore.DataStorePreferences
+import com.example.hairbookfront.domain.SignOutHandler
 import com.example.hairbookfront.domain.entities.Booking
 import com.example.hairbookfront.domain.entities.Service
 import com.example.hairbookfront.domain.repository.ApiRepositoryBooking
 import com.example.hairbookfront.domain.repository.ApiRepositoryCustomer
+import com.example.hairbookfront.ui.navgraph.Routes
 import com.example.hairbookfront.util.ResourceState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
@@ -21,12 +23,23 @@ import javax.inject.Inject
 
 @HiltViewModel
 class CustomerDetailsViewModel @Inject constructor(
+    private val signOutHandler: SignOutHandler,
     private val apiRepositoryCustomer: ApiRepositoryCustomer,
     private val apiRepositoryBooking: ApiRepositoryBooking,
     private val dataStorePreferences: DataStorePreferences
 ) : ViewModel() {
 
     private val _accessToken = MutableStateFlow("")
+    val accessToken: StateFlow<String>
+        get() = _accessToken
+
+    private val _isExpanded = MutableStateFlow(false)
+    val isExpanded: StateFlow<Boolean>
+        get() = _isExpanded
+
+    private val _screen = MutableStateFlow("")
+    val screen: StateFlow<String>
+        get() = _screen
 
     private val _firstName = MutableStateFlow("")
     val firstName: StateFlow<String>
@@ -76,6 +89,21 @@ class CustomerDetailsViewModel @Inject constructor(
 
     fun getPhoneNumber(): Flow<String> {
         return dataStorePreferences.getPhoneNumber()
+    }
+
+    fun expandedFun() {
+        _isExpanded.value = !_isExpanded.value
+    }
+
+    fun dismissMenu(){
+        _isExpanded.value = false
+    }
+
+    fun signOut() {
+        viewModelScope.launch {
+            signOutHandler.signOut(_accessToken.value)
+            _screen.emit(Routes.WelcomeScreen.route)
+        }
     }
 
     fun deleteBooking() {
