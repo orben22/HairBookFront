@@ -2,6 +2,7 @@ package com.example.hairbookfront.domain.repository
 
 import com.example.hairbookfront.data.remote.DataSources.HairBookDataSourceBooking
 import com.example.hairbookfront.domain.entities.Booking
+import com.example.hairbookfront.domain.entities.Service
 import com.example.hairbookfront.util.ResourceState
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
@@ -90,6 +91,40 @@ class ApiRepositoryBooking @Inject constructor(
                 emit(ResourceState.SUCCESS(response.body()!!))
             } else {
                 emit(ResourceState.ERROR("Error getting closest booking"))
+            }
+        }.catch { e ->
+            emit(ResourceState.ERROR(e.localizedMessage ?: "Something went wrong with api"))
+        }
+    }
+
+    suspend fun getServiceBookings(
+        accessToken: String,
+        serviceId: String
+    ): Flow<ResourceState<Service>> {
+        return flow {
+            emit(ResourceState.LOADING())
+            val response = hairBookDataSourceBooking.getServiceBookings(accessToken, serviceId)
+            if (response.isSuccessful && response.body() != null) {
+                emit(ResourceState.SUCCESS(response.body()!!))
+            } else {
+                emit(ResourceState.ERROR("Error getting service bookings"))
+            }
+        }.catch { e ->
+            emit(ResourceState.ERROR(e.localizedMessage ?: "Something went wrong with api"))
+        }
+    }
+
+    suspend fun getAllServicesByBarberShop(
+        accessToken: String,
+        barberShopId: String
+    ): Flow<ResourceState<List<Service>>> {
+        return flow {
+            emit(ResourceState.LOADING())
+            val response = hairBookDataSourceBooking.getAllServicesByBarberShop(accessToken, barberShopId)
+            if (response.isSuccessful && response.body() != null) {
+                emit(ResourceState.SUCCESS(response.body()!!))
+            } else {
+                emit(ResourceState.ERROR("Error getting all services by barber shop"))
             }
         }.catch { e ->
             emit(ResourceState.ERROR(e.localizedMessage ?: "Something went wrong with api"))

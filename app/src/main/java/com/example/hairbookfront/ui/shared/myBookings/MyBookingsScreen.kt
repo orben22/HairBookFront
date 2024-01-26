@@ -1,10 +1,9 @@
-package com.example.hairbookfront.ui.shared.MyBookings
+package com.example.hairbookfront.ui.shared.myBookings
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -30,7 +29,7 @@ fun MyBookingsScreen(
     val expanded by myBookingsViewModel.isExpanded.collectAsStateWithLifecycle()
     val role by myBookingsViewModel.role.collectAsState(initial = "")
     val bookingsList by myBookingsViewModel.bookings.collectAsStateWithLifecycle()
-
+    val servicesList by myBookingsViewModel.services.collectAsStateWithLifecycle()
     LaunchedEffect(screen) {
         if (screen != "") {
             Timber.d("navigating....$screen")
@@ -39,7 +38,8 @@ fun MyBookingsScreen(
     }
     Scaffold(
         topBar = {
-            TopAppBarComponent(text = "My Bookings",
+            TopAppBarComponent(
+                text = "My Bookings",
                 onDismissRequest = myBookingsViewModel::dismissMenu,
                 expanded = expanded,
                 expandFunction = myBookingsViewModel::expandedFun,
@@ -55,6 +55,7 @@ fun MyBookingsScreen(
                 BookingsList(
                     isCustomer = false,
                     bookings = bookingsList,
+                    services = servicesList,
                     numberOfOptions = 1,
                     optionsIcons = listOf(Icons.Filled.Delete),
                     optionFunctions = listOf { myBookingsViewModel.deleteBookings(it) }
@@ -64,8 +65,10 @@ fun MyBookingsScreen(
                 BookingsList(
                     isCustomer = true,
                     bookings = bookingsList,
+                    services = servicesList,
                     optionFunctions = listOf({ myBookingsViewModel.editBookings(it) },
-                        { myBookingsViewModel.deleteBookings(it) }))
+                        { myBookingsViewModel.deleteBookings(it) })
+                )
             }
         }
     }

@@ -16,7 +16,7 @@ interface ApiServiceCustomer {
     @GET("/customer/get-shop_by_id")
     suspend fun getShopById(
         @Header("Authorization") authToken: String,
-        @Query("barbershopId") barbershopId: String
+        @Query("barberShopId") barberShopId: String
     ): Response<BarberShop>
 
     @GET("customer/get-customer-details")

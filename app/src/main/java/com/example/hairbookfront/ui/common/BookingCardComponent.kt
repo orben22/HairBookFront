@@ -25,12 +25,14 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import com.example.hairbookfront.domain.entities.BarberShop
 import com.example.hairbookfront.domain.entities.Booking
+import com.example.hairbookfront.domain.entities.Service
 
 
 @Composable
 fun BookingsList(
     isCustomer: Boolean,
     bookings: List<Booking>?,
+    services: List<Service>?,
     numberOfOptions: Int = 2,
     optionsIcons: List<ImageVector> = listOf(Icons.Filled.Edit,Icons.Filled.Delete),
     optionFunctions: List<(Booking) -> Unit>
@@ -38,14 +40,21 @@ fun BookingsList(
     bookings?.let {
         LazyColumn {
             items(bookings) { booking ->
-                BookingCardComponent(isCustomer = isCustomer,booking = booking,numberOfOptions=numberOfOptions,optionsIcons=optionsIcons, optionFunctions = optionFunctions)
+                val service = services?.find { it.serviceId == booking.serviceId }
+                service?.let {
+                    BookingCardComponent(isCustomer = isCustomer, booking = booking, service = it, numberOfOptions = numberOfOptions, optionsIcons = optionsIcons, optionFunctions = optionFunctions)
+                }
             }
         }
     }
 }
+
 @Composable
 fun BookingCardComponent(
-    isCustomer: Boolean, booking: Booking, numberOfOptions: Int = 2,
+    isCustomer: Boolean,
+    booking: Booking,
+    service: Service,
+    numberOfOptions: Int = 2,
     optionsIcons: List<ImageVector> = listOf(Icons.Filled.Edit,Icons.Filled.Delete),
     optionFunctions: List<(Booking) -> Unit>
 ) {
@@ -57,9 +66,7 @@ fun BookingCardComponent(
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.onPrimaryContainer,
         ),
-
-
-        ) {
+    ) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
@@ -77,9 +84,9 @@ fun BookingCardComponent(
             if (isCustomer) {
                 Text(text = "Barber Name: ${booking.barberName} ", color = Color.Black)
             } else Text(text = "Customer Name: ${booking.customerName}")
-            Text(text = "Service: ${booking.service.serviceName}", color = Color.Black)
-            Text(text = "Price: ${booking.service.price}", color = Color.Black)
-            Text(text = "Duration: ${booking.service.duration}", color = Color.Black)
+            Text(text = "Service: ${service.serviceName}", color = Color.Black)
+            Text(text = "Price: ${service.price}", color = Color.Black)
+            Text(text = "Duration: ${service.duration}", color = Color.Black)
             Text(text = "Date: ${booking.date}", color = Color.Black)
             Spacer(modifier = Modifier.height(16.dp))
             Row(

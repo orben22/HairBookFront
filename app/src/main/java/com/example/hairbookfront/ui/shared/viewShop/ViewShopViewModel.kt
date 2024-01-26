@@ -83,6 +83,7 @@ class ViewShopViewModel @Inject constructor(
         _screen.value = Routes.EditOrCreateBookingScreen.route
         viewModelScope.launch {
             dataStorePreferences.setMode(Constants.CreateMode)
+            _barberShop.value.barberShopId?.let { dataStorePreferences.setShopId(it) }
         }
     }
 
@@ -133,7 +134,7 @@ class ViewShopViewModel @Inject constructor(
 
     fun viewHistory() {
         viewModelScope.launch {
-            _screen.emit(Routes.BookingHistoryScreen.route)
+            _screen.emit(Routes.MyBookingsScreen.route)
         }
     }
 

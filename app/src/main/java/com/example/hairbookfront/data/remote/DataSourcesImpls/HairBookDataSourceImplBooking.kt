@@ -3,6 +3,7 @@ package com.example.hairbookfront.data.remote.DataSourcesImpls
 import com.example.hairbookfront.data.remote.ApiServices.ApiServiceBooking
 import com.example.hairbookfront.data.remote.DataSources.HairBookDataSourceBooking
 import com.example.hairbookfront.domain.entities.Booking
+import com.example.hairbookfront.domain.entities.Service
 import retrofit2.Response
 import timber.log.Timber
 import javax.inject.Inject
@@ -34,4 +35,20 @@ class HairBookDataSourceImplBooking @Inject constructor(
     override suspend fun getClosestBooking(accessToken: String): Response<Booking> {
         return apiServiceBooking.getClosestBooking("Bearer $accessToken")
     }
+
+    override suspend fun getServiceBookings(
+        accessToken: String,
+        serviceId: String
+    ): Response<Service> {
+        return apiServiceBooking.getServiceBookings("Bearer $accessToken", serviceId)
+    }
+
+    override suspend fun getAllServicesByBarberShop(
+        accessToken: String,
+        barberShopId: String
+    ): Response<List<Service>> {
+        return apiServiceBooking.getAllServicesByBarberShop("Bearer $accessToken", barberShopId)
+    }
+
+
 }

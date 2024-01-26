@@ -20,7 +20,7 @@ import com.example.hairbookfront.ui.barber.barberDetails.BarberDetailsScreen
 import com.example.hairbookfront.ui.customer.customerDetails.CustomerDetailsScreen
 import com.example.hairbookfront.ui.customer.customerHome.CustomerHomeScreen
 import com.example.hairbookfront.ui.customer.reviewsHistory.ReviewsHistoryScreen
-import com.example.hairbookfront.ui.shared.MyBookings.MyBookingsScreen
+import com.example.hairbookfront.ui.shared.myBookings.MyBookingsScreen
 import com.example.hairbookfront.ui.shared.editOrCreateBooking.EditOrCreateBookingScreen
 import com.example.hairbookfront.ui.shared.editOrCreateReview.EditOrCreateReviewScreen
 import com.example.hairbookfront.ui.shared.readReviews.ReadReviewsScreen

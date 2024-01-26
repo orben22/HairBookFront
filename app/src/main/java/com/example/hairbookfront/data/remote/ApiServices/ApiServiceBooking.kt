@@ -1,6 +1,7 @@
 package com.example.hairbookfront.data.remote.ApiServices
 
 import com.example.hairbookfront.domain.entities.Booking
+import com.example.hairbookfront.domain.entities.Service
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.DELETE
@@ -40,5 +41,17 @@ interface ApiServiceBooking {
     suspend fun getClosestBooking(
         @Header("Authorization") authToken: String,
     ): Response<Booking>
+
+    @GET("booking/get-service-by-id")
+    suspend fun getServiceBookings(
+        @Header("Authorization") authToken: String,
+        @Query("serviceId") serviceId: String,
+    ): Response<Service>
+
+    @GET("booking/get-all-services-by-barbershop")
+    suspend fun getAllServicesByBarberShop(
+        @Header("Authorization") authToken: String,
+        @Query("barberShopId") barberShopId: String,
+    ): Response<List<Service>>
 
 }

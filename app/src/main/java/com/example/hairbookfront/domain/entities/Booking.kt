@@ -5,7 +5,7 @@ data class Booking(
     val barberShopName: String,
     val barberName: String?,
     val customerName: String?,
-    val service: Service,
+    val serviceId: String,
     val date: String,
     val userId: String,
     val barberShopId: String

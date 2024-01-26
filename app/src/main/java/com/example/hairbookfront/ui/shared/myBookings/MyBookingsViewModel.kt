@@ -1,10 +1,11 @@
-package com.example.hairbookfront.ui.shared.MyBookings
+package com.example.hairbookfront.ui.shared.myBookings
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.hairbookfront.data.datastore.DataStorePreferences
 import com.example.hairbookfront.domain.SignOutHandler
 import com.example.hairbookfront.domain.entities.Booking
+import com.example.hairbookfront.domain.entities.Service
 import com.example.hairbookfront.domain.repository.ApiRepositoryBarber
 import com.example.hairbookfront.domain.repository.ApiRepositoryBooking
 import com.example.hairbookfront.ui.navgraph.Routes
@@ -47,6 +48,9 @@ class MyBookingsViewModel @Inject constructor(
     private val _bookings = MutableStateFlow(listOf<Booking>())
     val bookings: StateFlow<List<Booking>>
         get() = _bookings
+    private val _services = MutableStateFlow(listOf<Service>())
+    val services: StateFlow<List<Service>>
+        get() = _services
 
     fun expandedFun() {
         _isExpanded.value = !_isExpanded.value
@@ -65,24 +69,43 @@ class MyBookingsViewModel @Inject constructor(
 
     fun deleteBookings(booking: Booking) {
         viewModelScope.launch {
-            Timber.d(booking.toString())
+            Timber.d("adsfgaksdjfgdsaklf" + booking.toString())
             if (role.value == Constants.BarberRole) {
                 booking.bookingId?.let {
-                    hairBookRepositoryBarber.deleteBooking(accessToken.value,booking.barberShopId,
+                    hairBookRepositoryBarber.deleteBooking(
+                        accessToken.value, booking.barberShopId,
                         it
                     )
                 }
             } else {
-                booking.bookingId?.let {
-                    hairBookRepositoryBooking.deleteBooking(accessToken.value,
-                        it
-                    )
+                booking.bookingId?.let { bookingId ->
+                    hairBookRepositoryBooking.deleteBooking(
+                        accessToken.value,
+                        bookingId
+                    ).collectLatest {
+                        when (it) {
+                            is ResourceState.LOADING -> {
+                                Timber.d("Loading")
+                            }
+
+                            is ResourceState.SUCCESS -> {
+                                Timber.d("Success")
+                                _bookings.emit(_bookings.value.filter { booking1 ->
+                                    booking1.bookingId != booking.bookingId
+                                })
+                            }
+
+                            is ResourceState.ERROR -> {
+                                Timber.d("Error")
+                            }
+                        }
+                    }
                 }
             }
         }
     }
 
-    fun editBookings(booking: Booking){
+    fun editBookings(booking: Booking) {
         viewModelScope.launch {
             dataStorePreferences.setMode(Constants.EditMode)
             booking.bookingId?.let { dataStorePreferences.setBookingIdForEditing(it) }
@@ -96,19 +119,46 @@ class MyBookingsViewModel @Inject constructor(
             dataStorePreferences.getRole().collectLatest { role ->
                 Timber.d(role)
                 _role.emit(role)
-                hairBookRepositoryBooking.getUserBookings(accessToken.value).collectLatest {response ->
+                hairBookRepositoryBooking.getUserBookings(accessToken.value)
+                    .collectLatest { response ->
+                        when (response) {
+                            is ResourceState.LOADING -> {
+                                Timber.d("Loading")
+                            }
+
+                            is ResourceState.SUCCESS -> {
+                                response.data.forEach { booking ->
+                                    getServiceDetails(booking.serviceId)
+                                }
+                                _bookings.emit(response.data)
+                            }
+
+                            is ResourceState.ERROR -> {
+                                Timber.d("Error")
+                            }
+                        }
+                    }
+            }
+        }
+    }
+    private fun getServiceDetails(serviceId: String?) {
+        viewModelScope.launch {
+            serviceId?.let {
+                hairBookRepositoryBooking.getServiceBookings(_accessToken.value, it).collect { response ->
+                    Timber.d("res: $response")
                     when (response) {
                         is ResourceState.LOADING -> {
-                            Timber.d("Loading")
                         }
 
                         is ResourceState.SUCCESS -> {
-                            Timber.d("Success")
-                            _bookings.emit(response.data)
+                            response.data.let { service ->
+                                val currentServices = _services.value.toMutableList()
+                                currentServices.add(service)
+                                _services.emit(currentServices)
+                            }
                         }
 
                         is ResourceState.ERROR -> {
-                            Timber.d("Error")
                         }
                     }
                 }

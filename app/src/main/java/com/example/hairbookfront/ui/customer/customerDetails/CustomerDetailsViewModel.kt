@@ -63,6 +63,10 @@ class CustomerDetailsViewModel @Inject constructor(
         MutableStateFlow<Booking?>(null)
     val closestBooking: StateFlow<Booking?>
         get() = _closestBooking
+
+    private val _serviceDetails = MutableStateFlow<Service?>(null)
+    val serviceDetails: StateFlow<Service?>
+        get() = _serviceDetails
     private val showOrHideDeleteDialog = MutableStateFlow(false)
     val showOrHideDeleteDialogState: StateFlow<Boolean>
         get() = showOrHideDeleteDialog
@@ -95,7 +99,7 @@ class CustomerDetailsViewModel @Inject constructor(
         _isExpanded.value = !_isExpanded.value
     }
 
-    fun dismissMenu(){
+    fun dismissMenu() {
         _isExpanded.value = false
     }
 
@@ -143,6 +147,7 @@ class CustomerDetailsViewModel @Inject constructor(
 
                     is ResourceState.SUCCESS -> {
                         _closestBooking.emit(response.data)
+                        getServiceDetails(response.data.serviceId)
                     }
 
                     is ResourceState.ERROR -> {
@@ -152,4 +157,25 @@ class CustomerDetailsViewModel @Inject constructor(
         }
     }
 
+    private fun getServiceDetails(serviceId: String?) {
+        viewModelScope.launch {
+            serviceId?.let {
+                apiRepositoryBooking.getServiceBookings(_accessToken.value, it)
+                    .collect { response ->
+                        when (response) {
+                            is ResourceState.LOADING -> {
+                            }
+
+                            is ResourceState.SUCCESS -> {
+                                _serviceDetails.emit(response.data)
+                            }
+
+                            is ResourceState.ERROR -> {
+                            }
+                        }
+                    }
+            }
+        }
+    }
 }
+

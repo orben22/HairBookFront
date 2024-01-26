@@ -478,7 +478,7 @@ class CreateBarberShopViewModel @Inject constructor(
                         }
 
                         is ResourceState.SUCCESS -> {
-                            _shopId.emit(it.data.barbershopId.toString())
+                            _shopId.emit(it.data.barberShopId.toString())
                             createServices()
                             Timber.d("Success")
                         }

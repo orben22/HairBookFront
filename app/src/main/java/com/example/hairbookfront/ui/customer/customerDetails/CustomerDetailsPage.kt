@@ -37,6 +37,7 @@ fun CustomerDetailsScreen(
     val showOrHideDeleteDialog by customerDetailsViewModel.showOrHideDeleteDialogState.collectAsState()
     val screen by customerDetailsViewModel.screen.collectAsStateWithLifecycle()
     val expanded by customerDetailsViewModel.isExpanded.collectAsStateWithLifecycle()
+    val serviceDetails by customerDetailsViewModel.serviceDetails.collectAsStateWithLifecycle()
     LaunchedEffect(screen) {
         if (screen != "") {
             Timber.d("navigating....")
@@ -45,12 +46,13 @@ fun CustomerDetailsScreen(
     }
     Scaffold(
         topBar = {
-            TopAppBarComponent("Customer Details",
-onDismissRequest = customerDetailsViewModel::dismissMenu,
+            TopAppBarComponent(
+                "Customer Details",
+                onDismissRequest = customerDetailsViewModel::dismissMenu,
                 expanded = expanded,
                 expandFunction = customerDetailsViewModel::expandedFun,
                 onClickMenus = listOf(customerDetailsViewModel::signOut, {})
-                )
+            )
         },
         bottomBar = {
             BottomAppBarComponent()
@@ -103,11 +105,12 @@ onDismissRequest = customerDetailsViewModel::dismissMenu,
                 Spacer(modifier = Modifier.height(50.dp))
 
                 // Card: Upcoming Booking
-                if (booking != null) {
-                    BookingCardComponent(true, booking!!, numberOfOptions = 2, optionFunctions = listOf(
-                        { },
-                        { customerDetailsViewModel.showOrHideDeleteDialog() }
-                    ))
+                if (booking != null && serviceDetails != null) {
+                    BookingCardComponent(true, booking!!,
+                        serviceDetails!!, numberOfOptions = 2, optionFunctions = listOf(
+                            { },
+                            { customerDetailsViewModel.showOrHideDeleteDialog() }
+                        ))
                 } else {
                     Text(
                         modifier = Modifier
