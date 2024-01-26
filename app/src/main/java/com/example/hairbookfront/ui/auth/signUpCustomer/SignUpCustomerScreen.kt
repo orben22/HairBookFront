@@ -56,6 +56,12 @@ fun SignUpCustomerScreen(
     val passwordError by signUpCustomerViewModel.passwordError.collectAsStateWithLifecycle()
     val showOrHidePassword by signUpCustomerViewModel.showOrHidePassword.collectAsStateWithLifecycle()
     val homeScreen by signUpCustomerViewModel.homeScreen.collectAsStateWithLifecycle()
+
+    LaunchedEffect(homeScreen) {
+        if (homeScreen != "") {
+            navController?.navigate(homeScreen)
+        }
+    }
     LaunchedEffect(Unit) {
         signUpCustomerViewModel
             .toastMessage
@@ -67,12 +73,7 @@ fun SignUpCustomerScreen(
                 ).show()
             }
     }
-    if (homeScreen != "") {
-        navController?.navigate(homeScreen)
-    }
     Surface(color = MaterialTheme.colorScheme.surface) {
-
-        // Compose UI components
         Column(
             modifier = Modifier.fillMaxSize(),
             verticalArrangement = Arrangement.Center,

@@ -9,6 +9,7 @@ import androidx.compose.material3.*
 import com.example.hairbookfront.R
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -35,17 +36,24 @@ fun WelcomePageScreen(
     navController: NavHostController?
 ) {
     val context = LocalContext.current
-    val email = welcomeViewModel.email.collectAsStateWithLifecycle()
-    val password = welcomeViewModel.password.collectAsStateWithLifecycle()
-    val emailError = welcomeViewModel.emailError.collectAsStateWithLifecycle()
-    val passwordError = welcomeViewModel.passwordError.collectAsStateWithLifecycle()
-    val showOrHidePassword = welcomeViewModel.showOrHidePassword.collectAsStateWithLifecycle()
-    val showDialog = welcomeViewModel.showDialog.collectAsStateWithLifecycle()
-    val dialogText = welcomeViewModel.dialogText.collectAsStateWithLifecycle()
-    val signUpScreen = welcomeViewModel.signUpScreen.collectAsStateWithLifecycle()
-    val homeScreen = welcomeViewModel.homeScreen.collectAsStateWithLifecycle()
-    if (homeScreen.value != "") {
-        navController?.navigate(homeScreen.value)
+    val email by welcomeViewModel.email.collectAsStateWithLifecycle()
+    val password by welcomeViewModel.password.collectAsStateWithLifecycle()
+    val emailError by welcomeViewModel.emailError.collectAsStateWithLifecycle()
+    val passwordError by welcomeViewModel.passwordError.collectAsStateWithLifecycle()
+    val showOrHidePassword by welcomeViewModel.showOrHidePassword.collectAsStateWithLifecycle()
+    val showDialog by welcomeViewModel.showDialog.collectAsStateWithLifecycle()
+    val dialogText by welcomeViewModel.dialogText.collectAsStateWithLifecycle()
+    val signUpScreen by welcomeViewModel.signUpScreen.collectAsStateWithLifecycle()
+    val homeScreen by welcomeViewModel.homeScreen.collectAsStateWithLifecycle()
+    LaunchedEffect(homeScreen) {
+        if (homeScreen != "") {
+            navController?.navigate(homeScreen)
+        }
+    }
+    LaunchedEffect(signUpScreen) {
+        if (signUpScreen != "") {
+            navController?.navigate(signUpScreen)
+        }
     }
     LaunchedEffect(Unit) {
         welcomeViewModel
@@ -58,9 +66,7 @@ fun WelcomePageScreen(
                 ).show()
             }
     }
-    if (signUpScreen.value != "") {
-        navController?.navigate(signUpScreen.value)
-    }
+
     Scaffold(
         content = { innerPadding ->
             Column(
@@ -93,18 +99,18 @@ fun WelcomePageScreen(
                     fontWeight = FontWeight.Bold
                 )
                 TextFieldComponent(
-                    value = email.value,
+                    value = email,
                     placeholderText = "Email",
                     icon = Icons.Outlined.Email,
                     onValueChange = { welcomeViewModel.emailChanged(it) },
-                    isError = emailError.value
+                    isError = emailError
                 )
                 TextFieldPasswordComponent(
-                    password = password.value,
+                    password = password,
                     onValueChange = { welcomeViewModel.passwordChanged(it) },
-                    isError = passwordError.value,
+                    isError = passwordError,
                     onIconClicked = { welcomeViewModel.showOrHidePassword() },
-                    passwordVisibility = showOrHidePassword.value
+                    passwordVisibility = showOrHidePassword
                 )
                 ButtonComponent(text = "Sign In", onClick = {
                     welcomeViewModel.login()
@@ -123,12 +129,12 @@ fun WelcomePageScreen(
                     )
                 }
 
-                if (showDialog.value) {
+                if (showDialog) {
                     DialogComponent(
                         dialogTitle = "Sign Up",
                         dialogText = "Are you a Barber or a Customer?",
                         numberOfConfirmButtons = 2,
-                        textOfConfirmButtons = dialogText.value,
+                        textOfConfirmButtons = dialogText,
                         confirmFunctions = listOf(
                             welcomeViewModel::signUpCustomerClicked,
                             welcomeViewModel::signUpBarberClicked

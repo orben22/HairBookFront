@@ -10,5 +10,8 @@ object Constants {
     const val CustomerRole = "Customer"
     const val BarberRole = "Barber"
 
+    const val EditMode = "Edit"
+    const val CreateMode = "Create"
+
 
 }

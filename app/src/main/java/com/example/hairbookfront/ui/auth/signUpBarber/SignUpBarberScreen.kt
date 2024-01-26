@@ -54,6 +54,12 @@ fun SignUpBarberScreen(
     val passwordError by signUpBarberViewModel.passwordError.collectAsStateWithLifecycle()
     val showOrHidePassword by signUpBarberViewModel.showOrHidePassword.collectAsStateWithLifecycle()
     val homeScreen by signUpBarberViewModel.homeScreen.collectAsStateWithLifecycle()
+
+    LaunchedEffect(homeScreen) {
+        if (homeScreen != "") {
+            navController?.navigate(homeScreen)
+        }
+    }
     LaunchedEffect(Unit) {
         signUpBarberViewModel
             .toastMessage
@@ -65,9 +71,7 @@ fun SignUpBarberScreen(
                 ).show()
             }
     }
-    if (homeScreen != "") {
-        navController?.navigate(homeScreen)
-    }
+
     Surface(color = MaterialTheme.colorScheme.surface) {
         Column(
             modifier = Modifier.fillMaxSize(),

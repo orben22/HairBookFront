@@ -53,22 +53,22 @@ fun ViewShopScreen(
     viewShopViewModel: ViewShopViewModel = hiltViewModel(),
     navController: NavHostController? = null
 ) {
-    val dataLoaded by viewShopViewModel.dataLoaded.collectAsStateWithLifecycle()
     val barberShop by viewShopViewModel.barberShop.collectAsStateWithLifecycle()
+    val screen by viewShopViewModel.screen.collectAsStateWithLifecycle()
 
-//    if (!dataLoaded) {
-//        viewShopViewModel.dataLoaded()
-//        viewShopViewModel.getShopData()
-//    }
-    LaunchedEffect(Unit) {
-        Timber.d("ViewShopScreen recomposed")
+    LaunchedEffect(screen) {
+        if (screen != "") {
+            navController?.navigate(screen)
+        }
     }
     Scaffold(
         topBar = {
             TopAppBarComponent(text = "View Shop")
         },
         bottomBar = {
-            BottomAppBarComponent()
+            BottomAppBarComponent(onClickFloating = {
+                viewShopViewModel.onFloatingActionButtonClicked()
+            })
         }
     ) { innerPadding ->
         Column(

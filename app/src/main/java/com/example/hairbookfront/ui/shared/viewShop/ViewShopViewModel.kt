@@ -5,6 +5,8 @@ import androidx.lifecycle.viewModelScope
 import com.example.hairbookfront.data.datastore.DataStorePreferences
 import com.example.hairbookfront.domain.entities.BarberShop
 import com.example.hairbookfront.domain.repository.ApiRepositoryCustomer
+import com.example.hairbookfront.ui.navgraph.Routes
+import com.example.hairbookfront.util.Constants
 import com.example.hairbookfront.util.ResourceState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
@@ -27,12 +29,13 @@ class ViewShopViewModel @Inject constructor(
 
     private val _accessToken = MutableStateFlow("")
     private val _dataLoaded = MutableStateFlow(false)
+
+    private val _screen = MutableStateFlow("")
+    val screen: StateFlow<String>
+        get() = _screen
+
     val dataLoaded: StateFlow<Boolean>
         get() = _dataLoaded
-
-    private
-    val accessToken: StateFlow<String>
-        get() = _accessToken
 
     private val _barberShop = MutableStateFlow(
         BarberShop(
@@ -56,19 +59,21 @@ class ViewShopViewModel @Inject constructor(
     val barberShop: StateFlow<BarberShop>
         get() = _barberShop
     private val _shopId = MutableStateFlow("")
-    val shopId: StateFlow<String>
-        get() = _shopId
 
     private val _role = MutableStateFlow("")
-    val role: StateFlow<String>
-        get() = _role
 
-
-    fun dataLoaded() {
-        _dataLoaded.value = true
+    init {
+        getShopData()
     }
 
-    fun getShopData() {
+    fun onFloatingActionButtonClicked() {
+        _screen.value = Routes.EditOrCreateBookingScreen.route
+        viewModelScope.launch {
+            dataStorePreferences.setMode(Constants.CreateMode)
+        }
+    }
+
+    private fun getShopData() {
         viewModelScope.launch {
             _shopId.emit(dataStorePreferences.getShopId().first())
             _role.emit(dataStorePreferences.getRole().first())

@@ -1,5 +1,7 @@
 package com.example.hairbookfront.ui.common
 
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
@@ -20,6 +22,8 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun TimeSlotsPicker(
+    selectedTimeSlot: String,
+    onTimeSlotSelected: (String) -> Unit,
     timeSlots: List<String> = listOf(
         "10:00",
         "10:30",
@@ -34,21 +38,18 @@ fun TimeSlotsPicker(
         "15:00"
     )
 ) {
-    var selectedTimeSlot by remember { mutableStateOf("") }
-
     ElevatedCard(
         modifier = Modifier.padding(16.dp),
         elevation = CardDefaults.cardElevation(
             defaultElevation = 8.dp
         ),
-
-        ) {
-        LazyColumn {
-            items(timeSlots.chunked(3)) { rowSlots ->
-                LazyRow {
-                    items(rowSlots) { timeSlot ->
+    ) {
+        Column {
+            timeSlots.chunked(3).forEach { rowSlots ->
+                Row {
+                    rowSlots.forEach { timeSlot ->
                         Button(
-                            onClick = { selectedTimeSlot = timeSlot },
+                            onClick = { onTimeSlotSelected(timeSlot) },
                             modifier = Modifier.padding(8.dp),
                             colors = ButtonDefaults.buttonColors(
                                 contentColor = if (timeSlot == selectedTimeSlot) Color(0xFF03A9F4) else Color.White

@@ -31,6 +31,7 @@ class DataStorePreferences @Inject constructor(private val dataStore: DataStore<
         private const val USER_ID = "UserId"
         private const val ACCESS_TOKEN = "AccessToken"
         private const val SHOP_ID = "ShopId"
+        private const val MODE = "Mode"
         val firstName = stringPreferencesKey(FIRST_NAME)
         val lastName = stringPreferencesKey(LAST_NAME)
         val age = floatPreferencesKey(AGE)
@@ -41,8 +42,22 @@ class DataStorePreferences @Inject constructor(private val dataStore: DataStore<
         val accessToken = stringPreferencesKey(ACCESS_TOKEN)
         val email = stringPreferencesKey(EMAIL)
         val shopId = stringPreferencesKey(SHOP_ID)
+        val mode = stringPreferencesKey(MODE)
     }
 
+    fun getMode(): Flow<String> {
+        return dataStore.data.catch {
+            emit(emptyPreferences())
+        }.map { preferences ->
+            preferences[mode] ?: ""
+        }
+    }
+
+    suspend fun setMode(mode: String) {
+        dataStore.edit { preferences ->
+            preferences[DataStorePreferences.mode] = mode
+        }
+    }
 
     fun getShopId(): Flow<String> {
         return dataStore.data.catch {
