@@ -1,7 +1,9 @@
 package com.example.hairbookfront.ui.common
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
@@ -16,6 +18,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
@@ -36,24 +39,35 @@ fun TimeSlotsPicker(
         "14:00",
         "14:30",
         "15:00"
-    )
+    ),
+    availability: List<Boolean> = List(timeSlots.size) { it != timeSlots.size - 1 }
 ) {
     ElevatedCard(
-        modifier = Modifier.padding(16.dp),
+        modifier = Modifier
+            .padding(16.dp)
+            .fillMaxWidth(),
         elevation = CardDefaults.cardElevation(
             defaultElevation = 8.dp
         ),
     ) {
-        Column {
-            timeSlots.chunked(3).forEach { rowSlots ->
-                Row {
-                    rowSlots.forEach { timeSlot ->
+        Column(
+            verticalArrangement = Arrangement.Center,
+        ) {
+            timeSlots.chunked(3).forEachIndexed { rowIndex, rowSlots ->
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    rowSlots.forEachIndexed { columnIndex, timeSlot ->
+                        val index = rowIndex * 3 + columnIndex
+                        val isAvailable = availability.getOrNull(index) ?: true
                         Button(
-                            onClick = { onTimeSlotSelected(timeSlot) },
+                            onClick = { if (isAvailable) onTimeSlotSelected(timeSlot) },
                             modifier = Modifier.padding(8.dp),
                             colors = ButtonDefaults.buttonColors(
-                                contentColor = if (timeSlot == selectedTimeSlot) Color(0xFF03A9F4) else Color.White
-                            )
+                                contentColor = if (timeSlot == selectedTimeSlot) Color(0xFF03A9F4) else Color.White,
+                                disabledContainerColor = Color.Gray
+                            ),
+                            enabled = isAvailable
                         ) {
                             Text(text = timeSlot)
                         }
@@ -62,5 +76,4 @@ fun TimeSlotsPicker(
             }
         }
     }
-    Text(text = "Selected time slot: $selectedTimeSlot")
 }

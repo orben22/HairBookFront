@@ -1,6 +1,7 @@
 package com.example.hairbookfront.ui.shared.editOrCreateBooking
 
 import android.os.Build
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.padding
@@ -17,10 +18,12 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.example.hairbookfront.ui.common.BottomAppBarComponent
+import com.example.hairbookfront.ui.common.ButtonComponent
 import com.example.hairbookfront.ui.common.DatePickerComponent
 import com.example.hairbookfront.ui.common.ServiceCard
 import com.example.hairbookfront.ui.common.TimeSlotsPicker
@@ -35,6 +38,7 @@ fun EditOrCreateBookingScreen(
     viewModel: EditOrCreateBookingViewModel = hiltViewModel(),
     navController: NavController? = null,
 ) {
+    val context = LocalContext.current
     val selectedService by viewModel.selectedService.collectAsStateWithLifecycle()
     val selectedDate by viewModel.selectedDate.collectAsState()
     val selectedTimeSlot by viewModel.selectedTimeSlot.collectAsState()
@@ -43,12 +47,24 @@ fun EditOrCreateBookingScreen(
     val expanded by viewModel.isExpanded.collectAsStateWithLifecycle()
     val shop by viewModel.shop.collectAsState()
     val services by viewModel.services.collectAsStateWithLifecycle()
+    val availability by viewModel.availableBookingByDay.collectAsStateWithLifecycle()
     LaunchedEffect(screen) {
         if (screen != "") {
             navController?.navigate(screen)
         }
     }
 
+    LaunchedEffect(Unit) {
+        viewModel
+            .toastMessage
+            .collect { message ->
+                Toast.makeText(
+                    context,
+                    message,
+                    Toast.LENGTH_SHORT,
+                ).show()
+            }
+    }
     Scaffold(
         topBar = {
             TopAppBarComponent(
@@ -60,9 +76,6 @@ fun EditOrCreateBookingScreen(
 
             )
         },
-        bottomBar = {
-            BottomAppBarComponent()
-        }
     ) { innerPadding ->
 
         LazyColumn(
@@ -96,8 +109,23 @@ fun EditOrCreateBookingScreen(
             }
             item {
                 if (selectedDate != "") {
-                    TimeSlotsPicker(selectedTimeSlot, viewModel::onTimeSlotSelected)
+                    viewModel.getAvailableBookingByDay()
+                    if (availability.isNotEmpty()) {
+                        TimeSlotsPicker(
+                            selectedTimeSlot, viewModel::onTimeSlotSelected,
+                            timeSlots = viewModel.getWorkingHours(),
+                            availability = availability
+                        )
+                    }
+
                 }
+            }
+            item {
+                ButtonComponent(
+                    text = "Confirm Booking",
+                    onClick = viewModel::bookHaircutIfPossible,
+                    icon = null
+                )
             }
         }
         DatePickerComponent(getDisabledDates = viewModel::getDisabledDates,

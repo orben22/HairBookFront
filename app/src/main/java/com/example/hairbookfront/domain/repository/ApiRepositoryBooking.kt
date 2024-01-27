@@ -130,4 +130,22 @@ class ApiRepositoryBooking @Inject constructor(
             emit(ResourceState.ERROR(e.localizedMessage ?: "Something went wrong with api"))
         }
     }
+
+    suspend fun getAvailableBookingByDay(
+        accessToken: String,
+        barberShopId: String,
+        date: String
+    ): Flow<ResourceState<List<Boolean>>> {
+        return flow {
+            emit(ResourceState.LOADING())
+            val response = hairBookDataSourceBooking.getAvailableBookingByDay(accessToken, barberShopId, date)
+            if (response.isSuccessful && response.body() != null) {
+                emit(ResourceState.SUCCESS(response.body()!!))
+            } else {
+                emit(ResourceState.ERROR("Error getting available booking by day"))
+            }
+        }.catch { e ->
+            emit(ResourceState.ERROR(e.localizedMessage ?: "Something went wrong with api"))
+        }
+    }
 }

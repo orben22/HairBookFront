@@ -18,8 +18,10 @@ import com.maxkeppeker.sheets.core.models.base.rememberSheetState
 import com.maxkeppeler.sheets.calendar.CalendarDialog
 import com.maxkeppeler.sheets.calendar.models.CalendarConfig
 import com.maxkeppeler.sheets.calendar.models.CalendarSelection
+import com.maxkeppeler.sheets.calendar.models.CalendarTimeline
 import java.time.DayOfWeek
 import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 import java.util.Calendar
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -31,12 +33,16 @@ fun DatePickerComponent(
     onDateSelected: (String) -> Unit = {},
 ) {
     CalendarDialog(state = calendarState,
+
         config = CalendarConfig(
             monthSelection = true,
             yearSelection = true,
-            disabledDates = getDisabledDates()
+            disabledDates = getDisabledDates(),
+            disabledTimeline = CalendarTimeline.PAST,
         ),
-        selection = CalendarSelection.Date {
-            onDateSelected(it.toString())
+        selection = CalendarSelection.Date { selectedDate ->
+            val formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy")
+            val formattedDate = selectedDate.format(formatter)
+            onDateSelected(formattedDate)
         })
 }

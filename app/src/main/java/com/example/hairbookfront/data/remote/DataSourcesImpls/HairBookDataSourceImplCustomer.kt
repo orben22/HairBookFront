@@ -21,4 +21,6 @@ class HairBookDataSourceImplCustomer @Inject constructor(
     override suspend fun getDetailsCustomer(accessToken: String): Response<CustomerDTO> {
         return apiServiceCustomer.getDetailsCustomer(accessToken)
     }
+
+
 }

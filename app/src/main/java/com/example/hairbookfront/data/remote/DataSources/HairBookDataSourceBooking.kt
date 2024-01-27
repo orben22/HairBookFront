@@ -23,4 +23,9 @@ interface HairBookDataSourceBooking {
 
     suspend fun getAllServicesByBarberShop(accessToken: String, barberShopId: String): Response<List<Service>>
 
+    suspend fun getAvailableBookingByDay(
+        accessToken: String,
+        barberShopId: String,
+        date: String
+    ): Response<List<Boolean>>
 }

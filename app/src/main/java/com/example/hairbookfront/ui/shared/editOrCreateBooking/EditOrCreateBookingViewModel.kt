@@ -7,22 +7,27 @@ import androidx.lifecycle.viewModelScope
 import com.example.hairbookfront.data.datastore.DataStorePreferences
 import com.example.hairbookfront.domain.SignOutHandler
 import com.example.hairbookfront.domain.entities.BarberShop
+import com.example.hairbookfront.domain.entities.Booking
 import com.example.hairbookfront.domain.entities.Service
 import com.example.hairbookfront.domain.repository.ApiRepositoryBarber
 import com.example.hairbookfront.domain.repository.ApiRepositoryBooking
 import com.example.hairbookfront.domain.repository.ApiRepositoryCustomer
 import com.example.hairbookfront.ui.navgraph.Routes
+import com.example.hairbookfront.util.Constants
 import com.example.hairbookfront.util.ResourceState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.time.DayOfWeek
 import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 
 @HiltViewModel
@@ -54,6 +59,11 @@ class EditOrCreateBookingViewModel @Inject constructor(
     val selectedDate: StateFlow<String>
         get() = _selectedDate
 
+    private val _availableBookingByDay = MutableStateFlow<List<Boolean>>(listOf())
+
+    val availableBookingByDay: StateFlow<List<Boolean>>
+        get() = _availableBookingByDay
+
     private val _showTimeSlots = MutableStateFlow(false)
     val showTimeSlots: StateFlow<Boolean>
         get() = _showTimeSlots
@@ -72,13 +82,15 @@ class EditOrCreateBookingViewModel @Inject constructor(
     val services: StateFlow<List<Service>>
         get() = _services
 
+    private val _toastMessage = MutableSharedFlow<String>()
+    val toastMessage = _toastMessage.asSharedFlow()
+
     fun onServiceSelected(service: Service) {
         _selectedService.value = service
     }
 
     fun onDateSelected(date: String) {
         _selectedDate.value = date
-        Timber.d("onDateSelected: ${_selectedDate.value}")
         _showTimeSlots.value = true
     }
 
@@ -95,7 +107,6 @@ class EditOrCreateBookingViewModel @Inject constructor(
     }
 
     private suspend fun getAllServicesByBarberShop() {
-        Timber.d("getAllServicesByBarberShop: ${_barberShopId.value}")
         hairBookRepositoryBooking.getAllServicesByBarberShop(
             _accessToken.value,
             _barberShopId.value
@@ -115,6 +126,100 @@ class EditOrCreateBookingViewModel @Inject constructor(
                     }
                 }
             }
+    }
+
+    fun getAvailableBookingByDay() {
+        viewModelScope.launch(Dispatchers.IO) {
+            hairBookRepositoryBooking.getAvailableBookingByDay(
+                _accessToken.value,
+                _barberShopId.value,
+                _selectedDate.value
+            )
+                .collectLatest { response ->
+                    when (response) {
+                        is ResourceState.SUCCESS -> {
+                            Timber.d("getAvailableBookingByDay: ${response.data}")
+                            _availableBookingByDay.emit(response.data)
+                        }
+
+                        is ResourceState.ERROR -> {
+                            Timber.d(response.error)
+                        }
+
+                        is ResourceState.LOADING -> {
+                            Timber.d("Loading")
+                        }
+                    }
+                }
+        }
+    }
+
+    fun bookHaircutIfPossible() {
+        val service = _selectedService.value
+        val date = _selectedDate.value
+        val timeslot = _selectedTimeSlot.value
+        if (service == null) {
+            sendMessage("Please select a service")
+            return
+        }
+        if (date.isEmpty()) {
+            sendMessage("Please select a date")
+            return
+        }
+        if (timeslot.isEmpty()) {
+            sendMessage("Please select a time slot")
+            return
+        }
+        val bookingDateTime = "$date $timeslot"
+        viewModelScope.launch {
+            val firstName = dataStorePreferences.getFirstName().first()
+            val lastName = dataStorePreferences.getLastName().first()
+            val userId = dataStorePreferences.getUserId().first()
+            hairBookRepositoryBooking.bookHaircut(
+                _accessToken.value, Booking(
+                    barberShopId = _barberShopId.value,
+                    serviceId = service.serviceId!!,
+                    date = bookingDateTime,
+                    barberShopName = _shop.value?.barberShopName ?: "",
+                    barberName = _shop.value?.barberName ?: "",
+                    customerName = "$firstName $lastName",
+                    userId = userId,
+                    bookingId = null
+                )
+            ).collectLatest { response ->
+                when (response) {
+                    is ResourceState.SUCCESS -> {
+                        Timber.d("bookHaircutIfPossible: ${response.data}")
+                        _screen.emit(Routes.ViewShopScreen.route)
+                    }
+
+                    is ResourceState.ERROR -> {
+                        Timber.d(response.error)
+                    }
+
+                    is ResourceState.LOADING -> {
+                        Timber.d("Loading")
+                    }
+                }
+            }
+        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun getWorkingHours(): List<String> {
+        val formatter = DateTimeFormatter.ofPattern(Constants.DATE_FORMAT)
+        val selectedDate = LocalDate.parse(selectedDate.value, formatter)
+        val dayOfWeek = selectedDate.dayOfWeek
+        val shop = shop.value
+        return when (dayOfWeek) {
+            DayOfWeek.SUNDAY -> shop?.sundayHours ?: emptyList()
+            DayOfWeek.MONDAY -> shop?.mondayHours ?: emptyList()
+            DayOfWeek.TUESDAY -> shop?.tuesdayHours ?: emptyList()
+            DayOfWeek.WEDNESDAY -> shop?.wednesdayHours ?: emptyList()
+            DayOfWeek.THURSDAY -> shop?.thursdayHours ?: emptyList()
+            DayOfWeek.FRIDAY -> shop?.fridayHours ?: emptyList()
+            DayOfWeek.SATURDAY -> shop?.saturdayHours ?: emptyList()
+        }
     }
 
     private fun getShopById() {
@@ -183,5 +288,10 @@ class EditOrCreateBookingViewModel @Inject constructor(
         }
     }
 
+    private fun sendMessage(message: String) {
+        viewModelScope.launch {
+            _toastMessage.emit(message)
+        }
+    }
 }
 

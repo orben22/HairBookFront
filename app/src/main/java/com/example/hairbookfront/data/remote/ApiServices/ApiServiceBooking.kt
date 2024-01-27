@@ -54,4 +54,11 @@ interface ApiServiceBooking {
         @Query("barberShopId") barberShopId: String,
     ): Response<List<Service>>
 
+    @GET("booking/get-available-booking-by-day")
+    suspend fun getAvailableBookingByDay(
+        @Header("Authorization") authToken: String,
+        @Query("barberShopId") barberShopId: String,
+        @Query("date") date: String,
+    ): Response<List<Boolean>>
+
 }
