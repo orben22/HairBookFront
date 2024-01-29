@@ -21,6 +21,7 @@ import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
@@ -48,7 +49,10 @@ fun ReviewsList(
         Column {
             for (review in reviews) {
                 ReviewItem(
-                    review = review,
+                    fullName = review.firstName + " " + review.lastName,
+                    review = review.review,
+                    rating = review.rating.toString(),
+                    timestamp = review.timestamp,
                     editable = editable,
                     onClickFunctions = onClickFunctions,
                     isEditing = isEditing,
@@ -64,8 +68,11 @@ fun ReviewsList(
 
 @Composable
 fun ReviewItem(
-    review: Review,
+    fullName: String,
+    review: String,
+    rating: String,
     editable: Boolean,
+    timestamp: String,
     onClickFunctions: List<() -> Unit> = listOf(
         { },
         { },
@@ -86,23 +93,26 @@ fun ReviewItem(
     ) {
         Column(modifier = Modifier.padding(Dimens.mediumPadding1)) {
             Text(
-                text = "From: " + review.firstName + " " + review.lastName,
+                text = "From: $fullName",
                 fontWeight = FontWeight.Bold,
                 fontSize = Dimens.fontMedium,
             )
             Spacer(modifier = Modifier.height(Dimens.smallPadding1))
             if (isEditing) {
+                Text("Review:")
                 TextField(
-                    value = review.review,
+                    value = review,
                     onValueChange = onReviewChange,
                     modifier = Modifier.padding(Dimens.smallPadding1)
                 )
                 Row(
                     modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.End
+                    horizontalArrangement = Arrangement.End,
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
+                    Text("Rating:")
                     TextField(
-                        value = review.rating.toString(),
+                        value = rating,
                         onValueChange = onRatingChange,
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                         modifier = Modifier
@@ -113,7 +123,7 @@ fun ReviewItem(
                 }
             } else {
                 Text(
-                    text = review.review,
+                    text = review,
                     fontSize = Dimens.fontMedium,
                 )
                 Spacer(modifier = Modifier.height(Dimens.smallPadding1))
@@ -122,11 +132,11 @@ fun ReviewItem(
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     Text(
-                        text = "Time: " + review.timestamp,
+                        text = "Time: " + timestamp,
                         fontSize = Dimens.fontSmall,
                         fontWeight = FontWeight.Bold,
                     )
-                    RatingComponent(rating = review.rating)
+                    RatingComponent(rating = rating.toFloat())
                 }
             }
             Spacer(modifier = Modifier.height(Dimens.smallPadding1))
@@ -155,24 +165,3 @@ fun ReviewItem(
     }
 }
 
-@Preview
-@Composable
-fun ReviewItemPreview() {
-    HairBookFrontTheme {
-        ReviewItem(
-            review = Review(
-                reviewId = "1",
-                firstName = "firstName",
-                lastName = "lastName",
-                review = "review",
-                rating = 5f,
-                timestamp = "timestamp",
-                userId = "userId",
-                barberShopId = "barberShopId"
-            ),
-            editable = true,
-            isEditing = true,
-            mode = "Customer"
-        )
-    }
-}

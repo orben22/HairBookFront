@@ -140,6 +140,8 @@ class ViewShopViewModel @Inject constructor(
 
     fun writeReview() {
         viewModelScope.launch {
+            dataStorePreferences.setMode(Constants.CreateMode)
+            dataStorePreferences.setShopId(_shopId.value)
             _screen.emit(Routes.EditOrCreateReviewScreen.route)
         }
     }

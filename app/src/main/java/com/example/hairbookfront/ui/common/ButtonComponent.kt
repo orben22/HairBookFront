@@ -19,12 +19,12 @@ fun ButtonComponent(
     text: String,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
-    icon: ImageVector?
+    icon: ImageVector? = null
 ) {
     Button(
         onClick = onClick,
         modifier = modifier
-            .padding(bottom = 8.dp,start = 40.dp, end = 40.dp)
+            .padding(bottom = 8.dp, start = 40.dp, end = 40.dp)
     ) {
         if (icon != null) {
             Icon(imageVector = icon, contentDescription = null)
