@@ -24,4 +24,8 @@ class HairBookDataSourceImplReview @Inject constructor(
     override suspend fun getMyReviews(accessToken: String): Response<List<Review>> {
         return apiServiceReview.getMyReviews("Bearer $accessToken")
     }
+
+    override suspend fun getReviews(accessToken: String, barbershopId: String): Response<List<Review>> {
+        return apiServiceReview.getReviews("Bearer $accessToken", barbershopId)
+    }
 }

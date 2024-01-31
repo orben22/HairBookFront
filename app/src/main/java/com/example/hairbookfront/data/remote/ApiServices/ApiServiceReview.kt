@@ -35,5 +35,12 @@ interface ApiServiceReview {
         @Header("Authorization") authToken: String
     ): Response<List<Review>>
 
+    @GET("review/get-reviews")
+    suspend fun getReviews(
+        @Header("Authorization") authToken: String,
+        @Query("barberShopId") barberShopId: String
+    ): Response<List<Review>>
+
+
 
 }

@@ -3,49 +3,35 @@ package com.example.hairbookfront.ui.shared.viewShop
 import android.content.res.Configuration
 import android.os.Build
 import androidx.annotation.RequiresApi
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.List
-import androidx.compose.material.icons.filled.Star
-import androidx.compose.material.icons.outlined.Star
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
-import com.example.hairbookfront.R
-import com.example.hairbookfront.domain.entities.BarberShop
-import com.example.hairbookfront.domain.entities.Review
 import com.example.hairbookfront.theme.HairBookFrontTheme
-import com.example.hairbookfront.ui.Dimens
 import com.example.hairbookfront.ui.common.BottomAppBarComponent
 import com.example.hairbookfront.ui.common.RatingComponent
 import com.example.hairbookfront.ui.common.ReviewsList
 import com.example.hairbookfront.ui.common.TopAppBarComponent
 import com.example.hairbookfront.util.Constants
-import timber.log.Timber
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 
@@ -59,6 +45,7 @@ fun ViewShopScreen(
     val screen by viewShopViewModel.screen.collectAsStateWithLifecycle()
     val expanded by viewShopViewModel.isExpanded.collectAsStateWithLifecycle()
     val role by viewShopViewModel.role.collectAsState()
+    val reviews by viewShopViewModel.reviews.collectAsStateWithLifecycle()
     LaunchedEffect(screen) {
         if (screen != "") {
             navController?.navigate(screen)
@@ -66,33 +53,32 @@ fun ViewShopScreen(
     }
     Scaffold(
         topBar = {
-            TopAppBarComponent(text = "View Shop",
+            TopAppBarComponent(
+                text = "View Shop",
                 onDismissRequest = viewShopViewModel::dismissMenu,
                 expanded = expanded,
                 expandFunction = viewShopViewModel::expandedFun,
-                onClickMenus = listOf(viewShopViewModel::signOut,{})
+                onClickMenus = listOf(viewShopViewModel::signOut, {})
             )
         },
         bottomBar = {
-            if (role==Constants.CustomerRole) {
-                BottomAppBarComponent(onClickFunctions = listOf(viewShopViewModel::writeReview, viewShopViewModel::viewReview),
+            if (role == Constants.CustomerRole) {
+                BottomAppBarComponent(
+                    onClickFunctions = listOf(viewShopViewModel::writeReview),
                     onClickFloating = {
                         viewShopViewModel.onFloatingActionButtonClicked()
-                    }, icons = listOf(
-                        Icons.Filled.Edit,
-                        Icons.Filled.List
-                    ),
+                    }, icons = listOf(Icons.Filled.Edit),
                     floatingIcon = Icons.Filled.Add,
-                    numberOfIcons = 2,
-                    textToIcon = listOf("Write Review", "Read Review")
+                    numberOfIcons = 1,
+                    textToIcon = listOf("Write Review")
                 )
-            }
-            else {
-                BottomAppBarComponent(onClickFunctions = listOf(viewShopViewModel::viewHistory, viewShopViewModel::viewReview),
-                    textToIcon = listOf("Booking History", "Read Reviews"),
+            } else {
+                BottomAppBarComponent(
+                    onClickFunctions = listOf(viewShopViewModel::viewHistory),
+                    textToIcon = listOf("Booking History"),
+                    numberOfIcons = 1,
                     icons = listOf(
-                        Icons.Filled.List,
-                        Icons.Filled.Star
+                        Icons.Filled.List
                     ),
                 )
             }
@@ -139,21 +125,12 @@ fun ViewShopScreen(
             }
             Spacer(modifier = Modifier.height(16.dp))
             Text(text = "Reviews", style = MaterialTheme.typography.headlineMedium)
-            ReviewsList(
-                reviews = listOf(
-                    Review(
-                        reviewId = "1",
-                        firstName = "firstName",
-                        lastName = "lastName",
-                        review = "review",
-                        rating = 3.6f,
-                        timestamp = "timestamp",
-                        userId = "userId",
-                        barberShopId = "barberShopId"
-                    )
-                ),
-                editable = false
-            )
+            if (reviews!=null) {
+                ReviewsList(
+                    reviews = reviews,
+                    editable = false
+                )
+            }
         }
     }
 }

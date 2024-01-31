@@ -80,4 +80,21 @@ class ApiRepositoryReview @Inject constructor(
         }
     }
 
+    suspend fun getReviews(
+        accessToken: String,
+        barbershopId: String
+    ): Flow<ResourceState<List<Review>>> {
+        return flow {
+            emit(ResourceState.LOADING())
+            val response = hairBookDataSourceReview.getReviews(accessToken, barbershopId)
+            if (response.isSuccessful && response.body() != null) {
+                emit(ResourceState.SUCCESS(response.body()!!))
+            } else {
+                emit(ResourceState.ERROR("Error getting reviews"))
+            }
+        }.catch { e ->
+            emit(ResourceState.ERROR(e.localizedMessage ?: "Something went wrong with api"))
+        }
+    }
+
 }

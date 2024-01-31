@@ -5,27 +5,28 @@ import androidx.lifecycle.viewModelScope
 import com.example.hairbookfront.data.datastore.DataStorePreferences
 import com.example.hairbookfront.domain.SignOutHandler
 import com.example.hairbookfront.domain.entities.BarberShop
+import com.example.hairbookfront.domain.entities.Review
+import com.example.hairbookfront.domain.entities.Service
+import com.example.hairbookfront.domain.repository.ApiRepositoryBarber
 import com.example.hairbookfront.domain.repository.ApiRepositoryCustomer
+import com.example.hairbookfront.domain.repository.ApiRepositoryReview
 import com.example.hairbookfront.ui.navgraph.Routes
 import com.example.hairbookfront.util.Constants
 import com.example.hairbookfront.util.ResourceState
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.sync.Mutex
-import kotlinx.coroutines.sync.withLock
 import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
 class ViewShopViewModel @Inject constructor(
     private val signOutHandler: SignOutHandler,
-    private val hairBookRepository: ApiRepositoryCustomer,
+    private val hairBookRepositoryCustomer: ApiRepositoryCustomer,
+    private val hairBookRepositoryReview: ApiRepositoryReview,
     private val dataStorePreferences: DataStorePreferences,
 ) : ViewModel() {
 
@@ -64,6 +65,12 @@ class ViewShopViewModel @Inject constructor(
     )
     val barberShop: StateFlow<BarberShop>
         get() = _barberShop
+
+    private val _reviews = MutableStateFlow<List<Review>>(listOf())
+
+    val reviews: StateFlow<List <Review>>
+        get() = _reviews
+
     private val _shopId = MutableStateFlow("")
 
     private val _role = MutableStateFlow("")
@@ -77,7 +84,9 @@ class ViewShopViewModel @Inject constructor(
             }
         }
         getShopData()
+        getReviews()
     }
+
 
     fun onFloatingActionButtonClicked() {
         _screen.value = Routes.EditOrCreateBookingScreen.route
@@ -87,12 +96,43 @@ class ViewShopViewModel @Inject constructor(
         }
     }
 
+    fun onEditShopClicked() {
+        _screen.value = Routes.CreateBarberShopScreen.route
+        viewModelScope.launch {
+            dataStorePreferences.setMode(Constants.EditMode)
+            _barberShop.value.barberShopId?.let { dataStorePreferences.setShopId(it) }
+        }
+    }
+
+    private fun getReviews() {
+        viewModelScope.launch {
+            _shopId.emit(dataStorePreferences.getShopId().first())
+            _accessToken.emit(dataStorePreferences.getAccessToken().first())
+            hairBookRepositoryReview.getReviews(_accessToken.value, _shopId.value)
+                .collectLatest { resourceState ->
+                    when (resourceState) {
+                        is ResourceState.SUCCESS -> {
+                            _reviews.emit(resourceState.data)
+                        }
+
+                        is ResourceState.ERROR -> {
+                            Timber.d(resourceState.error)
+                        }
+
+                        is ResourceState.LOADING -> {
+                            Timber.d("Loading")
+                        }
+                    }
+                }
+        }
+    }
+
     private fun getShopData() {
         viewModelScope.launch {
             _shopId.emit(dataStorePreferences.getShopId().first())
             _role.emit(dataStorePreferences.getRole().first())
             _accessToken.emit(dataStorePreferences.getAccessToken().first())
-            hairBookRepository.getShopById(_accessToken.value, _shopId.value)
+            hairBookRepositoryCustomer.getShopById(_accessToken.value, _shopId.value)
                 .collect { resourceState ->
                     when (resourceState) {
                         is ResourceState.SUCCESS -> {
@@ -123,12 +163,6 @@ class ViewShopViewModel @Inject constructor(
         viewModelScope.launch {
             signOutHandler.signOut(_accessToken.value)
             _screen.emit(Routes.WelcomeScreen.route)
-        }
-    }
-
-    fun viewReview() {
-        viewModelScope.launch {
-            _screen.emit(Routes.ReadReviewScreen.route)
         }
     }
 

@@ -11,4 +11,6 @@ interface HairBookDataSourceReview {
     suspend fun updateReview(accessToken: String, reviewId: String, review: Review): Response<Review>
 
     suspend fun getMyReviews(accessToken: String): Response<List<Review>>
+
+    suspend fun getReviews(accessToken: String, barbershopId: String): Response<List<Review>>
 }

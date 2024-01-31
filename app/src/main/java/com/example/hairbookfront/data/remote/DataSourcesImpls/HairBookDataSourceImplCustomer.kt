@@ -4,6 +4,7 @@ import com.example.hairbookfront.data.remote.ApiServices.ApiServiceCustomer
 import com.example.hairbookfront.data.remote.DataSources.HairBookDataSourceCustomer
 import com.example.hairbookfront.domain.entities.BarberShop
 import com.example.hairbookfront.domain.entities.CustomerDTO
+import com.example.hairbookfront.domain.entities.Review
 import retrofit2.Response
 import javax.inject.Inject
 
@@ -21,6 +22,7 @@ class HairBookDataSourceImplCustomer @Inject constructor(
     override suspend fun getDetailsCustomer(accessToken: String): Response<CustomerDTO> {
         return apiServiceCustomer.getDetailsCustomer(accessToken)
     }
+
 
 
 }
