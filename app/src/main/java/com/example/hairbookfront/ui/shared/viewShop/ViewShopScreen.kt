@@ -86,11 +86,11 @@ fun ViewShopScreen(
             )
         } else {
             BottomAppBarComponent(
-                onClickFunctions = listOf(viewModel::viewHistory),
-                textToIcon = listOf("Booking History"),
-                numberOfIcons = 1,
+                onClickFunctions = listOf(viewModel::viewHistory, viewModel::editShop),
+                textToIcon = listOf("Booking History", "Edit Shop"),
+                numberOfIcons = 2,
                 icons = listOf(
-                    Icons.Filled.List
+                    Icons.Filled.List,Icons.Filled.Edit
                 ),
             )
         }
@@ -131,7 +131,6 @@ fun ViewShopScreen(
                     WorkingHours(daysOfWeek[i], hoursOfWeek[i], barberShop.workingDays[i] == 1.0f)
                 }
                 Spacer(modifier = Modifier.height(16.dp))
-
             }
             item {
                 Text(text = "Reviews", style = MaterialTheme.typography.headlineMedium)

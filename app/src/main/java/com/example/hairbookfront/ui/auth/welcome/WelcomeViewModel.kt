@@ -5,11 +5,11 @@ import androidx.lifecycle.viewModelScope
 import com.example.hairbookfront.data.datastore.DataStorePreferences
 import com.example.hairbookfront.domain.entities.User
 import com.example.hairbookfront.domain.repository.ApiRepositoryAuth
+import com.example.hairbookfront.domain.repository.ApiRepositoryBarber
 import com.example.hairbookfront.ui.navgraph.Routes
 import com.example.hairbookfront.util.Constants.BarberRole
 import com.example.hairbookfront.util.Constants.CustomerRole
 import com.example.hairbookfront.util.ResourceState
-import com.squareup.moshi.Moshi
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -18,7 +18,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import timber.log.Timber
 import java.util.regex.Pattern
 import javax.inject.Inject
 
@@ -26,14 +25,16 @@ import javax.inject.Inject
 class WelcomeViewModel @Inject constructor(
     private val hairBookRepository: ApiRepositoryAuth,
     private val dataStorePreferences: DataStorePreferences,
+    private val hairBookRepositoryBarber: ApiRepositoryBarber
 ) : ViewModel() {
+
 
     //customer@customer.com customer_password
     // barber@example.com barber_password
-    private val _email = MutableStateFlow("customer@customer.com")
+    private val _email = MutableStateFlow("barber@example.com")
     val email: StateFlow<String>
         get() = _email
-    private val _password = MutableStateFlow("customer_password")
+    private val _password = MutableStateFlow("barber_password")
     val password: StateFlow<String>
         get() = _password
 
@@ -75,6 +76,8 @@ class WelcomeViewModel @Inject constructor(
     private val _homeScreen = MutableStateFlow("")
     val homeScreen: StateFlow<String>
         get() = _homeScreen
+
+    private val _numberOfShops = MutableStateFlow(0)
 
     fun emailChanged(email: String) {
         _email.value = email
@@ -170,14 +173,26 @@ class WelcomeViewModel @Inject constructor(
                 }
             }
         } else if (data.role == BarberRole) {
-            hairBookRepository.getDetailsBarber(data.accessToken!!).collect {
-                when (it) {
+            hairBookRepository.getDetailsBarber(data.accessToken!!).collect { response ->
+                when (response) {
                     is ResourceState.SUCCESS -> {
-                        dataStorePreferences.storeBarberDetails(it.data)
-                        _homeScreen.value = Routes.CreateBarberShopScreen.route
+                        dataStorePreferences.storeBarberDetails(response.data)
+                        hairBookRepositoryBarber.getNumberOfShops(data.accessToken).collect {
+                            when (it) {
+                                is ResourceState.SUCCESS -> {
+                                    _numberOfShops.emit(it.data)
+                                    if (_numberOfShops.value == 0)
+                                        _homeScreen.value =
+                                            Routes.EditOrCreateBarberShopScreen.route
+                                    else
+                                        _homeScreen.value = Routes.BarberDetailsScreen.route
+                                }
+                                is ResourceState.ERROR -> sendMessage(it.error)
+                                else -> {}
+                            }
+                        }
                     }
-
-                    is ResourceState.ERROR -> sendMessage(it.error)
+                    is ResourceState.ERROR -> sendMessage(response.error)
                     else -> {}
                 }
             }

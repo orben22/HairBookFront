@@ -1,7 +1,7 @@
 package com.example.hairbookfront.domain.entities
 
 data class BarberShop(
-    val barberShopId: String?,
+    var barberShopId: String?,
     val barberShopName: String,
     val barberName: String,
     val phoneNumber: String,

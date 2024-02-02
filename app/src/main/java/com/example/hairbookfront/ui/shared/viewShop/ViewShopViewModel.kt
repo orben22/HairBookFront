@@ -6,8 +6,6 @@ import com.example.hairbookfront.data.datastore.DataStorePreferences
 import com.example.hairbookfront.domain.SignOutHandler
 import com.example.hairbookfront.domain.entities.BarberShop
 import com.example.hairbookfront.domain.entities.Review
-import com.example.hairbookfront.domain.entities.Service
-import com.example.hairbookfront.domain.repository.ApiRepositoryBarber
 import com.example.hairbookfront.domain.repository.ApiRepositoryCustomer
 import com.example.hairbookfront.domain.repository.ApiRepositoryReview
 import com.example.hairbookfront.ui.navgraph.Routes
@@ -116,7 +114,7 @@ class ViewShopViewModel @Inject constructor(
     }
 
     fun onEditShopClicked() {
-        _screen.value = Routes.CreateBarberShopScreen.route
+        _screen.value = Routes.EditOrCreateBarberShopScreen.route
         viewModelScope.launch {
             dataStorePreferences.setMode(Constants.EditMode)
             _barberShop.value.barberShopId?.let { dataStorePreferences.setShopId(it) }
@@ -168,6 +166,15 @@ class ViewShopViewModel @Inject constructor(
                         }
                     }
                 }
+        }
+    }
+
+
+    fun editShop() {
+        viewModelScope.launch {
+            _screen.emit(Routes.EditOrCreateBarberShopScreen.route)
+            dataStorePreferences.setMode(Constants.EditMode)
+            _barberShop.value.barberShopId?.let { dataStorePreferences.setShopId(it) }
         }
     }
 

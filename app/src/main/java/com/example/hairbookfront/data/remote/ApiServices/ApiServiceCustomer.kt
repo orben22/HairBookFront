@@ -14,7 +14,7 @@ interface ApiServiceCustomer {
         @Header("Authorization") authToken: String
     ): Response<List<BarberShop>>
 
-    @GET("/customer/get-shop_by_id")
+    @GET("/shared/get-shop_by_id")
     suspend fun getShopById(
         @Header("Authorization") authToken: String,
         @Query("barberShopId") barberShopId: String

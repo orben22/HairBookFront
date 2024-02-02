@@ -230,7 +230,7 @@ class SignUpBarberViewModel @Inject constructor(
                 is ResourceState.SUCCESS -> {
                     dataStorePreferences.storeBarberDetails(it.data)
                     sendMessage("Welcome ${it.data.firstName}")
-                    _homeScreen.value = Routes.CreateBarberShopScreen.route
+                    _homeScreen.value = Routes.EditOrCreateBarberShopScreen.route
                 }
 
                 is ResourceState.ERROR -> sendMessage(it.error)

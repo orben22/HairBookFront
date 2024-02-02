@@ -7,9 +7,9 @@ import com.example.hairbookfront.domain.entities.BarberShop
 import com.example.hairbookfront.domain.entities.Service
 import com.example.hairbookfront.domain.repository.ApiRepositoryBarber
 import com.example.hairbookfront.ui.navgraph.Routes
+import com.example.hairbookfront.util.Constants
 import com.example.hairbookfront.util.ResourceState
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -28,6 +28,9 @@ class EditOrCreateBarberShopViewModel @Inject constructor(
 ) : ViewModel() {
 
     private val _shopId = MutableStateFlow("")
+    private val _mode = MutableStateFlow("")
+    val mode: StateFlow<String>
+        get() = _mode
     private val _accessToken = MutableStateFlow("")
     private val _barberShopName = MutableStateFlow("")
     val barberShopName: StateFlow<String>
@@ -110,6 +113,121 @@ class EditOrCreateBarberShopViewModel @Inject constructor(
 
     private val _toastMessage = MutableSharedFlow<String>()
     val toastMessage = _toastMessage.asSharedFlow()
+
+    init {
+        viewModelScope.launch {
+            _accessToken.emit(dataStorePreferences.getAccessToken().first())
+            _mode.emit(dataStorePreferences.getMode().first())
+            if (_mode.value == Constants.EditMode) {
+                _shopId.emit(dataStorePreferences.getShopId().first())
+                getBarberShop()
+            }
+        }
+    }
+
+    private suspend fun getBarberShop() {
+        hairBookRepositoryBarber.getBarberShopById(_accessToken.value, _shopId.value)
+            .collectLatest { response ->
+                when (response) {
+                    is ResourceState.LOADING -> {
+                        Timber.d("Loading")
+                    }
+
+                    is ResourceState.SUCCESS -> {
+                        val barberShop = response.data
+                        setBarberShopName(barberShop.barberShopName)
+                        setBarberShopDescription(barberShop.description)
+                        setBarberShopAddress(barberShop.location)
+                        setPhoneNumber(barberShop.phoneNumber)
+                        val workingDays = barberShop.workingDays.map { it == 1.0f }
+                        _daysOfWeek.emit(workingDays)
+                        initWorkingHoursForAllDays(barberShop)
+                        loadServices()
+                    }
+
+                    is ResourceState.ERROR -> {
+                        Timber.d("Error")
+                    }
+                }
+            }
+    }
+
+    private fun initWorkingHoursForAllDays(barberShop: BarberShop) {
+        val daysOfWeek = listOf(
+            barberShop.sundayHours,
+            barberShop.mondayHours,
+            barberShop.tuesdayHours,
+            barberShop.wednesdayHours,
+            barberShop.thursdayHours,
+            barberShop.fridayHours,
+            barberShop.saturdayHours
+        )
+
+        val startTimes = listOf(
+            _startTimeSunday,
+            _startTimeMonday,
+            _startTimeTuesday,
+            _startTimeWednesday,
+            _startTimeThursday,
+            _startTimeFriday,
+            _startTimeSaturday
+        )
+
+        val endTimes = listOf(
+            _endTimeSunday,
+            _endTimeMonday,
+            _endTimeTuesday,
+            _endTimeWednesday,
+            _endTimeThursday,
+            _endTimeFriday,
+            _endTimeSaturday
+        )
+
+        for (i in daysOfWeek.indices) {
+            val hours = daysOfWeek[i]
+            if (!hours.isNullOrEmpty()) {
+                viewModelScope.launch {
+                    startTimes[i].emit(hours.first())
+                    val endTime = hours.last()
+                    val endTimeSplit = endTime.split(":").map { it.toInt() }
+                    var endHour = endTimeSplit[0]
+                    var endMinute = endTimeSplit[1] + 30
+
+                    if (endMinute >= 60) {
+                        endHour += 1
+                        endMinute -= 60
+                    }
+                    endTimes[i].emit(String.format("%02d:%02d", endHour, endMinute))
+                    setShownClocks(i, true)
+                }
+            } else {
+                viewModelScope.launch {
+                    startTimes[i].emit("")
+                    endTimes[i].emit("")
+
+                }
+            }
+        }
+    }
+
+    private suspend fun loadServices() {
+        hairBookRepositoryBarber.getServices(_accessToken.value, _shopId.value)
+            .collectLatest {
+                when (it) {
+                    is ResourceState.LOADING -> {
+                        Timber.d("Loading")
+                    }
+
+                    is ResourceState.SUCCESS -> {
+                        _services.emit(it.data)
+                    }
+
+                    is ResourceState.ERROR -> {
+                        Timber.d("Error")
+                    }
+                }
+            }
+    }
 
     fun setShownClocks(index: Int, isShown: Boolean) {
         _shownClocks.value = _shownClocks.value.toMutableList().apply { set(index, isShown) }
@@ -251,8 +369,6 @@ class EditOrCreateBarberShopViewModel @Inject constructor(
         get() = _servicePriceError
 
     private val _isEditing = MutableStateFlow(false)
-    val isEditing: StateFlow<Boolean>
-        get() = _isEditing
 
     private val _editingService = MutableStateFlow<Service?>(null)
     val editingService: StateFlow<Service?>
@@ -267,7 +383,7 @@ class EditOrCreateBarberShopViewModel @Inject constructor(
     }
 
 
-    fun onDeleteClicked(serviceId: String) {
+    fun onDeleteServiceClicked(serviceId: String) {
         val serviceToRemove = _services.value.find { it.serviceId == serviceId }
 
         if (serviceToRemove != null) {
@@ -303,32 +419,6 @@ class EditOrCreateBarberShopViewModel @Inject constructor(
         service.price = _servicePrice.value.toFloat()
         service.duration = _serviceDuration.value.toFloat()
         _editingService.value = null
-    }
-
-    private suspend fun createServices() {
-        for (service in _services.value) {
-            Timber.d("service: $service")
-            hairBookRepositoryBarber.createService(
-                _accessToken.value,
-                barberShopId = _shopId.value,
-                service
-            )
-                .collectLatest {
-                    when (it) {
-                        is ResourceState.LOADING -> {
-                            Timber.d("Loading")
-                        }
-
-                        is ResourceState.SUCCESS -> {
-                        }
-
-                        is ResourceState.ERROR -> {
-                            Timber.d("Error")
-                        }
-                    }
-                }
-        }
-        _homeScreen.emit(Routes.BarberDetailsScreen.route)
     }
 
     fun validateServiceInput() {
@@ -467,26 +557,100 @@ class EditOrCreateBarberShopViewModel @Inject constructor(
                 description = _barberShopDescription.value
             )
             Timber.d("Barber Shop: $barberShop")
-            _accessToken.value = dataStorePreferences.getAccessToken().first()
-            hairBookRepositoryBarber.createBarberShop(_accessToken.value, barberShop)
-                .collectLatest {
-                    when (it) {
-                        is ResourceState.LOADING -> {
-                            Timber.d("Loading")
-                        }
+            if (_mode.value == Constants.EditMode) {
+                updateBarberShop(barberShop)
+            } else {
+                postBarberShop(barberShop)
+            }
+        }
+    }
 
-                        is ResourceState.SUCCESS -> {
-                            _shopId.emit(it.data.barberShopId.toString())
-                            createServices()
-                            Timber.d("Success")
-                        }
+    private suspend fun updateBarberShop(barberShop: BarberShop) {
+        barberShop.barberShopId = _shopId.value
+        hairBookRepositoryBarber.updateBarberShop(_accessToken.value, _shopId.value, barberShop)
+            .collectLatest {
+                when (it) {
+                    is ResourceState.LOADING -> {
+                        Timber.d("Loading")
+                    }
 
-                        is ResourceState.ERROR -> {
-                            Timber.d("Error")
-                        }
+                    is ResourceState.SUCCESS -> {
+                        postOrUpdateServices()
+                    }
+
+                    is ResourceState.ERROR -> {
+                        Timber.d("Error")
                     }
                 }
+            }
+    }
+
+    private suspend fun postOrUpdateServices() {
+        for (service in _services.value) {
+            if (service.serviceId == null) {
+                hairBookRepositoryBarber.createService(_accessToken.value, _shopId.value, service)
+                    .collectLatest {
+                        when (it) {
+                            is ResourceState.LOADING -> {
+                                Timber.d("Loading")
+                            }
+
+                            is ResourceState.SUCCESS -> {
+                                Timber.d("Success")
+                            }
+
+                            is ResourceState.ERROR -> {
+                                Timber.d("Error")
+                            }
+                        }
+                    }
+            } else {
+                hairBookRepositoryBarber.updateService(
+                    _accessToken.value,
+                    _shopId.value,
+                    service.serviceId,
+                    service
+                )
+                    .collectLatest {
+                        when (it) {
+                            is ResourceState.LOADING -> {
+                                Timber.d("Loading")
+                            }
+
+                            is ResourceState.SUCCESS -> {
+                                Timber.d("Success")
+                            }
+
+                            is ResourceState.ERROR -> {
+                                Timber.d("Error")
+                            }
+                        }
+                    }
+            }
+
         }
+        _homeScreen.emit(Routes.BarberDetailsScreen.route)
+    }
+
+    private suspend fun postBarberShop(barberShop: BarberShop) {
+        hairBookRepositoryBarber.createBarberShop(_accessToken.value, barberShop)
+            .collectLatest {
+                when (it) {
+                    is ResourceState.LOADING -> {
+                        Timber.d("Loading")
+                    }
+
+                    is ResourceState.SUCCESS -> {
+                        _shopId.emit(it.data.barberShopId.toString())
+                        postOrUpdateServices()
+                        Timber.d("Success")
+                    }
+
+                    is ResourceState.ERROR -> {
+                        Timber.d("Error")
+                    }
+                }
+            }
     }
 
     private fun generateWorkingHours(startTime: String, endTime: String): List<String> {

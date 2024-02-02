@@ -75,7 +75,7 @@ class BarberDetailsViewModel @Inject constructor(
         _isExpanded.value = !_isExpanded.value
     }
 
-    fun dismissMenu(){
+    fun dismissMenu() {
         _isExpanded.value = false
     }
 
@@ -86,6 +86,12 @@ class BarberDetailsViewModel @Inject constructor(
         }
     }
 
+    fun onBarberShopClicked(barberShop: BarberShop) {
+        viewModelScope.launch {
+            dataStorePreferences.setShopId(barberShop.barberShopId!!)
+            _screen.emit(Routes.ViewShopScreen.route)
+        }
+    }
 
     init {
         viewModelScope.launch {

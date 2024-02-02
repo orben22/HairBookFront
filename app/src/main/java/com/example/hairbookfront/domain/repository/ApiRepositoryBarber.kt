@@ -266,4 +266,20 @@ class ApiRepositoryBarber @Inject constructor(
             emit(ResourceState.ERROR(e.localizedMessage ?: "Something went wrong with api"))
         }
     }
+
+    suspend fun getNumberOfShops(
+        accessToken: String
+    ): Flow<ResourceState<Int>> {
+        return flow {
+            emit(ResourceState.LOADING())
+            val response = hairBookDataSourceBarber.getNumberOfShops(accessToken)
+            if (response.isSuccessful && response.body() != null) {
+                emit(ResourceState.SUCCESS(response.body()!!))
+            } else {
+                emit(ResourceState.ERROR("Error getting number of shops"))
+            }
+        }.catch { e ->
+            emit(ResourceState.ERROR(e.localizedMessage ?: "Something went wrong with api"))
+        }
+    }
 }

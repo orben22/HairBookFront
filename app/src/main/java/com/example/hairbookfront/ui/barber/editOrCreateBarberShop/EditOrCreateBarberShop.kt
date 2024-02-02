@@ -58,7 +58,8 @@ import java.time.LocalTime
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun EditOrCreateBarberShopScreen(
-    viewModel: EditOrCreateBarberShopViewModel = hiltViewModel(), navController: NavHostController? = null
+    viewModel: EditOrCreateBarberShopViewModel = hiltViewModel(),
+    navController: NavHostController? = null
 ) {
 
     val context = LocalContext.current
@@ -72,6 +73,7 @@ fun EditOrCreateBarberShopScreen(
         }
     }
     val homeScreen by viewModel.homeScreen.collectAsStateWithLifecycle()
+    val mode by viewModel.mode.collectAsStateWithLifecycle()
     if (homeScreen.isNotEmpty()) {
         navController?.navigate(homeScreen) {
             popUpTo("createBarberShopScreen") { inclusive = true }
@@ -142,9 +144,8 @@ fun EditOrCreateBarberShopScreen(
             })
         }
     }
-
     Scaffold(topBar = {
-        TopAppBarComponent(text = "Create BarberShop")
+        TopAppBarComponent(text = "$mode BarberShop")
     }, floatingActionButton = {
         FloatingActionButton(
             onClick = { viewModel.isValidInput() },
@@ -318,7 +319,13 @@ fun EditOrCreateBarberShopScreen(
                         serviceDuration = serviceDuration,
                         mode = Constants.BarberRole,
                         onEditClick = { viewModel.onEditClicked(it) },
-                        onDeleteClick = { service.serviceId?.let { viewModel.onDeleteClicked(it) } },
+                        onDeleteClick = {
+                            service.serviceId?.let {
+                                viewModel.onDeleteServiceClicked(
+                                    it
+                                )
+                            }
+                        },
                         onAcceptClick = { viewModel.onAcceptClicked(service) },
                         onDiscardClick = { },
                         onServiceNameChange = { viewModel.setServiceName(it) },

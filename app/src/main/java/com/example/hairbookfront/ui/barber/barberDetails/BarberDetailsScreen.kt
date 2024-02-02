@@ -96,7 +96,8 @@ fun BarberDetailsScreen(
                     text = "My barbershops:",
                     style = MaterialTheme.typography.bodyMedium
                 )
-                BarberShopList(barberShops = myShops, true)
+                BarberShopList(barberShops = myShops, true,
+                    onBarberShopClick = viewModel::onBarberShopClicked)
             }
         }
     )

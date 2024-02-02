@@ -90,7 +90,7 @@ fun AppNavGraph(
             composable(route = Routes.BarberDetailsScreen.route) {
                 BarberDetailsScreen(navController = navController)
             }
-            composable(route = Routes.CreateBarberShopScreen.route) {
+            composable(route = Routes.EditOrCreateBarberShopScreen.route) {
                 EditOrCreateBarberShopScreen(navController = navController)
             }
             composable(route = Routes.EditOrCreateReviewScreen.route) {

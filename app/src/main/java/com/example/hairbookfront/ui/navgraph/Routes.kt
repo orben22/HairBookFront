@@ -24,7 +24,7 @@ sealed class Routes(val route: String) {
     //Barber
     data object BarberDetailsScreen : Routes("barberDetailsScreen")
 
-    data object CreateBarberShopScreen : Routes("createBarberShopScreen")
+    data object EditOrCreateBarberShopScreen : Routes("editOrCreateBarberShopScreen")
 
     //Shared
     data object EditOrCreateBookingScreen : Routes("editOrCreateBookingScreen")
@@ -38,14 +38,12 @@ sealed class Routes(val route: String) {
     data object MyBookingsScreen : Routes("myBookingsScreen")
 
 
-
     // Sub graphs
     data object AuthGraph : Routes("authGraph")
 
     data object CustomerGraph : Routes("customerGraph")
 
     data object BarberGraph : Routes("barberGraph")
-
 
 
 }

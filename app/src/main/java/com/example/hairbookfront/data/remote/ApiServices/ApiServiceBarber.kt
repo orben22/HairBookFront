@@ -103,4 +103,8 @@ interface ApiServiceBarber {
         @Query("bookingId") bookingId: String
     ): Response<String>
 
+    @GET("barber/get-number-of-shops")
+    suspend fun getNumberOfShops(
+        @Header("Authorization") authToken: String
+    ): Response<Int>
 }
