@@ -8,19 +8,45 @@ import com.example.hairbookfront.ui.navgraph.Routes
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import androidx.compose.runtime.State
+import androidx.lifecycle.viewModelScope
+import com.example.hairbookfront.data.datastore.DataStorePreferences
+import com.example.hairbookfront.util.Constants
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
+    private val dataStorePreferences: DataStorePreferences
 ) : ViewModel() {
 
-    private val _splashCondition = mutableStateOf(true)
-    val splashCondition: State<Boolean> = _splashCondition
+    private val _accessToken = MutableStateFlow("")
+    private val _role = MutableStateFlow("")
 
-    var startDestination by mutableStateOf(Routes.AuthGraph.route)
-        private set
+    private val _isSplashScreenVisible = MutableStateFlow(true)
+    val isSplashScreenVisible: StateFlow<Boolean>
+        get() = _isSplashScreenVisible
+
+
+    private val _startDestination = MutableStateFlow("")
+    val startDestination: StateFlow<String>
+        get() = _startDestination
 
     init {
-        startDestination = Routes.AuthGraph.route
-        _splashCondition.value = false
+        viewModelScope.launch {
+            _accessToken.emit(dataStorePreferences.getAccessToken().first())
+            if (_accessToken.value.isNotEmpty()) {
+                _role.emit(dataStorePreferences.getRole().first())
+                if (_role.value == Constants.CustomerRole)
+                    _startDestination.emit(Routes.CustomerGraph.route)
+                else if (_role.value == Constants.BarberRole)
+                    _startDestination.emit(Routes.BarberGraph.route)
+            } else {
+                _startDestination.emit(Routes.AuthGraph.route)
+            }
+            _isSplashScreenVisible.emit(false)
+        }
+
     }
 }

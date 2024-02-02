@@ -33,7 +33,8 @@ fun BarberDetailsScreen(
     navController: NavHostController? = null
 ) {
 
-    val yearsOfExperience by barberDetailsViewModel.getYearsOfExperience().collectAsState(initial = 0)
+    val yearsOfExperience by barberDetailsViewModel.getYearsOfExperience()
+        .collectAsState(initial = 0)
     val firstname by barberDetailsViewModel.getFirstName().collectAsState(initial = "")
     val lastname by barberDetailsViewModel.getLastName().collectAsState(initial = "")
     val email by barberDetailsViewModel.getEmail().collectAsState(initial = "")
@@ -48,14 +49,17 @@ fun BarberDetailsScreen(
         }
     }
     Scaffold(
-        topBar = { TopAppBarComponent(text = "Barber Details",
-            onDismissRequest = barberDetailsViewModel::dismissMenu,
-            expanded = expanded,
-            expandFunction = barberDetailsViewModel::expandedFun,
-            onClickMenus = listOf(barberDetailsViewModel::signOut,{})
+        topBar = {
+            TopAppBarComponent(
+                text = "Barber Details",
+                onDismissRequest = barberDetailsViewModel::dismissMenu,
+                expanded = expanded,
+                expandFunction = barberDetailsViewModel::expandedFun,
+                suggestions = listOf("Sign Out"),
+                onClickMenus = listOf(barberDetailsViewModel::signOut)
             )
-                 },
-         bottomBar = {
+        },
+        bottomBar = {
             BottomAppBarComponent()
         },
         content = { innerPadding ->

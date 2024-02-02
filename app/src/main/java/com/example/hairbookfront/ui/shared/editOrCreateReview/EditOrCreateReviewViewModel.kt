@@ -36,6 +36,7 @@ class EditOrCreateReviewViewModel @Inject constructor(
     private val dataStorePreferences: DataStorePreferences,
 ) : ViewModel() {
 
+    private val _role = MutableStateFlow("")
     private val _mode = MutableStateFlow("")
     private val _sentReview = MutableStateFlow(
         Review(
@@ -164,6 +165,7 @@ class EditOrCreateReviewViewModel @Inject constructor(
             _lastName.emit(dataStorePreferences.getLastName().first())
 
             _userId.emit(dataStorePreferences.getUserId().first())
+            _role.emit(dataStorePreferences.getRole().first())
         }
     }
 
@@ -177,6 +179,8 @@ class EditOrCreateReviewViewModel @Inject constructor(
             _screen.emit(Routes.WelcomeScreen.route)
         }
     }
+
+
 
     private fun sendMessage(message: String) {
         viewModelScope.launch {

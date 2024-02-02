@@ -30,12 +30,16 @@ fun ReviewsHistoryScreen(
     }
     Scaffold(
         topBar = {
-            TopAppBarComponent(text = "Reviews History",
+            TopAppBarComponent(
+                text = "Reviews History",
                 onDismissRequest = reviewsHistoryViewModel::dismissMenu,
                 expanded = expanded,
                 expandFunction = reviewsHistoryViewModel::expandedFun,
-                onClickMenus = listOf(reviewsHistoryViewModel::signOut,{})
+                onClickMenus = listOf(
+                    reviewsHistoryViewModel::profileClicked,
+                    reviewsHistoryViewModel::signOut
                 )
+            )
         },
         bottomBar = {
             BottomAppBarComponent()

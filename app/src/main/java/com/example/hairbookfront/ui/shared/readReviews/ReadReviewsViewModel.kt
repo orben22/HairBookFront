@@ -7,9 +7,12 @@ import com.example.hairbookfront.domain.SignOutHandler
 import com.example.hairbookfront.domain.repository.ApiRepositoryBarber
 import com.example.hairbookfront.domain.repository.ApiRepositoryReview
 import com.example.hairbookfront.ui.navgraph.Routes
+import com.example.hairbookfront.util.Constants
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -21,6 +24,7 @@ class ReadReviewsViewModel @Inject constructor(
     private val dataStorePreferences: DataStorePreferences,
 ) : ViewModel() {
 
+    private val _role = MutableStateFlow("")
     private val _accessToken = MutableStateFlow("")
     val accessToken: StateFlow<String>
         get() = _accessToken
@@ -32,6 +36,19 @@ class ReadReviewsViewModel @Inject constructor(
     private val _screen = MutableStateFlow("")
     val screen: StateFlow<String>
         get() = _screen
+
+    init {
+        viewModelScope.launch(Dispatchers.IO) {
+            _role.value = dataStorePreferences.getRole().first()
+        }
+    }
+
+    fun profileClicked() {
+        if (_role.value == Constants.BarberRole)
+            _screen.value = Routes.BarberDetailsScreen.route
+        else
+            _screen.value = Routes.CustomerDetailsScreen.route
+    }
 
     fun expandedFun() {
         _isExpanded.value = !_isExpanded.value

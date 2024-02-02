@@ -29,11 +29,15 @@ fun ReadReviewsScreen(
         }
     }
     Column {
-        TopAppBarComponent(text = "Reviews",
+        TopAppBarComponent(
+            text = "Reviews",
             onDismissRequest = readReviewsViewModel::dismissMenu,
             expanded = expanded,
             expandFunction = readReviewsViewModel::expandedFun,
-            onClickMenus = listOf(readReviewsViewModel::signOut,{})
+            onClickMenus = listOf(
+                readReviewsViewModel::profileClicked,
+                readReviewsViewModel::signOut
+            )
         )
         ReviewsList(reviews = listOf(review1, review2, review3, review4, review5, review6))
     }

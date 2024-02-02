@@ -78,7 +78,7 @@ class CustomerHomeViewModel @Inject constructor(
         _isExpanded.value = !_isExpanded.value
     }
 
-    fun dismissMenu(){
+    fun dismissMenu() {
         _isExpanded.value = false
     }
 
@@ -87,6 +87,10 @@ class CustomerHomeViewModel @Inject constructor(
             signOutHandler.signOut(_accessToken.value)
             _screen.emit(Routes.WelcomeScreen.route)
         }
+    }
+
+    fun profileClicked() {
+        _screen.value = Routes.CustomerDetailsScreen.route
     }
 
     init {

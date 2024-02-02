@@ -38,8 +38,7 @@ import java.time.format.DateTimeFormatter
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun ViewShopScreen(
-    viewShopViewModel: ViewShopViewModel = hiltViewModel(),
-    navController: NavHostController? = null
+    viewShopViewModel: ViewShopViewModel = hiltViewModel(), navController: NavHostController? = null
 ) {
     val barberShop by viewShopViewModel.barberShop.collectAsStateWithLifecycle()
     val screen by viewShopViewModel.screen.collectAsStateWithLifecycle()
@@ -51,39 +50,37 @@ fun ViewShopScreen(
             navController?.navigate(screen)
         }
     }
-    Scaffold(
-        topBar = {
-            TopAppBarComponent(
-                text = "View Shop",
-                onDismissRequest = viewShopViewModel::dismissMenu,
-                expanded = expanded,
-                expandFunction = viewShopViewModel::expandedFun,
-                onClickMenus = listOf(viewShopViewModel::signOut, {})
+    Scaffold(topBar = {
+        TopAppBarComponent(
+            text = "View Shop",
+            onDismissRequest = viewShopViewModel::dismissMenu,
+            expanded = expanded,
+            expandFunction = viewShopViewModel::expandedFun,
+            onClickMenus = listOf(viewShopViewModel::profileClicked, viewShopViewModel::signOut)
+        )
+    }, bottomBar = {
+        if (role == Constants.CustomerRole) {
+            BottomAppBarComponent(
+                onClickFunctions = listOf(viewShopViewModel::writeReview),
+                onClickFloating = {
+                    viewShopViewModel.onFloatingActionButtonClicked()
+                },
+                icons = listOf(Icons.Filled.Edit),
+                floatingIcon = Icons.Filled.Add,
+                numberOfIcons = 1,
+                textToIcon = listOf("Write Review")
             )
-        },
-        bottomBar = {
-            if (role == Constants.CustomerRole) {
-                BottomAppBarComponent(
-                    onClickFunctions = listOf(viewShopViewModel::writeReview),
-                    onClickFloating = {
-                        viewShopViewModel.onFloatingActionButtonClicked()
-                    }, icons = listOf(Icons.Filled.Edit),
-                    floatingIcon = Icons.Filled.Add,
-                    numberOfIcons = 1,
-                    textToIcon = listOf("Write Review")
-                )
-            } else {
-                BottomAppBarComponent(
-                    onClickFunctions = listOf(viewShopViewModel::viewHistory),
-                    textToIcon = listOf("Booking History"),
-                    numberOfIcons = 1,
-                    icons = listOf(
-                        Icons.Filled.List
-                    ),
-                )
-            }
+        } else {
+            BottomAppBarComponent(
+                onClickFunctions = listOf(viewShopViewModel::viewHistory),
+                textToIcon = listOf("Booking History"),
+                numberOfIcons = 1,
+                icons = listOf(
+                    Icons.Filled.List
+                ),
+            )
         }
-    ) { innerPadding ->
+    }) { innerPadding ->
         Column(
             modifier = Modifier
                 .padding(innerPadding)
@@ -95,8 +92,7 @@ fun ViewShopScreen(
             Text(text = barberShop.barberShopName, style = MaterialTheme.typography.headlineLarge)
             Spacer(modifier = Modifier.height(16.dp))
             Text(
-                text = "Address: ${barberShop.location}",
-                style = MaterialTheme.typography.bodySmall
+                text = "Address: ${barberShop.location}", style = MaterialTheme.typography.bodySmall
             )
             Spacer(modifier = Modifier.height(16.dp))
             Text(text = barberShop.description, style = MaterialTheme.typography.bodySmall)
@@ -125,10 +121,9 @@ fun ViewShopScreen(
             }
             Spacer(modifier = Modifier.height(16.dp))
             Text(text = "Reviews", style = MaterialTheme.typography.headlineMedium)
-            if (reviews!=null) {
+            if (reviews != null) {
                 ReviewsList(
-                    reviews = reviews,
-                    editable = false
+                    reviews = reviews, editable = false
                 )
             }
         }
@@ -146,12 +141,10 @@ fun WorkingHours(dayOfWeek: String, hours: List<String>?, isOpen: Boolean) {
             parsedTime.plusMinutes(30).format(DateTimeFormatter.ofPattern("HH:mm"))
         } else {
             val parsedTime = LocalTime.parse(closeTime, DateTimeFormatter.ofPattern("HH:mm"))
-            parsedTime.plusHours(1).minusMinutes(30)
-                .format(DateTimeFormatter.ofPattern("HH:mm"))
+            parsedTime.plusHours(1).minusMinutes(30).format(DateTimeFormatter.ofPattern("HH:mm"))
         }
         Text(
-            text = "$dayOfWeek: $openTime - $closeTime",
-            style = MaterialTheme.typography.bodySmall
+            text = "$dayOfWeek: $openTime - $closeTime", style = MaterialTheme.typography.bodySmall
         )
         Spacer(modifier = Modifier.height(16.dp))
     }

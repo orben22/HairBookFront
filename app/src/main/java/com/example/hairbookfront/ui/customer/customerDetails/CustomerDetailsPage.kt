@@ -2,6 +2,8 @@ package com.example.hairbookfront.ui.customer.customerDetails
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -50,12 +52,17 @@ fun CustomerDetailsScreen(
                 "Customer Details",
                 onDismissRequest = customerDetailsViewModel::dismissMenu,
                 expanded = expanded,
+                suggestions = listOf("Sign Out"),
                 expandFunction = customerDetailsViewModel::expandedFun,
-                onClickMenus = listOf(customerDetailsViewModel::signOut, {})
+                onClickMenus = listOf(customerDetailsViewModel::signOut)
             )
         },
         bottomBar = {
-            BottomAppBarComponent()
+            BottomAppBarComponent(
+                textToIcon = listOf("Booking History", "My Reviews"),
+                icons = listOf(Icons.Default.Star, Icons.Default.Edit),
+                onClickFunctions = listOf({ }, { })
+            )
         },
         content = { innerPadding ->
             Column(
@@ -65,7 +72,6 @@ fun CustomerDetailsScreen(
                 verticalArrangement = Arrangement.Center
             ) {
                 // User Information
-                Spacer(modifier = Modifier.height(100.dp))
                 Text(
                     modifier = Modifier
                         .padding(start = 10.dp)
@@ -106,16 +112,24 @@ fun CustomerDetailsScreen(
 
                 // Card: Upcoming Booking
                 if (booking != null && serviceDetails != null) {
+                    Text(
+                        modifier = Modifier
+                            .padding(start = 10.dp)
+                            .align(Alignment.CenterHorizontally),
+                        text = "Upcoming Booking:",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = Color.Black
+                    )
                     BookingCardComponent(true, booking!!,
                         serviceDetails!!, numberOfOptions = 2, optionFunctions = listOf(
-                            { },
+                            { customerDetailsViewModel.editBookingClicked(booking!!) },
                             { customerDetailsViewModel.showOrHideDeleteDialog() }
                         ))
                 } else {
                     Text(
                         modifier = Modifier
                             .padding(start = 10.dp)
-                            .align(Alignment.Start),
+                            .align(Alignment.CenterHorizontally),
                         text = "No upcoming bookings",
                         style = MaterialTheme.typography.bodyMedium,
                         color = Color.Black
@@ -129,23 +143,6 @@ fun CustomerDetailsScreen(
                     ) {
                     }
                 }
-                Column(modifier = Modifier.weight(1f)) {
-
-                    // Button: Show My Reviews
-                    ButtonComponent(
-                        text = "Show My Reviews",
-                        onClick = { /*TODO*/ },
-                        icon = Icons.Filled.Star
-                    )
-
-                    // Button: Show Booking History
-                    ButtonComponent(
-                        text = "Show Booking History",
-                        onClick = { /*TODO*/ },
-                        icon = null
-                    )
-                }
-
             }
         }
     )

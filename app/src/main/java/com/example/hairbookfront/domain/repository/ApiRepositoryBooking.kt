@@ -7,7 +7,6 @@ import com.example.hairbookfront.util.ResourceState
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
-import timber.log.Timber
 import javax.inject.Inject
 
 class ApiRepositoryBooking @Inject constructor(
@@ -120,7 +119,8 @@ class ApiRepositoryBooking @Inject constructor(
     ): Flow<ResourceState<List<Service>>> {
         return flow {
             emit(ResourceState.LOADING())
-            val response = hairBookDataSourceBooking.getAllServicesByBarberShop(accessToken, barberShopId)
+            val response =
+                hairBookDataSourceBooking.getAllServicesByBarberShop(accessToken, barberShopId)
             if (response.isSuccessful && response.body() != null) {
                 emit(ResourceState.SUCCESS(response.body()!!))
             } else {
@@ -138,11 +138,30 @@ class ApiRepositoryBooking @Inject constructor(
     ): Flow<ResourceState<List<Boolean>>> {
         return flow {
             emit(ResourceState.LOADING())
-            val response = hairBookDataSourceBooking.getAvailableBookingByDay(accessToken, barberShopId, date)
+            val response =
+                hairBookDataSourceBooking.getAvailableBookingByDay(accessToken, barberShopId, date)
             if (response.isSuccessful && response.body() != null) {
                 emit(ResourceState.SUCCESS(response.body()!!))
             } else {
                 emit(ResourceState.ERROR("Error getting available booking by day"))
+            }
+        }.catch { e ->
+            emit(ResourceState.ERROR(e.localizedMessage ?: "Something went wrong with api"))
+        }
+    }
+
+    suspend fun getBookingById(
+        accessToken: String,
+        bookingId: String
+    ): Flow<ResourceState<Booking>> {
+        return flow {
+            emit(ResourceState.LOADING())
+            val response = hairBookDataSourceBooking.getBookingById(accessToken, bookingId)
+
+            if (response.isSuccessful && response.body() != null) {
+                emit(ResourceState.SUCCESS(response.body()!!))
+            } else {
+                emit(ResourceState.ERROR("Error getting booking by id"))
             }
         }.catch { e ->
             emit(ResourceState.ERROR(e.localizedMessage ?: "Something went wrong with api"))

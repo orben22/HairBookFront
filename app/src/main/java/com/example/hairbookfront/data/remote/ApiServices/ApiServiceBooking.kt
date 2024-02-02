@@ -61,4 +61,9 @@ interface ApiServiceBooking {
         @Query("date") date: String,
     ): Response<List<Boolean>>
 
+    @GET("booking/get-booking-by-id")
+    suspend fun getBookingById(
+        @Header("Authorization") authToken: String,
+        @Query("bookingId") bookingId: String,
+    ): Response<Booking>
 }

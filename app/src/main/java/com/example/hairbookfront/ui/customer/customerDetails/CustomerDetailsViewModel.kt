@@ -9,6 +9,7 @@ import com.example.hairbookfront.domain.entities.Service
 import com.example.hairbookfront.domain.repository.ApiRepositoryBooking
 import com.example.hairbookfront.domain.repository.ApiRepositoryCustomer
 import com.example.hairbookfront.ui.navgraph.Routes
+import com.example.hairbookfront.util.Constants
 import com.example.hairbookfront.util.ResourceState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
@@ -154,6 +155,15 @@ class CustomerDetailsViewModel @Inject constructor(
                     }
                 }
             }
+        }
+    }
+
+    fun editBookingClicked(booking: Booking) {
+        viewModelScope.launch {
+            dataStorePreferences.setMode(Constants.EditMode)
+            booking.bookingId?.let { dataStorePreferences.setBookingIdForEditing(it) }
+            dataStorePreferences.setShopId(booking.barberShopId)
+            _screen.emit(Routes.EditOrCreateBookingScreen.route)
         }
     }
 

@@ -28,4 +28,6 @@ interface HairBookDataSourceBooking {
         barberShopId: String,
         date: String
     ): Response<List<Boolean>>
+
+    suspend fun getBookingById(accessToken:String, bookingId:String):Response<Booking>
 }

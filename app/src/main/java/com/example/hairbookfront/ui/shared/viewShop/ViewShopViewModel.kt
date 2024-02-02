@@ -30,6 +30,9 @@ class ViewShopViewModel @Inject constructor(
     private val dataStorePreferences: DataStorePreferences,
 ) : ViewModel() {
 
+    private val _role = MutableStateFlow("")
+    val role: StateFlow<String>
+        get() = _role
     private val _accessToken = MutableStateFlow("")
     private val _dataLoaded = MutableStateFlow(false)
 
@@ -68,14 +71,12 @@ class ViewShopViewModel @Inject constructor(
 
     private val _reviews = MutableStateFlow<List<Review>>(listOf())
 
-    val reviews: StateFlow<List <Review>>
+    val reviews: StateFlow<List<Review>>
         get() = _reviews
 
     private val _shopId = MutableStateFlow("")
 
-    private val _role = MutableStateFlow("")
-    val role: StateFlow<String>
-        get() = _role
+
 
     init {
         viewModelScope.launch {
@@ -178,5 +179,12 @@ class ViewShopViewModel @Inject constructor(
             dataStorePreferences.setShopId(_shopId.value)
             _screen.emit(Routes.EditOrCreateReviewScreen.route)
         }
+    }
+
+    fun profileClicked() {
+        if (_role.value == Constants.BarberRole)
+            _screen.value = Routes.BarberDetailsScreen.route
+        else
+            _screen.value = Routes.CustomerDetailsScreen.route
     }
 }

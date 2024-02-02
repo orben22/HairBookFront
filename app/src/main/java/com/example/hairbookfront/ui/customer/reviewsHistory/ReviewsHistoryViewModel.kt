@@ -34,8 +34,12 @@ class ReviewsHistoryViewModel @Inject constructor(
         _isExpanded.value = !_isExpanded.value
     }
 
-    fun dismissMenu(){
+    fun dismissMenu() {
         _isExpanded.value = false
+    }
+
+    fun profileClicked() {
+        _screen.value = Routes.CustomerDetailsScreen.route
     }
 
     fun signOut() {
@@ -44,7 +48,6 @@ class ReviewsHistoryViewModel @Inject constructor(
             _screen.emit(Routes.WelcomeScreen.route)
         }
     }
-
 
 
 }

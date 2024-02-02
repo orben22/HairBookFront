@@ -40,11 +40,12 @@ fun CustomerHomeScreen(
     }
     Scaffold(
         topBar = {
-            TopAppBarComponent("HairBook",
+            TopAppBarComponent(
+                "Search Shop",
                 onDismissRequest = customerViewModel::dismissMenu,
                 expanded = expanded,
                 expandFunction = customerViewModel::expandedFun,
-                onClickMenus = listOf(customerViewModel::signOut,{})
+                onClickMenus = listOf(customerViewModel::profileClicked, customerViewModel::signOut)
             )
         },
         bottomBar = { BottomAppBarComponent() },
@@ -55,7 +56,6 @@ fun CustomerHomeScreen(
                     .padding(innerPadding),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                TopAppBarComponent(text = "Search Shop")
                 TextFieldComponent(
                     value = searchText,
                     placeholderText = "Search",

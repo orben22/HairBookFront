@@ -33,6 +33,7 @@ class DataStorePreferences @Inject constructor(private val dataStore: DataStore<
         private const val SHOP_ID = "ShopId"
         private const val MODE = "Mode"
         private const val BOOKINGID_FOR_EDITING = "BookingIdForEditing"
+        private const val LAST_SCREEN = "LastScreen"
         val firstName = stringPreferencesKey(FIRST_NAME)
         val lastName = stringPreferencesKey(LAST_NAME)
         val age = floatPreferencesKey(AGE)
@@ -45,9 +46,25 @@ class DataStorePreferences @Inject constructor(private val dataStore: DataStore<
         val shopId = stringPreferencesKey(SHOP_ID)
         val mode = stringPreferencesKey(MODE)
         val bookingIdForEditing = stringPreferencesKey(BOOKINGID_FOR_EDITING)
+        val lastScreen = stringPreferencesKey(LAST_SCREEN)
     }
 
-    suspend fun setBookingIdForEditing(bookingId:String){
+
+    suspend fun setLastScreen(screen: String) {
+        dataStore.edit { preferences ->
+            preferences[DataStorePreferences.lastScreen] = screen
+        }
+    }
+
+    fun getLastScreen(): Flow<String> {
+        return dataStore.data.catch {
+            emit(emptyPreferences())
+        }.map { preferences ->
+            preferences[lastScreen] ?: ""
+        }
+    }
+
+    suspend fun setBookingIdForEditing(bookingId: String) {
         dataStore.edit { preferences ->
             preferences[DataStorePreferences.bookingIdForEditing] = bookingId
         }

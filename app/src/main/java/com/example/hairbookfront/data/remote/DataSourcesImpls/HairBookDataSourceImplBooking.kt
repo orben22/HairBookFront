@@ -58,4 +58,7 @@ class HairBookDataSourceImplBooking @Inject constructor(
         return apiServiceBooking.getAvailableBookingByDay("Bearer $accessToken", barberShopId, date)
     }
 
+    override suspend fun getBookingById(accessToken: String, bookingId: String): Response<Booking> {
+        return apiServiceBooking.getBookingById("Bearer $accessToken", bookingId)
+    }
 }

@@ -28,6 +28,7 @@ class MyBookingsViewModel @Inject constructor(
     private val hairBookRepositoryBarber: ApiRepositoryBarber,
     private val dataStorePreferences: DataStorePreferences,
 ) : ViewModel() {
+
     private val _accessToken = MutableStateFlow("")
     val accessToken: StateFlow<String>
         get() = _accessToken
@@ -113,11 +114,17 @@ class MyBookingsViewModel @Inject constructor(
         }
     }
 
+    fun profileClicked() {
+        if (_role.value == Constants.BarberRole)
+            _screen.value = Routes.BarberDetailsScreen.route
+        else
+            _screen.value = Routes.CustomerDetailsScreen.route
+    }
+
     init {
         viewModelScope.launch {
             _accessToken.emit(dataStorePreferences.getAccessToken().first())
             dataStorePreferences.getRole().collectLatest { role ->
-                Timber.d(role)
                 _role.emit(role)
                 hairBookRepositoryBooking.getUserBookings(accessToken.value)
                     .collectLatest { response ->

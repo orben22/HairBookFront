@@ -39,6 +39,11 @@ class EditOrCreateBookingViewModel @Inject constructor(
     private val hairBookRepositoryCustomer: ApiRepositoryCustomer,
 ) : ViewModel() {
 
+    private val _mode = MutableStateFlow("")
+    private val _bookingIdForEditing = MutableStateFlow("")
+    private val _role = MutableStateFlow("")
+    private val _booking = MutableStateFlow<Booking?>(null)
+
     private val _accessToken = MutableStateFlow("")
     val accessToken: StateFlow<String>
         get() = _accessToken
@@ -102,19 +107,27 @@ class EditOrCreateBookingViewModel @Inject constructor(
         viewModelScope.launch {
             _accessToken.emit(dataStorePreferences.getAccessToken().first())
             _barberShopId.emit(dataStorePreferences.getShopId().first())
+            _role.emit(dataStorePreferences.getRole().first())
+            _mode.emit(dataStorePreferences.getMode().first())
         }
         getShopById()
     }
 
-    private suspend fun getAllServicesByBarberShop() {
-        hairBookRepositoryBooking.getAllServicesByBarberShop(
-            _accessToken.value,
-            _barberShopId.value
-        )
+    private suspend fun getBookingById() {
+        hairBookRepositoryBooking.getBookingById(_accessToken.value, _bookingIdForEditing.value)
             .collectLatest { response ->
                 when (response) {
                     is ResourceState.SUCCESS -> {
-                        _services.emit(response.data)
+                        Timber.d("getBookingById: ${response.data}")
+                        _booking.emit(response.data)
+                        if (_booking.value != null) {
+                            Timber.d("service ID ${_booking.value!!.serviceId}")
+                            Timber.d("services ${_services.value}")
+                            _selectedService.emit(_services.value.find { it.serviceId == _booking.value!!.serviceId })
+                            val dateAndTime = _booking.value!!.date.split(" ")
+                            _selectedDate.emit(dateAndTime[0])
+                            _selectedTimeSlot.emit(dateAndTime[1])
+                        }
                     }
 
                     is ResourceState.ERROR -> {
@@ -128,6 +141,35 @@ class EditOrCreateBookingViewModel @Inject constructor(
             }
     }
 
+    private suspend fun getAllServicesByBarberShop() {
+        hairBookRepositoryBooking.getAllServicesByBarberShop(
+            _accessToken.value,
+            _barberShopId.value
+        )
+            .collectLatest { response ->
+                when (response) {
+                    is ResourceState.SUCCESS -> {
+                        _services.emit(response.data)
+                        if (_mode.value == Constants.EditMode) {
+                            _bookingIdForEditing.emit(
+                                dataStorePreferences.getBookingIdForEditing().first()
+                            )
+                            getBookingById()
+                        }
+                    }
+
+                    is ResourceState.ERROR -> {
+                        Timber.d(response.error)
+                    }
+
+                    is ResourceState.LOADING -> {
+                        Timber.d("Loading")
+                    }
+                }
+            }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
     fun getAvailableBookingByDay() {
         viewModelScope.launch(Dispatchers.IO) {
             hairBookRepositoryBooking.getAvailableBookingByDay(
@@ -139,7 +181,23 @@ class EditOrCreateBookingViewModel @Inject constructor(
                     when (response) {
                         is ResourceState.SUCCESS -> {
                             Timber.d("getAvailableBookingByDay: ${response.data}")
-                            _availableBookingByDay.emit(response.data)
+                            val availableBookingByDay = response.data.toMutableList()
+                            // Check if the app is in edit mode
+                            if (_mode.value == Constants.EditMode) {
+                                if (_booking.value != null) {
+                                    val dateAndTime = _booking.value!!.date.split(" ")
+                                    // Get the working hours for the selected date
+                                    val workingHours = getWorkingHours()
+                                    // Find the index of dateAndTime[1] in the working hours list
+                                    val bookingTimeslotIndex = workingHours.indexOf(dateAndTime[1])
+                                    // If the index is not -1, change the corresponding index in availableBookingByDay to true
+                                    if (bookingTimeslotIndex != -1) {
+                                        availableBookingByDay[bookingTimeslotIndex] = true
+                                        _selectedTimeSlot.emit(dateAndTime[1])
+                                    }
+                                }
+                            }
+                            _availableBookingByDay.emit(availableBookingByDay)
                         }
 
                         is ResourceState.ERROR -> {
@@ -175,31 +233,63 @@ class EditOrCreateBookingViewModel @Inject constructor(
             val firstName = dataStorePreferences.getFirstName().first()
             val lastName = dataStorePreferences.getLastName().first()
             val userId = dataStorePreferences.getUserId().first()
-            hairBookRepositoryBooking.bookHaircut(
-                _accessToken.value, Booking(
-                    barberShopId = _barberShopId.value,
-                    serviceId = service.serviceId!!,
-                    date = bookingDateTime,
-                    barberShopName = _shop.value?.barberShopName ?: "",
-                    barberName = _shop.value?.barberName ?: "",
-                    customerName = "$firstName $lastName",
-                    userId = userId,
-                    bookingId = null
-                )
-            ).collectLatest { response ->
-                when (response) {
-                    is ResourceState.SUCCESS -> {
-                        Timber.d("bookHaircutIfPossible: ${response.data}")
-                        _screen.emit(Routes.ViewShopScreen.route)
-                    }
+            val booking = Booking(
+                barberShopId = _barberShopId.value,
+                serviceId = service.serviceId!!,
+                date = bookingDateTime,
+                barberShopName = _shop.value?.barberShopName ?: "",
+                barberName = _shop.value?.barberName ?: "",
+                customerName = "$firstName $lastName",
+                userId = userId,
+                bookingId = _bookingIdForEditing.value
+            )
+            if (_mode.value == Constants.CreateMode) {
+                postBooking(booking)
+            }
+            else {
+                Timber.d("updateBooking: ${booking.bookingId}")
+                updateBooking(booking)
+            }
+        }
+    }
 
-                    is ResourceState.ERROR -> {
-                        Timber.d(response.error)
-                    }
+    private suspend fun updateBooking(booking: Booking) {
+        hairBookRepositoryBooking.updateBooking(
+            _accessToken.value, _bookingIdForEditing.value, booking
+        ).collectLatest { response ->
+            when (response) {
+                is ResourceState.SUCCESS -> {
+                    Timber.d("updateBooking: ${response.data}")
+                    _screen.emit(Routes.ViewShopScreen.route)
+                }
 
-                    is ResourceState.LOADING -> {
-                        Timber.d("Loading")
-                    }
+                is ResourceState.ERROR -> {
+                    Timber.d(response.error)
+                }
+
+                is ResourceState.LOADING -> {
+                    Timber.d("Loading")
+                }
+            }
+        }
+    }
+
+    private suspend fun postBooking(booking: Booking) {
+        hairBookRepositoryBooking.bookHaircut(
+            _accessToken.value, booking
+        ).collectLatest { response ->
+            when (response) {
+                is ResourceState.SUCCESS -> {
+                    Timber.d("bookHaircutIfPossible: ${response.data}")
+                    _screen.emit(Routes.ViewShopScreen.route)
+                }
+
+                is ResourceState.ERROR -> {
+                    Timber.d(response.error)
+                }
+
+                is ResourceState.LOADING -> {
+                    Timber.d("Loading")
                 }
             }
         }
@@ -286,6 +376,13 @@ class EditOrCreateBookingViewModel @Inject constructor(
             signOutHandler.signOut(_accessToken.value)
             _screen.emit(Routes.WelcomeScreen.route)
         }
+    }
+
+    fun profileClicked() {
+        if (_role.value == Constants.BarberRole)
+            _screen.value = Routes.BarberDetailsScreen.route
+        else
+            _screen.value = Routes.CustomerDetailsScreen.route
     }
 
     private fun sendMessage(message: String) {

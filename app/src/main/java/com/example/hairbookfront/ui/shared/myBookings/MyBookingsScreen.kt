@@ -43,7 +43,10 @@ fun MyBookingsScreen(
                 onDismissRequest = myBookingsViewModel::dismissMenu,
                 expanded = expanded,
                 expandFunction = myBookingsViewModel::expandedFun,
-                onClickMenus = listOf(myBookingsViewModel::signOut, {})
+                onClickMenus = listOf(
+                    myBookingsViewModel::profileClicked,
+                    myBookingsViewModel::signOut
+                )
             )
         },
         bottomBar = {

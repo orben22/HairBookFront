@@ -64,6 +64,11 @@ fun EditOrCreateBookingScreen(
                 ).show()
             }
     }
+    LaunchedEffect(selectedDate) {
+        if (selectedDate != "") {
+            viewModel.getAvailableBookingByDay()
+        }
+    }
     Scaffold(
         topBar = {
             TopAppBarComponent(
@@ -71,8 +76,7 @@ fun EditOrCreateBookingScreen(
                 onDismissRequest = viewModel::dismissMenu,
                 expanded = expanded,
                 expandFunction = viewModel::expandedFun,
-                onClickMenus = listOf(viewModel::signOut, {})
-
+                onClickMenus = listOf(viewModel::profileClicked, viewModel::signOut)
             )
         },
     ) { innerPadding ->
@@ -108,7 +112,6 @@ fun EditOrCreateBookingScreen(
             }
             item {
                 if (selectedDate != "") {
-                    viewModel.getAvailableBookingByDay()
                     if (availability.isNotEmpty()) {
                         TimeSlotsPicker(
                             selectedTimeSlot, viewModel::onTimeSlotSelected,
