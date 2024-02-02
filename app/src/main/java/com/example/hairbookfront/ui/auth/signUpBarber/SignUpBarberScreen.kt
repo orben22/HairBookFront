@@ -37,23 +37,23 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun SignUpBarberScreen(
-    signUpBarberViewModel: SignUpBarberViewModel = hiltViewModel(),
+    viewModel: SignUpBarberViewModel = hiltViewModel(),
     navController: NavHostController? = null
 ) {
     val context = LocalContext.current
-    val firstName by signUpBarberViewModel.firstName.collectAsStateWithLifecycle()
-    val lastName by signUpBarberViewModel.lastName.collectAsStateWithLifecycle()
-    val firstNameError by signUpBarberViewModel.firstNameError.collectAsStateWithLifecycle()
-    val lastNameError by signUpBarberViewModel.lastNameError.collectAsStateWithLifecycle()
-    val email by signUpBarberViewModel.email.collectAsStateWithLifecycle()
-    val emailError by signUpBarberViewModel.emailError.collectAsStateWithLifecycle()
-    val yearsOfExperience by signUpBarberViewModel.yearsOfExperience.collectAsStateWithLifecycle()
+    val firstName by viewModel.firstName.collectAsStateWithLifecycle()
+    val lastName by viewModel.lastName.collectAsStateWithLifecycle()
+    val firstNameError by viewModel.firstNameError.collectAsStateWithLifecycle()
+    val lastNameError by viewModel.lastNameError.collectAsStateWithLifecycle()
+    val email by viewModel.email.collectAsStateWithLifecycle()
+    val emailError by viewModel.emailError.collectAsStateWithLifecycle()
+    val yearsOfExperience by viewModel.yearsOfExperience.collectAsStateWithLifecycle()
     val yearsOfExperienceError by
-    signUpBarberViewModel.yearsOfExperienceError.collectAsStateWithLifecycle()
-    val password by signUpBarberViewModel.password.collectAsStateWithLifecycle()
-    val passwordError by signUpBarberViewModel.passwordError.collectAsStateWithLifecycle()
-    val showOrHidePassword by signUpBarberViewModel.showOrHidePassword.collectAsStateWithLifecycle()
-    val homeScreen by signUpBarberViewModel.homeScreen.collectAsStateWithLifecycle()
+    viewModel.yearsOfExperienceError.collectAsStateWithLifecycle()
+    val password by viewModel.password.collectAsStateWithLifecycle()
+    val passwordError by viewModel.passwordError.collectAsStateWithLifecycle()
+    val showOrHidePassword by viewModel.showOrHidePassword.collectAsStateWithLifecycle()
+    val homeScreen by viewModel.homeScreen.collectAsStateWithLifecycle()
 
     LaunchedEffect(homeScreen) {
         if (homeScreen != "") {
@@ -61,7 +61,7 @@ fun SignUpBarberScreen(
         }
     }
     LaunchedEffect(Unit) {
-        signUpBarberViewModel
+        viewModel
             .toastMessage
             .collect { message ->
                 Toast.makeText(
@@ -83,7 +83,7 @@ fun SignUpBarberScreen(
                 value = firstName,
                 placeholderText = "First Name",
                 icon = Icons.Outlined.AccountCircle,
-                onValueChange = { signUpBarberViewModel.firstNameChanged(it) },
+                onValueChange = { viewModel.firstNameChanged(it) },
                 isError = firstNameError,
                 keyboardOptions = KeyboardOptions.Default.copy(
                     capitalization = KeyboardCapitalization.Words,
@@ -94,7 +94,7 @@ fun SignUpBarberScreen(
                 value = lastName,
                 placeholderText = "Last Name",
                 icon = Icons.Outlined.AccountCircle,
-                onValueChange = { signUpBarberViewModel.lastNameChanged(it) },
+                onValueChange = { viewModel.lastNameChanged(it) },
                 isError = lastNameError,
                 keyboardOptions = KeyboardOptions.Default.copy(
                     capitalization = KeyboardCapitalization.Words,
@@ -105,7 +105,7 @@ fun SignUpBarberScreen(
                 value = yearsOfExperience,
                 placeholderText = "Years of Experience",
                 icon = Icons.Outlined.Build,
-                onValueChange = { signUpBarberViewModel.yearsOfExperienceChanged(it) },
+                onValueChange = { viewModel.yearsOfExperienceChanged(it) },
                 keyboardOptions = KeyboardOptions.Default.copy(
                     keyboardType = KeyboardType.Number
                 ),
@@ -115,21 +115,21 @@ fun SignUpBarberScreen(
                 value = email,
                 placeholderText = "Email",
                 icon = Icons.Outlined.Email,
-                onValueChange = { signUpBarberViewModel.emailChanged(it) },
+                onValueChange = { viewModel.emailChanged(it) },
                 isError = emailError
             )
             TextFieldPasswordComponent(
                 password = password,
-                onValueChange = { signUpBarberViewModel.passwordChanged(it) },
+                onValueChange = { viewModel.passwordChanged(it) },
                 isError = passwordError,
-                onIconClicked = { signUpBarberViewModel.showOrHidePassword() },
+                onIconClicked = { viewModel.showOrHidePassword() },
                 passwordVisibility = showOrHidePassword
             )
             ButtonComponent(
                 text = "Sign Up",
                 onClick = {
-                    signUpBarberViewModel.viewModelScope.launch {
-                        signUpBarberViewModel.signUpBarber()
+                    viewModel.viewModelScope.launch {
+                        viewModel.signUpBarber()
                     }
                 },
                 icon = null

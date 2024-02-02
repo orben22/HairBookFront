@@ -1,4 +1,4 @@
-package com.example.hairbookfront.ui.barber.createBarberShop
+package com.example.hairbookfront.ui.barber.editOrCreateBarberShop
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -8,7 +8,6 @@ import com.example.hairbookfront.domain.entities.Service
 import com.example.hairbookfront.domain.repository.ApiRepositoryBarber
 import com.example.hairbookfront.ui.navgraph.Routes
 import com.example.hairbookfront.util.ResourceState
-import com.squareup.moshi.Moshi
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -22,9 +21,8 @@ import timber.log.Timber
 import java.util.regex.Pattern
 import javax.inject.Inject
 
-@OptIn(FlowPreview::class)
 @HiltViewModel
-class CreateBarberShopViewModel @Inject constructor(
+class EditOrCreateBarberShopViewModel @Inject constructor(
     private val hairBookRepositoryBarber: ApiRepositoryBarber,
     private val dataStorePreferences: DataStorePreferences,
 ) : ViewModel() {

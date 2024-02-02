@@ -22,14 +22,14 @@ import timber.log.Timber
 
 @Composable
 fun MyBookingsScreen(
-    myBookingsViewModel: MyBookingsViewModel = hiltViewModel(),
+    viewModel: MyBookingsViewModel = hiltViewModel(),
     navController: NavController? = null,
 ) {
-    val screen by myBookingsViewModel.screen.collectAsStateWithLifecycle()
-    val expanded by myBookingsViewModel.isExpanded.collectAsStateWithLifecycle()
-    val role by myBookingsViewModel.role.collectAsState(initial = "")
-    val bookingsList by myBookingsViewModel.bookings.collectAsStateWithLifecycle()
-    val servicesList by myBookingsViewModel.services.collectAsStateWithLifecycle()
+    val screen by viewModel.screen.collectAsStateWithLifecycle()
+    val expanded by viewModel.isExpanded.collectAsStateWithLifecycle()
+    val role by viewModel.role.collectAsState(initial = "")
+    val bookingsList by viewModel.bookings.collectAsStateWithLifecycle()
+    val servicesList by viewModel.services.collectAsStateWithLifecycle()
     LaunchedEffect(screen) {
         if (screen != "") {
             Timber.d("navigating....$screen")
@@ -40,12 +40,12 @@ fun MyBookingsScreen(
         topBar = {
             TopAppBarComponent(
                 text = "My Bookings",
-                onDismissRequest = myBookingsViewModel::dismissMenu,
+                onDismissRequest = viewModel::dismissMenu,
                 expanded = expanded,
-                expandFunction = myBookingsViewModel::expandedFun,
+                expandFunction = viewModel::expandedFun,
                 onClickMenus = listOf(
-                    myBookingsViewModel::profileClicked,
-                    myBookingsViewModel::signOut
+                    viewModel::profileClicked,
+                    viewModel::signOut
                 )
             )
         },
@@ -61,7 +61,7 @@ fun MyBookingsScreen(
                     services = servicesList,
                     numberOfOptions = 1,
                     optionsIcons = listOf(Icons.Filled.Delete),
-                    optionFunctions = listOf { myBookingsViewModel.deleteBookings(it) }
+                    optionFunctions = listOf { viewModel.deleteBookings(it) }
                 )
             }
             if (role == Constants.CustomerRole) {
@@ -69,8 +69,8 @@ fun MyBookingsScreen(
                     isCustomer = true,
                     bookings = bookingsList,
                     services = servicesList,
-                    optionFunctions = listOf({ myBookingsViewModel.editBookings(it) },
-                        { myBookingsViewModel.deleteBookings(it) })
+                    optionFunctions = listOf({ viewModel.editBookings(it) },
+                        { viewModel.deleteBookings(it) })
                 )
             }
         }

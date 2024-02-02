@@ -17,11 +17,11 @@ import timber.log.Timber
 
 @Composable
 fun ReadReviewsScreen(
-    readReviewsViewModel: ReadReviewsViewModel = hiltViewModel(),
+    viewModel: ReadReviewsViewModel = hiltViewModel(),
     navController: NavController? = null,
 ) {
-    val screen by readReviewsViewModel.screen.collectAsStateWithLifecycle()
-    val expanded by readReviewsViewModel.isExpanded.collectAsStateWithLifecycle()
+    val screen by viewModel.screen.collectAsStateWithLifecycle()
+    val expanded by viewModel.isExpanded.collectAsStateWithLifecycle()
     LaunchedEffect(screen) {
         if (screen != "") {
             Timber.d("navigating....$screen")
@@ -31,12 +31,12 @@ fun ReadReviewsScreen(
     Column {
         TopAppBarComponent(
             text = "Reviews",
-            onDismissRequest = readReviewsViewModel::dismissMenu,
+            onDismissRequest = viewModel::dismissMenu,
             expanded = expanded,
-            expandFunction = readReviewsViewModel::expandedFun,
+            expandFunction = viewModel::expandedFun,
             onClickMenus = listOf(
-                readReviewsViewModel::profileClicked,
-                readReviewsViewModel::signOut
+                viewModel::profileClicked,
+                viewModel::signOut
             )
         )
         ReviewsList(reviews = listOf(review1, review2, review3, review4, review5, review6), editable = listOf(true, false, true, false, true, false))

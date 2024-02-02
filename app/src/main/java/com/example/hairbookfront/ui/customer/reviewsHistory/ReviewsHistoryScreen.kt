@@ -17,11 +17,11 @@ import timber.log.Timber
 
 @Composable
 fun ReviewsHistoryScreen(
-    reviewsHistoryViewModel: ReviewsHistoryViewModel = hiltViewModel(),
+    viewModel: ReviewsHistoryViewModel = hiltViewModel(),
     navController: NavController? = null,
 ) {
-    val screen by reviewsHistoryViewModel.screen.collectAsStateWithLifecycle()
-    val expanded by reviewsHistoryViewModel.isExpanded.collectAsStateWithLifecycle()
+    val screen by viewModel.screen.collectAsStateWithLifecycle()
+    val expanded by viewModel.isExpanded.collectAsStateWithLifecycle()
     LaunchedEffect(screen) {
         if (screen != "") {
             Timber.d("navigating....")
@@ -32,12 +32,12 @@ fun ReviewsHistoryScreen(
         topBar = {
             TopAppBarComponent(
                 text = "Reviews History",
-                onDismissRequest = reviewsHistoryViewModel::dismissMenu,
+                onDismissRequest = viewModel::dismissMenu,
                 expanded = expanded,
-                expandFunction = reviewsHistoryViewModel::expandedFun,
+                expandFunction = viewModel::expandedFun,
                 onClickMenus = listOf(
-                    reviewsHistoryViewModel::profileClicked,
-                    reviewsHistoryViewModel::signOut
+                    viewModel::profileClicked,
+                    viewModel::signOut
                 )
             )
         },

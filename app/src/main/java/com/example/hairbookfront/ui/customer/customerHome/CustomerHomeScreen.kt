@@ -25,13 +25,13 @@ import timber.log.Timber
 
 @Composable
 fun CustomerHomeScreen(
-    customerViewModel: CustomerHomeViewModel = hiltViewModel(),
+    viewModel: CustomerHomeViewModel = hiltViewModel(),
     navController: NavHostController? = null
 ) {
-    val searchText by customerViewModel.searchText.collectAsStateWithLifecycle()
-    val barberShops by customerViewModel.barberShops.collectAsStateWithLifecycle()
-    val screen by customerViewModel.screen.collectAsStateWithLifecycle()
-    val expanded by customerViewModel.isExpanded.collectAsStateWithLifecycle()
+    val searchText by viewModel.searchText.collectAsStateWithLifecycle()
+    val barberShops by viewModel.barberShops.collectAsStateWithLifecycle()
+    val screen by viewModel.screen.collectAsStateWithLifecycle()
+    val expanded by viewModel.isExpanded.collectAsStateWithLifecycle()
     LaunchedEffect(screen) {
         if (screen != "") {
             Timber.d("navigating....")
@@ -42,10 +42,10 @@ fun CustomerHomeScreen(
         topBar = {
             TopAppBarComponent(
                 "Search Shop",
-                onDismissRequest = customerViewModel::dismissMenu,
+                onDismissRequest = viewModel::dismissMenu,
                 expanded = expanded,
-                expandFunction = customerViewModel::expandedFun,
-                onClickMenus = listOf(customerViewModel::profileClicked, customerViewModel::signOut)
+                expandFunction = viewModel::expandedFun,
+                onClickMenus = listOf(viewModel::profileClicked, viewModel::signOut)
             )
         },
         bottomBar = { BottomAppBarComponent() },
@@ -60,11 +60,11 @@ fun CustomerHomeScreen(
                     value = searchText,
                     placeholderText = "Search",
                     icon = Icons.Outlined.Search,
-                    onValueChange = customerViewModel::onSearchTextChanged,
+                    onValueChange = viewModel::onSearchTextChanged,
                 )
                 BarberShopList(
                     barberShops,
-                    onBarberShopClick = customerViewModel::onBarberShopClicked
+                    onBarberShopClick = viewModel::onBarberShopClicked
                 )
             }
         }

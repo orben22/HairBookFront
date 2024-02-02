@@ -38,24 +38,24 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun SignUpCustomerScreen(
-    signUpCustomerViewModel: SignUpCustomerViewModel = hiltViewModel(),
+    viewModel: SignUpCustomerViewModel = hiltViewModel(),
     navController: NavHostController?
 ) {
     val context = LocalContext.current
-    val firstName by signUpCustomerViewModel.firstName.collectAsStateWithLifecycle()
-    val lastName by signUpCustomerViewModel.lastName.collectAsStateWithLifecycle()
-    val age by signUpCustomerViewModel.age.collectAsStateWithLifecycle()
-    val phoneNumber by signUpCustomerViewModel.phoneNumber.collectAsStateWithLifecycle()
-    val email by signUpCustomerViewModel.email.collectAsStateWithLifecycle()
-    val password by signUpCustomerViewModel.password.collectAsStateWithLifecycle()
-    val firstNameError by signUpCustomerViewModel.firstNameError.collectAsStateWithLifecycle()
-    val lastNameError by signUpCustomerViewModel.lastNameError.collectAsStateWithLifecycle()
-    val ageError by signUpCustomerViewModel.ageError.collectAsStateWithLifecycle()
-    val phoneNumberError by signUpCustomerViewModel.phoneNumberError.collectAsStateWithLifecycle()
-    val emailError by signUpCustomerViewModel.emailError.collectAsStateWithLifecycle()
-    val passwordError by signUpCustomerViewModel.passwordError.collectAsStateWithLifecycle()
-    val showOrHidePassword by signUpCustomerViewModel.showOrHidePassword.collectAsStateWithLifecycle()
-    val homeScreen by signUpCustomerViewModel.homeScreen.collectAsStateWithLifecycle()
+    val firstName by viewModel.firstName.collectAsStateWithLifecycle()
+    val lastName by viewModel.lastName.collectAsStateWithLifecycle()
+    val age by viewModel.age.collectAsStateWithLifecycle()
+    val phoneNumber by viewModel.phoneNumber.collectAsStateWithLifecycle()
+    val email by viewModel.email.collectAsStateWithLifecycle()
+    val password by viewModel.password.collectAsStateWithLifecycle()
+    val firstNameError by viewModel.firstNameError.collectAsStateWithLifecycle()
+    val lastNameError by viewModel.lastNameError.collectAsStateWithLifecycle()
+    val ageError by viewModel.ageError.collectAsStateWithLifecycle()
+    val phoneNumberError by viewModel.phoneNumberError.collectAsStateWithLifecycle()
+    val emailError by viewModel.emailError.collectAsStateWithLifecycle()
+    val passwordError by viewModel.passwordError.collectAsStateWithLifecycle()
+    val showOrHidePassword by viewModel.showOrHidePassword.collectAsStateWithLifecycle()
+    val homeScreen by viewModel.homeScreen.collectAsStateWithLifecycle()
 
     LaunchedEffect(homeScreen) {
         if (homeScreen != "") {
@@ -63,7 +63,7 @@ fun SignUpCustomerScreen(
         }
     }
     LaunchedEffect(Unit) {
-        signUpCustomerViewModel
+        viewModel
             .toastMessage
             .collect { message ->
                 Toast.makeText(
@@ -84,7 +84,7 @@ fun SignUpCustomerScreen(
                 value = firstName,
                 placeholderText = "First Name",
                 icon = Icons.Outlined.AccountCircle,
-                onValueChange = { signUpCustomerViewModel.firstNameChanged(it) },
+                onValueChange = { viewModel.firstNameChanged(it) },
                 isError = firstNameError,
                 keyboardOptions = KeyboardOptions.Default.copy(
                     capitalization = KeyboardCapitalization.Words,
@@ -95,7 +95,7 @@ fun SignUpCustomerScreen(
                 value = lastName,
                 placeholderText = "Last Name",
                 icon = Icons.Outlined.AccountCircle,
-                onValueChange = { signUpCustomerViewModel.lastNameChanged(it) },
+                onValueChange = { viewModel.lastNameChanged(it) },
                 isError = lastNameError,
                 keyboardOptions = KeyboardOptions.Default.copy(
                     capitalization = KeyboardCapitalization.Words,
@@ -106,7 +106,7 @@ fun SignUpCustomerScreen(
                 value = age,
                 placeholderText = "Age",
                 icon = null,
-                onValueChange = { signUpCustomerViewModel.ageChanged(it) },
+                onValueChange = { viewModel.ageChanged(it) },
                 keyboardOptions = KeyboardOptions.Default.copy(
                     keyboardType = KeyboardType.Number
                 ),
@@ -116,7 +116,7 @@ fun SignUpCustomerScreen(
                 value = phoneNumber,
                 placeholderText = "Phone Number",
                 icon = Icons.Outlined.Call,
-                onValueChange = { signUpCustomerViewModel.phoneNumberChanged(it) },
+                onValueChange = { viewModel.phoneNumberChanged(it) },
                 keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
                 isError = phoneNumberError
             )
@@ -124,21 +124,21 @@ fun SignUpCustomerScreen(
                 value = email,
                 placeholderText = "Email",
                 icon = Icons.Outlined.Email,
-                onValueChange = { signUpCustomerViewModel.emailChanged(it) },
+                onValueChange = { viewModel.emailChanged(it) },
                 isError = emailError
             )
             TextFieldPasswordComponent(
                 password = password,
-                onValueChange = { signUpCustomerViewModel.passwordChanged(it) },
+                onValueChange = { viewModel.passwordChanged(it) },
                 isError = passwordError,
-                onIconClicked = { signUpCustomerViewModel.showOrHidePassword() },
+                onIconClicked = { viewModel.showOrHidePassword() },
                 passwordVisibility = showOrHidePassword
             )
             ButtonComponent(
                 text = "Sign Up",
                 onClick = {
-                    signUpCustomerViewModel.viewModelScope.launch {
-                        signUpCustomerViewModel.signUpCustomer()
+                    viewModel.viewModelScope.launch {
+                        viewModel.signUpCustomer()
                     }
                 },
                 icon = null

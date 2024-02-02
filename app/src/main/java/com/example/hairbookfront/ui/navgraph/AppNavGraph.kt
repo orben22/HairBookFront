@@ -12,11 +12,11 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navigation
-import com.example.hairbookfront.presentation.CreateBarberShop.CreateBarberShopScreen
 import com.example.hairbookfront.ui.auth.signUpBarber.SignUpBarberScreen
 import com.example.hairbookfront.ui.auth.signUpCustomer.SignUpCustomerScreen
 import com.example.hairbookfront.ui.auth.welcome.WelcomePageScreen
 import com.example.hairbookfront.ui.barber.barberDetails.BarberDetailsScreen
+import com.example.hairbookfront.ui.barber.editOrCreateBarberShop.EditOrCreateBarberShopScreen
 import com.example.hairbookfront.ui.customer.customerDetails.CustomerDetailsScreen
 import com.example.hairbookfront.ui.customer.customerHome.CustomerHomeScreen
 import com.example.hairbookfront.ui.customer.reviewsHistory.ReviewsHistoryScreen
@@ -91,7 +91,7 @@ fun AppNavGraph(
                 BarberDetailsScreen(navController = navController)
             }
             composable(route = Routes.CreateBarberShopScreen.route) {
-                CreateBarberShopScreen(navController = navController)
+                EditOrCreateBarberShopScreen(navController = navController)
             }
             composable(route = Routes.EditOrCreateReviewScreen.route) {
                 EditOrCreateReviewScreen(navController = navController)

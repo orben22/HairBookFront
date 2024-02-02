@@ -1,4 +1,4 @@
-package com.example.hairbookfront.presentation.CreateBarberShop
+package com.example.hairbookfront.ui.barber.editOrCreateBarberShop
 
 import android.os.Build
 import android.widget.Toast
@@ -30,9 +30,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -44,11 +41,9 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
-import com.example.hairbookfront.domain.entities.Service
 import com.example.hairbookfront.ui.Dimens
 import com.example.hairbookfront.ui.common.TextFieldComponent
 import com.example.hairbookfront.ui.common.TopAppBarComponent
-import com.example.hairbookfront.ui.barber.createBarberShop.CreateBarberShopViewModel
 import com.example.hairbookfront.ui.common.AddServiceDialog
 import com.example.hairbookfront.ui.common.ServiceCard
 import com.example.hairbookfront.util.Constants
@@ -62,8 +57,8 @@ import java.time.LocalTime
 @OptIn(ExperimentalMaterial3Api::class)
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun CreateBarberShopScreen(
-    viewModel: CreateBarberShopViewModel = hiltViewModel(), navController: NavHostController? = null
+fun EditOrCreateBarberShopScreen(
+    viewModel: EditOrCreateBarberShopViewModel = hiltViewModel(), navController: NavHostController? = null
 ) {
 
     val context = LocalContext.current

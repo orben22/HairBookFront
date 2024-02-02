@@ -29,18 +29,18 @@ import timber.log.Timber
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BarberDetailsScreen(
-    barberDetailsViewModel: BarberDetailsViewModel = hiltViewModel(),
+    viewModel: BarberDetailsViewModel = hiltViewModel(),
     navController: NavHostController? = null
 ) {
 
-    val yearsOfExperience by barberDetailsViewModel.getYearsOfExperience()
+    val yearsOfExperience by viewModel.getYearsOfExperience()
         .collectAsState(initial = 0)
-    val firstname by barberDetailsViewModel.getFirstName().collectAsState(initial = "")
-    val lastname by barberDetailsViewModel.getLastName().collectAsState(initial = "")
-    val email by barberDetailsViewModel.getEmail().collectAsState(initial = "")
-    val myShops by barberDetailsViewModel.myshops.collectAsStateWithLifecycle()
-    val screen by barberDetailsViewModel.screen.collectAsStateWithLifecycle()
-    val expanded by barberDetailsViewModel.isExpanded.collectAsStateWithLifecycle()
+    val firstname by viewModel.getFirstName().collectAsState(initial = "")
+    val lastname by viewModel.getLastName().collectAsState(initial = "")
+    val email by viewModel.getEmail().collectAsState(initial = "")
+    val myShops by viewModel.myshops.collectAsStateWithLifecycle()
+    val screen by viewModel.screen.collectAsStateWithLifecycle()
+    val expanded by viewModel.isExpanded.collectAsStateWithLifecycle()
     Timber.d("experience: $yearsOfExperience")
     LaunchedEffect(screen) {
         if (screen != "") {
@@ -52,11 +52,11 @@ fun BarberDetailsScreen(
         topBar = {
             TopAppBarComponent(
                 text = "Barber Details",
-                onDismissRequest = barberDetailsViewModel::dismissMenu,
+                onDismissRequest = viewModel::dismissMenu,
                 expanded = expanded,
-                expandFunction = barberDetailsViewModel::expandedFun,
+                expandFunction = viewModel::expandedFun,
                 suggestions = listOf("Sign Out"),
-                onClickMenus = listOf(barberDetailsViewModel::signOut)
+                onClickMenus = listOf(viewModel::signOut)
             )
         },
         bottomBar = {

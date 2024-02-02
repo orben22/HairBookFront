@@ -32,19 +32,19 @@ import com.example.hairbookfront.ui.common.DialogComponent
 
 @Composable
 fun WelcomePageScreen(
-    welcomeViewModel: WelcomeViewModel = hiltViewModel(),
+    viewModel: WelcomeViewModel = hiltViewModel(),
     navController: NavHostController?
 ) {
     val context = LocalContext.current
-    val email by welcomeViewModel.email.collectAsStateWithLifecycle()
-    val password by welcomeViewModel.password.collectAsStateWithLifecycle()
-    val emailError by welcomeViewModel.emailError.collectAsStateWithLifecycle()
-    val passwordError by welcomeViewModel.passwordError.collectAsStateWithLifecycle()
-    val showOrHidePassword by welcomeViewModel.showOrHidePassword.collectAsStateWithLifecycle()
-    val showDialog by welcomeViewModel.showDialog.collectAsStateWithLifecycle()
-    val dialogText by welcomeViewModel.dialogText.collectAsStateWithLifecycle()
-    val signUpScreen by welcomeViewModel.signUpScreen.collectAsStateWithLifecycle()
-    val homeScreen by welcomeViewModel.homeScreen.collectAsStateWithLifecycle()
+    val email by viewModel.email.collectAsStateWithLifecycle()
+    val password by viewModel.password.collectAsStateWithLifecycle()
+    val emailError by viewModel.emailError.collectAsStateWithLifecycle()
+    val passwordError by viewModel.passwordError.collectAsStateWithLifecycle()
+    val showOrHidePassword by viewModel.showOrHidePassword.collectAsStateWithLifecycle()
+    val showDialog by viewModel.showDialog.collectAsStateWithLifecycle()
+    val dialogText by viewModel.dialogText.collectAsStateWithLifecycle()
+    val signUpScreen by viewModel.signUpScreen.collectAsStateWithLifecycle()
+    val homeScreen by viewModel.homeScreen.collectAsStateWithLifecycle()
     LaunchedEffect(homeScreen) {
         if (homeScreen != "") {
             navController?.navigate(homeScreen)
@@ -56,7 +56,7 @@ fun WelcomePageScreen(
         }
     }
     LaunchedEffect(Unit) {
-        welcomeViewModel
+        viewModel
             .toastMessage
             .collect { message ->
                 Toast.makeText(
@@ -102,18 +102,18 @@ fun WelcomePageScreen(
                     value = email,
                     placeholderText = "Email",
                     icon = Icons.Outlined.Email,
-                    onValueChange = { welcomeViewModel.emailChanged(it) },
+                    onValueChange = { viewModel.emailChanged(it) },
                     isError = emailError
                 )
                 TextFieldPasswordComponent(
                     password = password,
-                    onValueChange = { welcomeViewModel.passwordChanged(it) },
+                    onValueChange = { viewModel.passwordChanged(it) },
                     isError = passwordError,
-                    onIconClicked = { welcomeViewModel.showOrHidePassword() },
+                    onIconClicked = { viewModel.showOrHidePassword() },
                     passwordVisibility = showOrHidePassword
                 )
                 ButtonComponent(text = "Sign In", onClick = {
-                    welcomeViewModel.login()
+                    viewModel.login()
                 }, icon = null)
                 Row {
                     Text(
@@ -123,7 +123,7 @@ fun WelcomePageScreen(
                     )
                     ClickableText(
                         text = " Sign Up",
-                        onClick = { welcomeViewModel.showOrHideDialog() },
+                        onClick = { viewModel.showOrHideDialog() },
                         color = Color.Cyan,
                         fontSize = 20
                     )
@@ -136,10 +136,10 @@ fun WelcomePageScreen(
                         numberOfConfirmButtons = 2,
                         textOfConfirmButtons = dialogText,
                         confirmFunctions = listOf(
-                            welcomeViewModel::signUpCustomerClicked,
-                            welcomeViewModel::signUpBarberClicked
+                            viewModel::signUpCustomerClicked,
+                            viewModel::signUpBarberClicked
                         ),
-                        onDismissRequest = { welcomeViewModel.showOrHideDialog() }
+                        onDismissRequest = { viewModel.showOrHideDialog() }
                     )
                 }
             }
