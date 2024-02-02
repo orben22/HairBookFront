@@ -16,8 +16,8 @@ fun DialogComponent(
     dialogTitle: String,
     dialogText: String,
     icon: Int = R.drawable.ic_launcher_round,
-    numberOfConfirmButtons: Int = 1,
-    textOfConfirmButtons: List<String> = listOf("Confirm"),
+    numberOfConfirmButtons: Int = 2,
+    textOfConfirmButtons: List<String> = listOf("Confirm", "Cancel"),
     confirmFunctions: List<() -> Unit>,
     dismissButton: Boolean = false,
     onDismissRequest: (() -> Unit)

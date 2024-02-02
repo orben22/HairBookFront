@@ -39,7 +39,7 @@ fun ReadReviewsScreen(
                 readReviewsViewModel::signOut
             )
         )
-        ReviewsList(reviews = listOf(review1, review2, review3, review4, review5, review6))
+        ReviewsList(reviews = listOf(review1, review2, review3, review4, review5, review6), editable = listOf(true, false, true, false, true, false))
     }
 }
 

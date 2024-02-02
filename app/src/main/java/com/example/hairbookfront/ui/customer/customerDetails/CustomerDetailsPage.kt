@@ -3,7 +3,6 @@ package com.example.hairbookfront.ui.customer.customerDetails
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -18,7 +17,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.example.hairbookfront.ui.common.DialogComponent
-import com.example.hairbookfront.ui.common.ButtonComponent
 import com.example.hairbookfront.ui.common.TopAppBarComponent
 import com.example.hairbookfront.ui.common.BookingCardComponent
 import com.example.hairbookfront.ui.common.BottomAppBarComponent
@@ -26,20 +24,20 @@ import timber.log.Timber
 
 @Composable
 fun CustomerDetailsScreen(
-    customerDetailsViewModel: CustomerDetailsViewModel = hiltViewModel(),
+    viewModel: CustomerDetailsViewModel = hiltViewModel(),
     navController: NavController? = null,
 ) {
-    val age by customerDetailsViewModel.getAge()
+    val age by viewModel.getAge()
         .collectAsState(initial = 0)
-    val firstname by customerDetailsViewModel.getFirstName().collectAsState(initial = "")
-    val lastname by customerDetailsViewModel.getLastName().collectAsState(initial = "")
-    val email by customerDetailsViewModel.getEmail().collectAsState(initial = "")
-    val phoneNumber by customerDetailsViewModel.getPhoneNumber().collectAsState(initial = "")
-    val booking by customerDetailsViewModel.closestBooking.collectAsState()
-    val showOrHideDeleteDialog by customerDetailsViewModel.showOrHideDeleteDialogState.collectAsState()
-    val screen by customerDetailsViewModel.screen.collectAsStateWithLifecycle()
-    val expanded by customerDetailsViewModel.isExpanded.collectAsStateWithLifecycle()
-    val serviceDetails by customerDetailsViewModel.serviceDetails.collectAsStateWithLifecycle()
+    val firstname by viewModel.getFirstName().collectAsState(initial = "")
+    val lastname by viewModel.getLastName().collectAsState(initial = "")
+    val email by viewModel.getEmail().collectAsState(initial = "")
+    val phoneNumber by viewModel.getPhoneNumber().collectAsState(initial = "")
+    val booking by viewModel.closestBooking.collectAsStateWithLifecycle()
+    val showOrHideDeleteDialog by viewModel.showOrHideDeleteDialogState.collectAsStateWithLifecycle()
+    val screen by viewModel.screen.collectAsStateWithLifecycle()
+    val expanded by viewModel.isExpanded.collectAsStateWithLifecycle()
+    val serviceDetails by viewModel.serviceDetails.collectAsStateWithLifecycle()
     LaunchedEffect(screen) {
         if (screen != "") {
             Timber.d("navigating....")
@@ -50,11 +48,11 @@ fun CustomerDetailsScreen(
         topBar = {
             TopAppBarComponent(
                 "Customer Details",
-                onDismissRequest = customerDetailsViewModel::dismissMenu,
+                onDismissRequest = viewModel::dismissMenu,
                 expanded = expanded,
                 suggestions = listOf("Sign Out"),
-                expandFunction = customerDetailsViewModel::expandedFun,
-                onClickMenus = listOf(customerDetailsViewModel::signOut)
+                expandFunction = viewModel::expandedFun,
+                onClickMenus = listOf(viewModel::signOut)
             )
         },
         bottomBar = {
@@ -122,8 +120,8 @@ fun CustomerDetailsScreen(
                     )
                     BookingCardComponent(true, booking!!,
                         serviceDetails!!, numberOfOptions = 2, optionFunctions = listOf(
-                            { customerDetailsViewModel.editBookingClicked(booking!!) },
-                            { customerDetailsViewModel.showOrHideDeleteDialog() }
+                            { viewModel.editBookingClicked(booking!!) },
+                            { viewModel.showOrHideDeleteDialog() }
                         ))
                 } else {
                     Text(
@@ -139,9 +137,12 @@ fun CustomerDetailsScreen(
                     DialogComponent(
                         dialogTitle = "Delete confirmation",
                         dialogText = "Are you sure you want to delete this booking?",
-                        confirmFunctions = listOf(customerDetailsViewModel::deleteBooking)
-                    ) {
-                    }
+                        confirmFunctions = listOf(
+                            viewModel::deleteBooking,
+                            viewModel::onDismissRequest
+                        ),
+                        onDismissRequest = viewModel::onDismissRequest
+                    )
                 }
             }
         }

@@ -25,41 +25,46 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.hairbookfront.domain.entities.Review
-import com.example.hairbookfront.theme.HairBookFrontTheme
 import com.example.hairbookfront.ui.Dimens
+import com.example.hairbookfront.util.Constants
 
 @Composable
 fun ReviewsList(
     reviews: List<Review>?,
-    editable: Boolean = false,
-    onClickFunctions: List<() -> Unit> = listOf(
-        { },
-        { },
+    editable: List<Boolean>,
+    onClickFunctions: List<(String) -> Unit> = listOf(
+        { _ -> },
+        { _ -> },
     ),
     isEditing: Boolean = false,
     onReviewChange: (String) -> Unit = {},
     onRatingChange: (String) -> Unit = {},
-    mode: String = "Customer",
+    role: String = Constants.CustomerRole,
     isError: Boolean = false,
 ) {
     reviews?.let {
+        val pairedList = reviews.zip(editable)
+        val sortedList =
+            pairedList.sortedWith(compareByDescending<Pair<Review, Boolean>> { it.second }.thenBy { it.first.timestamp })
+        val sortedReviews = sortedList.map { it.first }
+        val sortedEditable = sortedList.map { it.second }
         Column {
-            for (review in reviews) {
+            for (i in sortedReviews.indices) {
                 ReviewItem(
-                    fullName = review.firstName + " " + review.lastName,
-                    review = review.review,
-                    rating = review.rating.toString(),
-                    timestamp = review.timestamp,
-                    editable = editable,
+                    fullName = sortedReviews[i].firstName + " " + sortedReviews[i].lastName,
+                    review = sortedReviews[i].review,
+                    rating = sortedReviews[i].rating.toString(),
+                    timestamp = sortedReviews[i].timestamp,
+                    reviewId =  sortedReviews[i].reviewId!!,
+                    editable = sortedEditable[i],
                     onClickFunctions = onClickFunctions,
                     isEditing = isEditing,
                     onReviewChange = onReviewChange,
                     onRatingChange = onRatingChange,
-                    mode = mode,
-                    isError = isError
+                    role = role,
+                    isError = isError,
                 )
             }
         }
@@ -73,14 +78,15 @@ fun ReviewItem(
     rating: String,
     editable: Boolean,
     timestamp: String,
-    onClickFunctions: List<() -> Unit> = listOf(
-        { },
-        { },
+    reviewId: String = "",
+    onClickFunctions: List<(String) -> Unit> = listOf(
+        { _ -> },
+        { _ -> },
     ),
     isEditing: Boolean = false,
     onReviewChange: (String) -> Unit = {},
     onRatingChange: (String) -> Unit = {},
-    mode: String = "Customer",
+    role: String = Constants.CustomerRole,
     isError: Boolean = false
 ) {
     OutlinedCard(
@@ -132,7 +138,7 @@ fun ReviewItem(
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     Text(
-                        text = "Time: " + timestamp,
+                        text = "Time: $timestamp",
                         fontSize = Dimens.fontSmall,
                         fontWeight = FontWeight.Bold,
                     )
@@ -140,7 +146,7 @@ fun ReviewItem(
                 }
             }
             Spacer(modifier = Modifier.height(Dimens.smallPadding1))
-            if (editable && mode == "Customer") {
+            if (editable && role == "Customer") {
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -148,15 +154,15 @@ fun ReviewItem(
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     if (isEditing) {
-                        IconButton(onClick = { onClickFunctions[0]() }) {
+                        IconButton(onClick = { onClickFunctions[0](reviewId) }) {
                             Icon(imageVector = Icons.Default.Check, contentDescription = "Check")
                         }
                     } else {
-                        IconButton(onClick = { onClickFunctions[0]() }) {
+                        IconButton(onClick = { onClickFunctions[0](reviewId) }) {
                             Icon(imageVector = Icons.Default.Edit, contentDescription = "Edit")
                         }
                     }
-                    IconButton(onClick = { onClickFunctions[1]() }) {
+                    IconButton(onClick = { onClickFunctions[1](reviewId) }) {
                         Icon(imageVector = Icons.Default.Delete, contentDescription = "Remove")
                     }
                 }

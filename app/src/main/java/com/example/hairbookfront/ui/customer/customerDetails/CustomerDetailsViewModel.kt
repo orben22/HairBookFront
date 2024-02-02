@@ -166,7 +166,9 @@ class CustomerDetailsViewModel @Inject constructor(
             _screen.emit(Routes.EditOrCreateBookingScreen.route)
         }
     }
-
+    fun onDismissRequest() {
+        showOrHideDeleteDialog.value = false
+    }
     private fun getServiceDetails(serviceId: String?) {
         viewModelScope.launch {
             serviceId?.let {

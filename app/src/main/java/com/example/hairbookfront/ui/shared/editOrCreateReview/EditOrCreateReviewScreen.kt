@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -83,7 +82,7 @@ fun EditOrCreateReviewScreen(
                     isEditing = true,
                     onReviewChange = viewModel::onReviewChange,
                     onRatingChange = viewModel::onRatingChange,
-                    mode = mode,
+                    role = mode,
                     isError = isError
                 )
                 ButtonComponent(

@@ -464,7 +464,7 @@ class CreateBarberShopViewModel @Inject constructor(
                 thursdayHours = thursdayHours,
                 fridayHours = fridayHours,
                 saturdayHours = saturdayHours,
-                totalRating = 0.0f,
+                totalRating = 5.0f,
                 location = _barberShopAddress.value,
                 description = _barberShopDescription.value
             )

@@ -3,11 +3,11 @@ package com.example.hairbookfront.ui.shared.viewShop
 import android.content.res.Configuration
 import android.os.Build
 import androidx.annotation.RequiresApi
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Edit
@@ -28,6 +28,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import com.example.hairbookfront.theme.HairBookFrontTheme
 import com.example.hairbookfront.ui.common.BottomAppBarComponent
+import com.example.hairbookfront.ui.common.DialogComponent
 import com.example.hairbookfront.ui.common.RatingComponent
 import com.example.hairbookfront.ui.common.ReviewsList
 import com.example.hairbookfront.ui.common.TopAppBarComponent
@@ -38,13 +39,26 @@ import java.time.format.DateTimeFormatter
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun ViewShopScreen(
-    viewShopViewModel: ViewShopViewModel = hiltViewModel(), navController: NavHostController? = null
+    viewModel: ViewShopViewModel = hiltViewModel(), navController: NavHostController? = null
 ) {
-    val barberShop by viewShopViewModel.barberShop.collectAsStateWithLifecycle()
-    val screen by viewShopViewModel.screen.collectAsStateWithLifecycle()
-    val expanded by viewShopViewModel.isExpanded.collectAsStateWithLifecycle()
-    val role by viewShopViewModel.role.collectAsState()
-    val reviews by viewShopViewModel.reviews.collectAsStateWithLifecycle()
+    val barberShop by viewModel.barberShop.collectAsStateWithLifecycle()
+    val screen by viewModel.screen.collectAsStateWithLifecycle()
+    val expanded by viewModel.isExpanded.collectAsStateWithLifecycle()
+    val role by viewModel.role.collectAsStateWithLifecycle()
+    val reviews by viewModel.reviews.collectAsStateWithLifecycle()
+    val showOrHideDeleteDialog by viewModel.showOrHideDeleteDialogState.collectAsStateWithLifecycle()
+    val daysOfWeek =
+        listOf("Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday")
+    val hoursOfWeek = listOf(
+        barberShop.sundayHours,
+        barberShop.mondayHours,
+        barberShop.tuesdayHours,
+        barberShop.wednesdayHours,
+        barberShop.thursdayHours,
+        barberShop.fridayHours,
+        barberShop.saturdayHours
+    )
+    val userId by viewModel.userId.collectAsStateWithLifecycle()
     LaunchedEffect(screen) {
         if (screen != "") {
             navController?.navigate(screen)
@@ -53,17 +67,17 @@ fun ViewShopScreen(
     Scaffold(topBar = {
         TopAppBarComponent(
             text = "View Shop",
-            onDismissRequest = viewShopViewModel::dismissMenu,
+            onDismissRequest = viewModel::dismissMenu,
             expanded = expanded,
-            expandFunction = viewShopViewModel::expandedFun,
-            onClickMenus = listOf(viewShopViewModel::profileClicked, viewShopViewModel::signOut)
+            expandFunction = viewModel::expandedFun,
+            onClickMenus = listOf(viewModel::profileClicked, viewModel::signOut)
         )
     }, bottomBar = {
         if (role == Constants.CustomerRole) {
             BottomAppBarComponent(
-                onClickFunctions = listOf(viewShopViewModel::writeReview),
+                onClickFunctions = listOf(viewModel::writeReview),
                 onClickFloating = {
-                    viewShopViewModel.onFloatingActionButtonClicked()
+                    viewModel.onFloatingActionButtonClicked()
                 },
                 icons = listOf(Icons.Filled.Edit),
                 floatingIcon = Icons.Filled.Add,
@@ -72,7 +86,7 @@ fun ViewShopScreen(
             )
         } else {
             BottomAppBarComponent(
-                onClickFunctions = listOf(viewShopViewModel::viewHistory),
+                onClickFunctions = listOf(viewModel::viewHistory),
                 textToIcon = listOf("Booking History"),
                 numberOfIcons = 1,
                 icons = listOf(
@@ -81,51 +95,65 @@ fun ViewShopScreen(
             )
         }
     }) { innerPadding ->
-        Column(
+        LazyColumn(
             modifier = Modifier
                 .padding(innerPadding)
                 .padding(16.dp)
                 .fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Spacer(modifier = Modifier.height(16.dp))
-            Text(text = barberShop.barberShopName, style = MaterialTheme.typography.headlineLarge)
-            Spacer(modifier = Modifier.height(16.dp))
-            Text(
-                text = "Address: ${barberShop.location}", style = MaterialTheme.typography.bodySmall
-            )
-            Spacer(modifier = Modifier.height(16.dp))
-            Text(text = barberShop.description, style = MaterialTheme.typography.bodySmall)
-            Spacer(modifier = Modifier.height(16.dp))
-            Text(
-                text = "Phone Number: ${barberShop.phoneNumber}",
-                style = MaterialTheme.typography.bodySmall
-            )
-            Spacer(modifier = Modifier.height(16.dp))
-
-            RatingComponent(rating = barberShop.totalRating)
-            Spacer(modifier = Modifier.height(16.dp))
-            val daysOfWeek =
-                listOf("Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday")
-            val hoursOfWeek = listOf(
-                barberShop.sundayHours,
-                barberShop.mondayHours,
-                barberShop.tuesdayHours,
-                barberShop.wednesdayHours,
-                barberShop.thursdayHours,
-                barberShop.fridayHours,
-                barberShop.saturdayHours
-            )
-            for (i in barberShop.workingDays.indices) {
-                WorkingHours(daysOfWeek[i], hoursOfWeek[i], barberShop.workingDays[i] == 1.0f)
-            }
-            Spacer(modifier = Modifier.height(16.dp))
-            Text(text = "Reviews", style = MaterialTheme.typography.headlineMedium)
-            if (reviews != null) {
-                ReviewsList(
-                    reviews = reviews, editable = false
+            item {
+                Spacer(modifier = Modifier.height(16.dp))
+                Text(
+                    text = barberShop.barberShopName,
+                    style = MaterialTheme.typography.headlineLarge
                 )
+                Spacer(modifier = Modifier.height(16.dp))
+                Text(
+                    text = "Address: ${barberShop.location}",
+                    style = MaterialTheme.typography.bodySmall
+                )
+                Spacer(modifier = Modifier.height(16.dp))
+                Text(text = barberShop.description, style = MaterialTheme.typography.bodySmall)
+                Spacer(modifier = Modifier.height(16.dp))
+                Text(
+                    text = "Phone Number: ${barberShop.phoneNumber}",
+                    style = MaterialTheme.typography.bodySmall
+                )
+                Spacer(modifier = Modifier.height(16.dp))
+
+                RatingComponent(rating = barberShop.totalRating)
+                Spacer(modifier = Modifier.height(16.dp))
             }
+
+            item {
+                for (i in barberShop.workingDays.indices) {
+                    WorkingHours(daysOfWeek[i], hoursOfWeek[i], barberShop.workingDays[i] == 1.0f)
+                }
+                Spacer(modifier = Modifier.height(16.dp))
+
+            }
+            item {
+                Text(text = "Reviews", style = MaterialTheme.typography.headlineMedium)
+                if (reviews.isNotEmpty()) {
+                    val editableList = reviews.map { it.userId == userId }
+                    ReviewsList(
+                        reviews = reviews, editable = editableList, role = role,
+                        onClickFunctions = listOf(
+                            viewModel::editReview,
+                            viewModel::showOrHideDeleteDialog
+                        )
+                    )
+                }
+            }
+        }
+        if (showOrHideDeleteDialog) {
+            DialogComponent(
+                dialogTitle = "Delete confirmation",
+                dialogText = "Are you sure you want to delete this review?",
+                confirmFunctions = listOf(viewModel::deleteReview, viewModel::onDismissRequest),
+                onDismissRequest = viewModel::onDismissRequest
+            )
         }
     }
 }

@@ -30,9 +30,15 @@ class ViewShopViewModel @Inject constructor(
     private val dataStorePreferences: DataStorePreferences,
 ) : ViewModel() {
 
+    private val _reviewToDelete = MutableStateFlow("")
+
     private val _role = MutableStateFlow("")
     val role: StateFlow<String>
         get() = _role
+
+    private val _userId = MutableStateFlow("")
+    val userId: StateFlow<String>
+        get() = _userId
     private val _accessToken = MutableStateFlow("")
     private val _dataLoaded = MutableStateFlow(false)
 
@@ -77,12 +83,24 @@ class ViewShopViewModel @Inject constructor(
     private val _shopId = MutableStateFlow("")
 
 
+    private val showOrHideDeleteDialog = MutableStateFlow(false)
+    val showOrHideDeleteDialogState: StateFlow<Boolean>
+        get() = showOrHideDeleteDialog
+
+    fun onDismissRequest() {
+        showOrHideDeleteDialog.value = false
+    }
+
+    fun showOrHideDeleteDialog(reviewId: String) {
+        Timber.d("reviewId: $reviewId")
+        _reviewToDelete.value = reviewId
+        showOrHideDeleteDialog.value = !showOrHideDeleteDialog.value
+    }
 
     init {
         viewModelScope.launch {
-            dataStorePreferences.getRole().collectLatest { role ->
-                _role.emit(role)
-            }
+            _role.emit(dataStorePreferences.getRole().first())
+            _userId.emit(dataStorePreferences.getUserId().first())
         }
         getShopData()
         getReviews()
@@ -113,6 +131,7 @@ class ViewShopViewModel @Inject constructor(
                 .collectLatest { resourceState ->
                     when (resourceState) {
                         is ResourceState.SUCCESS -> {
+                            Timber.d("Reviews: ${resourceState.data}")
                             _reviews.emit(resourceState.data)
                         }
 
@@ -178,6 +197,32 @@ class ViewShopViewModel @Inject constructor(
             dataStorePreferences.setMode(Constants.CreateMode)
             dataStorePreferences.setShopId(_shopId.value)
             _screen.emit(Routes.EditOrCreateReviewScreen.route)
+        }
+    }
+
+    fun editReview(reviewId: String) {
+        Timber.d("reviewId: $reviewId")
+    }
+
+    fun deleteReview() {
+        viewModelScope.launch {
+            hairBookRepositoryReview.deleteReview(_accessToken.value, _reviewToDelete.value)
+                .collectLatest { response ->
+                    Timber.d("res: $response")
+                    when (response) {
+                        is ResourceState.LOADING -> {
+                        }
+
+                        is ResourceState.SUCCESS -> {
+                            showOrHideDeleteDialog.emit(false)
+                            getReviews()
+                            getShopData()
+                        }
+
+                        is ResourceState.ERROR -> {
+                        }
+                    }
+                }
         }
     }
 
