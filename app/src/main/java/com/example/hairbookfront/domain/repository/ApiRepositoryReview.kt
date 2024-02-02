@@ -97,4 +97,20 @@ class ApiRepositoryReview @Inject constructor(
         }
     }
 
+    suspend fun getReviewById(
+        accessToken: String,
+        reviewId: String
+    ): Flow<ResourceState<Review>> {
+        return flow {
+            emit(ResourceState.LOADING())
+            val response = hairBookDataSourceReview.getReviewById(accessToken, reviewId)
+            if (response.isSuccessful && response.body() != null) {
+                emit(ResourceState.SUCCESS(response.body()!!))
+            } else {
+                emit(ResourceState.ERROR("Error getting review by id"))
+            }
+        }.catch { e ->
+            emit(ResourceState.ERROR(e.localizedMessage ?: "Something went wrong with api"))
+        }
+    }
 }

@@ -34,6 +34,7 @@ class DataStorePreferences @Inject constructor(private val dataStore: DataStore<
         private const val MODE = "Mode"
         private const val BOOKINGID_FOR_EDITING = "BookingIdForEditing"
         private const val LAST_SCREEN = "LastScreen"
+        private const val REVIEWID_FOR_EDITING = "ReviewIdForEditing"
         val firstName = stringPreferencesKey(FIRST_NAME)
         val lastName = stringPreferencesKey(LAST_NAME)
         val age = floatPreferencesKey(AGE)
@@ -47,12 +48,13 @@ class DataStorePreferences @Inject constructor(private val dataStore: DataStore<
         val mode = stringPreferencesKey(MODE)
         val bookingIdForEditing = stringPreferencesKey(BOOKINGID_FOR_EDITING)
         val lastScreen = stringPreferencesKey(LAST_SCREEN)
+        val reviewIdForEditing = stringPreferencesKey(REVIEWID_FOR_EDITING)
     }
 
 
     suspend fun setLastScreen(screen: String) {
         dataStore.edit { preferences ->
-            preferences[DataStorePreferences.lastScreen] = screen
+            preferences[lastScreen] = screen
         }
     }
 
@@ -66,7 +68,7 @@ class DataStorePreferences @Inject constructor(private val dataStore: DataStore<
 
     suspend fun setBookingIdForEditing(bookingId: String) {
         dataStore.edit { preferences ->
-            preferences[DataStorePreferences.bookingIdForEditing] = bookingId
+            preferences[bookingIdForEditing] = bookingId
         }
     }
 
@@ -75,6 +77,20 @@ class DataStorePreferences @Inject constructor(private val dataStore: DataStore<
             emit(emptyPreferences())
         }.map { preferences ->
             preferences[bookingIdForEditing] ?: ""
+        }
+    }
+
+    suspend fun setReviewIdForEditing(reviewId: String) {
+        dataStore.edit { preferences ->
+            preferences[reviewIdForEditing] = reviewId
+        }
+    }
+
+    fun getReviewIdForEditing(): Flow<String> {
+        return dataStore.data.catch {
+            emit(emptyPreferences())
+        }.map { preferences ->
+            preferences[reviewIdForEditing] ?: ""
         }
     }
 

@@ -12,6 +12,7 @@ import com.example.hairbookfront.domain.entities.Review
 import com.example.hairbookfront.domain.repository.ApiRepositoryBarber
 import com.example.hairbookfront.domain.repository.ApiRepositoryReview
 import com.example.hairbookfront.ui.navgraph.Routes
+import com.example.hairbookfront.util.Constants
 import com.example.hairbookfront.util.Constants.DATE_FORMAT
 import com.example.hairbookfront.util.ResourceState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -37,7 +38,6 @@ class EditOrCreateReviewViewModel @Inject constructor(
 ) : ViewModel() {
 
     private val _role = MutableStateFlow("")
-    private val _mode = MutableStateFlow("")
     private val _sentReview = MutableStateFlow(
         Review(
             reviewId = null,
@@ -50,6 +50,9 @@ class EditOrCreateReviewViewModel @Inject constructor(
             barberShopId = ""
         )
     )
+    private val reviewToEditId = MutableStateFlow("")
+
+    private val _mode = MutableStateFlow("")
     val mode: StateFlow<String>
         get() = _mode
     private val _accessToken = MutableStateFlow("")
@@ -99,8 +102,11 @@ class EditOrCreateReviewViewModel @Inject constructor(
     }
 
     fun onRatingChange(newRating: String) {
-        val rating = newRating.toFloatOrNull()
-        if (rating != null && rating in 0.0..5.0) {
+        Timber.d("newRating: $newRating")
+        if (newRating.isEmpty()) {
+            _rating.value = ""
+            _isError.value = false
+        } else if (newRating.toFloat() in 0.0..5.0) {
             _rating.value = newRating
             _isError.value = false
         } else {
@@ -127,16 +133,81 @@ class EditOrCreateReviewViewModel @Inject constructor(
                 barberShopId = shopId.value
             )
             viewModelScope.launch(Dispatchers.IO) {
-                hairBookRepositoryReview.postReview(
-                    _accessToken.value, newReview
-                ).collectLatest { response ->
+                if (_mode.value == Constants.EditMode) {
+                    updateReview(newReview)
+                } else {
+                    postReview(newReview)
+                }
+            }
+
+        }
+    }
+
+    private suspend fun updateReview(newReview: Review) {
+        hairBookRepositoryReview.updateReview(
+            _accessToken.value, reviewToEditId.value, newReview
+        ).collectLatest { response ->
+            when (response) {
+                is ResourceState.SUCCESS -> {
+                    sendMessage("Review updated")
+                    _sentReview.emit(response.data)
+                    Timber.d("Review sent: ${_sentReview.value}")
+                    _screen.emit(Routes.ViewShopScreen.route)
+                }
+
+                is ResourceState.ERROR -> {
+                    Timber.d(response.error)
+                }
+
+                is ResourceState.LOADING -> {
+                    Timber.d("Loading")
+                }
+            }
+        }
+    }
+
+    private suspend fun postReview(newReview: Review) {
+        hairBookRepositoryReview.postReview(
+            _accessToken.value, newReview
+        ).collectLatest { response ->
+            when (response) {
+                is ResourceState.SUCCESS -> {
+                    sendMessage("Review sent")
+                    _sentReview.emit(response.data)
+                    Timber.d("Review sent: ${_sentReview.value}")
+                    _screen.emit(Routes.ViewShopScreen.route)
+                }
+
+                is ResourceState.ERROR -> {
+                    Timber.d(response.error)
+                }
+
+                is ResourceState.LOADING -> {
+                    Timber.d("Loading")
+                }
+            }
+        }
+    }
+
+    init {
+        getInfo()
+    }
+
+    private fun getReviewById() {
+        viewModelScope.launch {
+            reviewToEditId.value = dataStorePreferences.getReviewIdForEditing().first()
+            hairBookRepositoryReview.getReviewById(_accessToken.value, reviewToEditId.value)
+                .collectLatest { response ->
                     when (response) {
                         is ResourceState.SUCCESS -> {
-                            sendMessage("Review sent")
                             _sentReview.emit(response.data)
+                            _review.emit(response.data.review)
+                            _rating.emit(response.data.rating.toString())
+                            _firstName.emit(response.data.firstName)
+                            _lastName.emit(response.data.lastName)
                             Timber.d("Review sent: ${_sentReview.value}")
-                            _screen.emit(Routes.ViewShopScreen.route)
                         }
+
                         is ResourceState.ERROR -> {
                             Timber.d(response.error)
                         }
@@ -146,13 +217,7 @@ class EditOrCreateReviewViewModel @Inject constructor(
                         }
                     }
                 }
-            }
-
         }
-    }
-
-    init {
-        getInfo()
     }
 
     private fun getInfo() {
@@ -166,6 +231,10 @@ class EditOrCreateReviewViewModel @Inject constructor(
 
             _userId.emit(dataStorePreferences.getUserId().first())
             _role.emit(dataStorePreferences.getRole().first())
+            _mode.emit(dataStorePreferences.getMode().first())
+            if (_mode.value == Constants.EditMode) {
+                getReviewById()
+            }
         }
     }
 
@@ -179,7 +248,6 @@ class EditOrCreateReviewViewModel @Inject constructor(
             _screen.emit(Routes.WelcomeScreen.route)
         }
     }
-
 
 
     private fun sendMessage(message: String) {

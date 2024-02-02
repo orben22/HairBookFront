@@ -201,7 +201,11 @@ class ViewShopViewModel @Inject constructor(
     }
 
     fun editReview(reviewId: String) {
-        Timber.d("reviewId: $reviewId")
+        viewModelScope.launch {
+            dataStorePreferences.setMode(Constants.EditMode)
+            dataStorePreferences.setReviewIdForEditing(reviewId)
+            _screen.emit(Routes.EditOrCreateReviewScreen.route)
+        }
     }
 
     fun deleteReview() {

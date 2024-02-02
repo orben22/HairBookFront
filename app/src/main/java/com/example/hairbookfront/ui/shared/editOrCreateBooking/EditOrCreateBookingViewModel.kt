@@ -40,6 +40,8 @@ class EditOrCreateBookingViewModel @Inject constructor(
 ) : ViewModel() {
 
     private val _mode = MutableStateFlow("")
+    val mode: StateFlow<String>
+        get() = _mode
     private val _bookingIdForEditing = MutableStateFlow("")
     private val _role = MutableStateFlow("")
     private val _booking = MutableStateFlow<Booking?>(null)

@@ -47,6 +47,7 @@ fun EditOrCreateBookingScreen(
     val shop by viewModel.shop.collectAsState()
     val services by viewModel.services.collectAsStateWithLifecycle()
     val availability by viewModel.availableBookingByDay.collectAsStateWithLifecycle()
+    val mode by viewModel.mode.collectAsStateWithLifecycle()
     LaunchedEffect(screen) {
         if (screen != "") {
             navController?.navigate(screen)
@@ -72,7 +73,7 @@ fun EditOrCreateBookingScreen(
     Scaffold(
         topBar = {
             TopAppBarComponent(
-                text = "Edit/Create Booking",
+                text = "$mode Booking",
                 onDismissRequest = viewModel::dismissMenu,
                 expanded = expanded,
                 expandFunction = viewModel::expandedFun,
