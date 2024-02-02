@@ -90,7 +90,6 @@ class ViewShopViewModel @Inject constructor(
     }
 
     fun showOrHideDeleteDialog(reviewId: String) {
-        Timber.d("reviewId: $reviewId")
         _reviewToDelete.value = reviewId
         showOrHideDeleteDialog.value = !showOrHideDeleteDialog.value
     }

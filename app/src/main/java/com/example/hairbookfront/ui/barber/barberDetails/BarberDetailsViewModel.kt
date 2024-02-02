@@ -8,12 +8,14 @@ import com.example.hairbookfront.domain.SignOutHandler
 import com.example.hairbookfront.domain.entities.BarberShop
 import com.example.hairbookfront.domain.repository.ApiRepositoryBarber
 import com.example.hairbookfront.ui.navgraph.Routes
+import com.example.hairbookfront.util.Constants
 import com.example.hairbookfront.util.ResourceState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
@@ -24,9 +26,14 @@ class BarberDetailsViewModel @Inject constructor(
     private val dataStorePreferences: DataStorePreferences,
     private val apiRepositoryBarber: ApiRepositoryBarber,
 ) : ViewModel() {
+
     private val _accessToken = MutableStateFlow("")
     val accessToken: StateFlow<String>
         get() = _accessToken
+
+    private val _showOrHideDeleteDialog = MutableStateFlow(false)
+    val showOrHideDeleteDialog: StateFlow<Boolean>
+        get() = _showOrHideDeleteDialog
 
     private val _isExpanded = MutableStateFlow(false)
     val isExpanded: StateFlow<Boolean>
@@ -55,6 +62,7 @@ class BarberDetailsViewModel @Inject constructor(
     val myshops: StateFlow<List<BarberShop>>
         get() = _myshops
 
+    private val _shopToDelete = MutableStateFlow("")
     fun getYearsOfExperience(): Flow<Int> {
         return dataStorePreferences.getYearsOfExperience()
     }
@@ -93,30 +101,78 @@ class BarberDetailsViewModel @Inject constructor(
         }
     }
 
-    init {
+    fun onCreateBarberShopClicked() {
+        _screen.value = Routes.EditOrCreateBarberShopScreen.route
+    }
+
+    fun onBookingHistoryClicked() {
+        _screen.value = Routes.MyBookingsScreen.route
+    }
+
+    fun onDismissRequest() {
+        _showOrHideDeleteDialog.value = false
+    }
+
+    fun showOrHideDeleteDialog(barberShopId: String) {
+        _shopToDelete.value = barberShopId
+        _showOrHideDeleteDialog.value = !showOrHideDeleteDialog.value
+    }
+
+    fun editShop(barberShopId: String) {
         viewModelScope.launch {
-            dataStorePreferences.getAccessToken().collectLatest { accessToken ->
-                Timber.d(accessToken)
-                _accessToken.emit(accessToken)
-                apiRepositoryBarber.getMyBarberShops(_accessToken.value)
-                    .collectLatest { response ->
-                        Timber.d("response: $response")
-                        when (response) {
-                            is ResourceState.LOADING -> {
-                                Timber.d("Loading")
-                            }
+            dataStorePreferences.setShopId(barberShopId)
+            dataStorePreferences.setMode(Constants.EditMode)
+            _screen.emit(Routes.EditOrCreateBarberShopScreen.route)
+        }
+    }
 
-                            is ResourceState.SUCCESS -> {
-                                Timber.d("Success")
-                                _myshops.emit(response.data)
-                            }
+    fun deleteShop() {
+        viewModelScope.launch {
+            apiRepositoryBarber.deleteBarberShop(_shopToDelete.value, _accessToken.value)
+                .collectLatest { response ->
+                    when (response) {
+                        is ResourceState.LOADING -> {
+                            Timber.d("Loading")
+                        }
 
-                            is ResourceState.ERROR -> {
-                                Timber.d("Error")
-                            }
+                        is ResourceState.SUCCESS -> {
+                            Timber.d("Success")
+                            getMyShops()
+                        }
+
+                        is ResourceState.ERROR -> {
+                            Timber.d("Error")
                         }
                     }
-            }
+                }
         }
+    }
+
+    init {
+        viewModelScope.launch {
+            _accessToken.emit(dataStorePreferences.getAccessToken().first())
+            getMyShops()
+        }
+    }
+
+    private suspend fun getMyShops() {
+        apiRepositoryBarber.getMyBarberShops(_accessToken.value)
+            .collectLatest { response ->
+                Timber.d("response: $response")
+                when (response) {
+                    is ResourceState.LOADING -> {
+                        Timber.d("Loading")
+                    }
+
+                    is ResourceState.SUCCESS -> {
+                        Timber.d("Success")
+                        _myshops.emit(response.data)
+                    }
+
+                    is ResourceState.ERROR -> {
+                        Timber.d("Error")
+                    }
+                }
+            }
     }
 }

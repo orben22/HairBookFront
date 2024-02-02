@@ -26,12 +26,15 @@ import com.example.hairbookfront.ui.Dimens
 fun BarberShopList(
     barberShops: List<BarberShop>?,
     editable: Boolean = false,
-    onBarberShopClick: (BarberShop) -> Unit = {}
+    onBarberShopClick: (BarberShop) -> Unit = {},
+    onIconsClicked: List<(String) -> Unit> = listOf({}, {})
 ) {
     barberShops?.let {
         LazyColumn {
             items(barberShops) { barberShop ->
-                BarberShopItem(barberShop = barberShop, editable, onBarberShopClick)
+                BarberShopItem(
+                    barberShop = barberShop, editable, onBarberShopClick, onIconsClicked
+                )
             }
         }
     }
@@ -41,7 +44,8 @@ fun BarberShopList(
 fun BarberShopItem(
     barberShop: BarberShop,
     editable: Boolean,
-    onBarberShopClick: (BarberShop) -> Unit
+    onBarberShopClick: (BarberShop) -> Unit,
+    onIconsClicked: List<(String) -> Unit> = listOf({}, {})
 ) {
     ElevatedCard(
         elevation = CardDefaults.cardElevation(
@@ -103,10 +107,10 @@ fun BarberShopItem(
                     .padding(Dimens.smallPadding3),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                IconButton(onClick = { /* TODO: Handle edit action */ }) {
+                IconButton(onClick = { barberShop.barberShopId?.let { onIconsClicked[0](it) } }) {
                     Icon(imageVector = Icons.Default.Edit, contentDescription = "Edit")
                 }
-                IconButton(onClick = { /* TODO: Handle edit action */ }) {
+                IconButton(onClick = { barberShop.barberShopId?.let { onIconsClicked[1](it) } }) {
                     Icon(imageVector = Icons.Default.Delete, contentDescription = "Remove")
                 }
             }
