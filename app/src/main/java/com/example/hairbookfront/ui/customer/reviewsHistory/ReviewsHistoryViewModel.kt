@@ -12,6 +12,13 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+/**
+ * ViewModel for the ReviewsHistory screen.
+ *
+ * @property signOutHandler The handler for signing out.
+ * @property hairBookRepositoryReview The repository for review related operations.
+ * @property dataStorePreferences The datastore for storing preferences.
+ */
 @HiltViewModel
 class ReviewsHistoryViewModel @Inject constructor(
     private val signOutHandler: SignOutHandler,

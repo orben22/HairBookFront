@@ -53,8 +53,11 @@ object Dependencies {
 
     val datastore by lazy { "androidx.datastore:datastore:${Versions.datastore}" }
     val datastorePreferences by lazy { "androidx.datastore:datastore-preferences:${Versions.datastore}" }
-    val kotlinxCollectionImmutable by lazy { "org.jetbrains.kotlinx:kotlinx-collection-immutable:${Versions.kotlinxCollectionImmutable}" }
     val json by lazy { "org.jetbrains.kotlinx:kotlinx-serialization-json:${Versions.json}" }
+
+    val maxkeppelerSheets by lazy { "com.maxkeppeler.sheets-compose-dialogs:core:${Versions.maxkeppelerSheets}" }
+    val maxkeppelerSheetsClock by lazy { "com.maxkeppeler.sheets-compose-dialogs:clock:${Versions.maxkeppelerSheets}" }
+    val maxkeppelerSheetsCalender by lazy { "com.maxkeppeler.sheets-compose-dialogs:calendar:${Versions.maxkeppelerSheets}" }
 
 
 

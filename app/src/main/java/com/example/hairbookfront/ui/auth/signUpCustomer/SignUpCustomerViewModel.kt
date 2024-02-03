@@ -10,7 +10,6 @@ import com.example.hairbookfront.domain.repository.ApiRepositoryAuth
 import com.example.hairbookfront.ui.navgraph.Routes
 import com.example.hairbookfront.util.Constants.CustomerRole
 import com.example.hairbookfront.util.ResourceState
-import com.squareup.moshi.Moshi
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -22,6 +21,12 @@ import timber.log.Timber
 import java.util.regex.Pattern
 import javax.inject.Inject
 
+/**
+ * ViewModel for the SignUpCustomer screen.
+ *
+ * @property hairBookRepository The repository for authentication related operations.
+ * @property dataStorePreferences The datastore for storing preferences.
+ */
 @HiltViewModel
 class SignUpCustomerViewModel @Inject constructor(
     private val hairBookRepository: ApiRepositoryAuth,

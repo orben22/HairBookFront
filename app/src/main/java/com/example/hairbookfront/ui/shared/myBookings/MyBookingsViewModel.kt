@@ -21,6 +21,14 @@ import timber.log.Timber
 import javax.inject.Inject
 
 
+/**
+ * ViewModel for the MyBookings screen.
+ *
+ * @property signOutHandler The handler for signing out.
+ * @property hairBookRepositoryBooking The repository for booking related operations.
+ * @property hairBookRepositoryBarber The repository for barber related operations.
+ * @property dataStorePreferences The datastore for storing preferences.
+ */
 @HiltViewModel
 class MyBookingsViewModel @Inject constructor(
     private val signOutHandler: SignOutHandler,
@@ -148,27 +156,29 @@ class MyBookingsViewModel @Inject constructor(
             }
         }
     }
+
     private fun getServiceDetails(serviceId: String?) {
         viewModelScope.launch {
             serviceId?.let {
-                hairBookRepositoryBooking.getServiceBookings(_accessToken.value, it).collect { response ->
-                    Timber.d("res: $response")
-                    when (response) {
-                        is ResourceState.LOADING -> {
-                        }
+                hairBookRepositoryBooking.getServiceBookings(_accessToken.value, it)
+                    .collect { response ->
+                        Timber.d("res: $response")
+                        when (response) {
+                            is ResourceState.LOADING -> {
+                            }
 
-                        is ResourceState.SUCCESS -> {
-                            response.data.let { service ->
-                                val currentServices = _services.value.toMutableList()
-                                currentServices.add(service)
-                                _services.emit(currentServices)
+                            is ResourceState.SUCCESS -> {
+                                response.data.let { service ->
+                                    val currentServices = _services.value.toMutableList()
+                                    currentServices.add(service)
+                                    _services.emit(currentServices)
+                                }
+                            }
+
+                            is ResourceState.ERROR -> {
                             }
                         }
-
-                        is ResourceState.ERROR -> {
-                        }
                     }
-                }
             }
         }
     }

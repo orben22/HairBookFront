@@ -21,6 +21,12 @@ import kotlinx.coroutines.launch
 import java.util.regex.Pattern
 import javax.inject.Inject
 
+/**
+ * ViewModel for the Welcome screen.
+ *
+ * @property hairBookRepositoryAuth The repository for authentication related operations.
+ * @property dataStorePreferences The datastore for storing preferences.
+ */
 @HiltViewModel
 class WelcomeViewModel @Inject constructor(
     private val hairBookRepositoryAuth: ApiRepositoryAuth,
@@ -65,9 +71,6 @@ class WelcomeViewModel @Inject constructor(
 
     private val _userDetails: MutableStateFlow<User?> =
         MutableStateFlow(null)
-    val userDetails: StateFlow<User?>
-        get() = _userDetails
-
 
     private val _signUpScreen = MutableStateFlow("")
     val signUpScreen: StateFlow<String>

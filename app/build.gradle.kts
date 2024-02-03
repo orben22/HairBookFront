@@ -117,21 +117,16 @@ dependencies {
     //Datastore
     implementation(Dependencies.datastore)
     implementation(Dependencies.datastorePreferences)
-//    implementation(Dependencies.kotlinxCollectionImmutable)
     implementation(Dependencies.json)
-    implementation("com.fasterxml.jackson.core:jackson-databind:2.13.3")
 
-    implementation("io.github.vanpra.compose-material-dialogs:datetime:0.9.0")
-    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.0.4")
+    implementation(Dependencies.maxkeppelerSheets)
 
-    implementation("com.maxkeppeler.sheets-compose-dialogs:core:1.0.2")
     // CALENDAR
-    implementation("com.maxkeppeler.sheets-compose-dialogs:calendar:1.0.2")
+    implementation(Dependencies.maxkeppelerSheetsCalender)
 
     // CLOCK
-    implementation("com.maxkeppeler.sheets-compose-dialogs:clock:1.0.2")
+    implementation(Dependencies.maxkeppelerSheetsClock)
 
-    //Tooltip
 
 }
 

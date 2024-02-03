@@ -21,6 +21,13 @@ import javax.inject.Inject
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.debounce
 
+/**
+ * ViewModel for the CustomerHome screen.
+ *
+ * @property signOutHandler The handler for signing out.
+ * @property hairBookRepository The repository for customer related operations.
+ * @property dataStorePreferences The datastore for storing preferences.
+ */
 @OptIn(FlowPreview::class)
 @HiltViewModel
 class CustomerHomeViewModel @Inject constructor(
@@ -40,10 +47,6 @@ class CustomerHomeViewModel @Inject constructor(
     private val _searchText = MutableStateFlow("")
     val searchText: StateFlow<String>
         get() = _searchText
-
-    private val _isSearching = MutableStateFlow(false)
-    val isSearching: StateFlow<Boolean>
-        get() = _isSearching
 
     private val _barberShops = MutableStateFlow(listOf<BarberShop>())
     val barberShops = searchText.debounce(1000L).combine(_barberShops) { text, barberShops ->

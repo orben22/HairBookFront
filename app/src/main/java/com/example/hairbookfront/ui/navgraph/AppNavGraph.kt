@@ -27,6 +27,11 @@ import com.example.hairbookfront.ui.shared.readReviews.ReadReviewsScreen
 import com.example.hairbookfront.ui.shared.viewShop.ViewShopScreen
 
 
+/**
+ * The navigation graph for the app.
+ *
+ * @param startDestination The start destination of the app.
+ */
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun AppNavGraph(
@@ -112,6 +117,7 @@ fun AppNavGraph(
 
     }
 }
+
 
 @Composable
 inline fun <reified T : ViewModel> NavBackStackEntry.sharedViewModel(navController: NavController): T {

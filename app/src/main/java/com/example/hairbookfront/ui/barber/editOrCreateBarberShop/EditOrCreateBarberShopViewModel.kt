@@ -21,6 +21,12 @@ import timber.log.Timber
 import java.util.regex.Pattern
 import javax.inject.Inject
 
+/**
+ * ViewModel for the EditOrCreateBarberShop screen.
+ *
+ * @property hairBookRepositoryBarber The repository for barber related operations.
+ * @property dataStorePreferences The datastore for storing preferences.
+ */
 @HiltViewModel
 class EditOrCreateBarberShopViewModel @Inject constructor(
     private val hairBookRepositoryBarber: ApiRepositoryBarber,
@@ -52,8 +58,6 @@ class EditOrCreateBarberShopViewModel @Inject constructor(
         MutableStateFlow(listOf(false, false, false, false, false, false, false))
     val daysOfWeek: StateFlow<List<Boolean>>
         get() = _daysOfWeek
-
-    private val _hoursOfWeek = MutableStateFlow(List(7) { Pair("", "") })
 
     val days = listOf("Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday")
 
@@ -367,8 +371,6 @@ class EditOrCreateBarberShopViewModel @Inject constructor(
     private val _servicePriceError = MutableStateFlow(false)
     val servicePriceError: StateFlow<Boolean>
         get() = _servicePriceError
-
-    private val _isEditing = MutableStateFlow(false)
 
     private val _editingService = MutableStateFlow<Service?>(null)
     val editingService: StateFlow<Service?>

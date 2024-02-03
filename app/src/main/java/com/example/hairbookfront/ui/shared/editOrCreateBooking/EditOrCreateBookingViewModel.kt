@@ -9,7 +9,6 @@ import com.example.hairbookfront.domain.SignOutHandler
 import com.example.hairbookfront.domain.entities.BarberShop
 import com.example.hairbookfront.domain.entities.Booking
 import com.example.hairbookfront.domain.entities.Service
-import com.example.hairbookfront.domain.repository.ApiRepositoryBarber
 import com.example.hairbookfront.domain.repository.ApiRepositoryBooking
 import com.example.hairbookfront.domain.repository.ApiRepositoryCustomer
 import com.example.hairbookfront.ui.navgraph.Routes
@@ -30,11 +29,18 @@ import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 
+/**
+ * ViewModel for the EditOrCreateBooking screen.
+ *
+ * @property signOutHandler The handler for signing out.
+ * @property hairBookRepositoryBooking The repository for booking related operations.
+ * @property dataStorePreferences The datastore for storing preferences.
+ * @property hairBookRepositoryCustomer The repository for customer related operations.
+ */
 @HiltViewModel
 class EditOrCreateBookingViewModel @Inject constructor(
     private val signOutHandler: SignOutHandler,
     private val hairBookRepositoryBooking: ApiRepositoryBooking,
-    private val hairBookRepositoryBarber: ApiRepositoryBarber,
     private val dataStorePreferences: DataStorePreferences,
     private val hairBookRepositoryCustomer: ApiRepositoryCustomer,
 ) : ViewModel() {
@@ -72,8 +78,6 @@ class EditOrCreateBookingViewModel @Inject constructor(
         get() = _availableBookingByDay
 
     private val _showTimeSlots = MutableStateFlow(false)
-    val showTimeSlots: StateFlow<Boolean>
-        get() = _showTimeSlots
 
     private val _selectedTimeSlot = MutableStateFlow("")
     val selectedTimeSlot: StateFlow<String>

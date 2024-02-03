@@ -7,7 +7,6 @@ import com.example.hairbookfront.domain.SignOutHandler
 import com.example.hairbookfront.domain.entities.Booking
 import com.example.hairbookfront.domain.entities.Service
 import com.example.hairbookfront.domain.repository.ApiRepositoryBooking
-import com.example.hairbookfront.domain.repository.ApiRepositoryCustomer
 import com.example.hairbookfront.ui.navgraph.Routes
 import com.example.hairbookfront.util.Constants
 import com.example.hairbookfront.util.ResourceState
@@ -17,15 +16,20 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
 
+/**
+ * ViewModel for the CustomerDetails screen.
+ *
+ * @property signOutHandler The handler for signing out.
+ * @property apiRepositoryBooking The repository for booking related operations.
+ * @property dataStorePreferences The datastore for storing preferences.
+ */
 @HiltViewModel
 class CustomerDetailsViewModel @Inject constructor(
     private val signOutHandler: SignOutHandler,
-    private val apiRepositoryCustomer: ApiRepositoryCustomer,
     private val apiRepositoryBooking: ApiRepositoryBooking,
     private val dataStorePreferences: DataStorePreferences
 ) : ViewModel() {
@@ -52,13 +56,6 @@ class CustomerDetailsViewModel @Inject constructor(
     private val _email = MutableStateFlow("")
     val email: StateFlow<String>
         get() = _email
-
-    private val _age = MutableStateFlow(0)
-    val age: StateFlow<Int>
-        get() = _age
-    private val _phoneNumber = MutableStateFlow("")
-    val phoneNumber: StateFlow<String>
-        get() = _phoneNumber
 
     private val _closestBooking =
         MutableStateFlow<Booking?>(null)

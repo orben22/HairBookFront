@@ -7,9 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.hairbookfront.data.datastore.DataStorePreferences
 import com.example.hairbookfront.domain.SignOutHandler
-import com.example.hairbookfront.domain.entities.BarberShop
 import com.example.hairbookfront.domain.entities.Review
-import com.example.hairbookfront.domain.repository.ApiRepositoryBarber
 import com.example.hairbookfront.domain.repository.ApiRepositoryReview
 import com.example.hairbookfront.ui.navgraph.Routes
 import com.example.hairbookfront.util.Constants
@@ -29,11 +27,17 @@ import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 
+/**
+ * ViewModel for the EditOrCreateReview screen.
+ *
+ * @property signOutHandler The handler for signing out.
+ * @property hairBookRepositoryReview The repository for review related operations.
+ * @property dataStorePreferences The datastore for storing preferences.
+ */
 @HiltViewModel
 class EditOrCreateReviewViewModel @Inject constructor(
     private val signOutHandler: SignOutHandler,
     private val hairBookRepositoryReview: ApiRepositoryReview,
-    private val hairBookRepositoryBarber: ApiRepositoryBarber,
     private val dataStorePreferences: DataStorePreferences,
 ) : ViewModel() {
 

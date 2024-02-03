@@ -20,6 +20,13 @@ import timber.log.Timber
 import java.util.regex.Pattern
 import javax.inject.Inject
 
+
+/**
+ * ViewModel for the SignUpBarber screen.
+ *
+ * @property hairBookRepositoryAuth The repository for authentication related operations.
+ * @property dataStorePreferences The datastore for storing preferences.
+ */
 @HiltViewModel
 class SignUpBarberViewModel @Inject constructor(
     private val hairBookRepositoryAuth: ApiRepositoryAuth,

@@ -1,10 +1,13 @@
 package com.example.hairbookfront.ui.navgraph
 
+/**
+ * Sealed class for the routes in the app.
+ *
+ * @property route The route for the destination.
+ */
 sealed class Routes(val route: String) {
 
-
     // Destinations
-
     //Auth
     data object WelcomeScreen : Routes("welcomeScreen")
 

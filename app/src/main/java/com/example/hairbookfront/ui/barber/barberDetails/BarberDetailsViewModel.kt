@@ -1,6 +1,5 @@
 package com.example.hairbookfront.ui.barber.barberDetails
 
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.hairbookfront.data.datastore.DataStorePreferences
@@ -20,6 +19,13 @@ import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
 
+/**
+ * ViewModel for the BarberDetails screen.
+ *
+ * @property signOutHandler The handler for signing out.
+ * @property dataStorePreferences The datastore for storing preferences.
+ * @property apiRepositoryBarber The repository for barber related operations.
+ */
 @HiltViewModel
 class BarberDetailsViewModel @Inject constructor(
     private val signOutHandler: SignOutHandler,
@@ -50,17 +56,13 @@ class BarberDetailsViewModel @Inject constructor(
     val lastName: StateFlow<String>
         get() = _lastName
 
-    private val _exp = MutableStateFlow(0)
-    val exp: StateFlow<Int>
-        get() = _exp
-
     private val _email = MutableStateFlow("")
     val email: StateFlow<String>
         get() = _email
 
-    private val _myshops = MutableStateFlow(listOf<BarberShop>())
-    val myshops: StateFlow<List<BarberShop>>
-        get() = _myshops
+    private val _myShops = MutableStateFlow(listOf<BarberShop>())
+    val myShops: StateFlow<List<BarberShop>>
+        get() = _myShops
 
     private val _shopToDelete = MutableStateFlow("")
     fun getYearsOfExperience(): Flow<Int> {
@@ -166,7 +168,7 @@ class BarberDetailsViewModel @Inject constructor(
 
                     is ResourceState.SUCCESS -> {
                         Timber.d("Success")
-                        _myshops.emit(response.data)
+                        _myShops.emit(response.data)
                     }
 
                     is ResourceState.ERROR -> {

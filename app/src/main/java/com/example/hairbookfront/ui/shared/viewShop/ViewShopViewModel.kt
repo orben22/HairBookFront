@@ -20,6 +20,14 @@ import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
 
+/**
+ * ViewModel for the ViewShop screen.
+ *
+ * @property signOutHandler The handler for signing out.
+ * @property hairBookRepositoryCustomer The repository for customer related operations.
+ * @property hairBookRepositoryReview The repository for review related operations.
+ * @property dataStorePreferences The datastore for storing preferences.
+ */
 @HiltViewModel
 class ViewShopViewModel @Inject constructor(
     private val signOutHandler: SignOutHandler,
@@ -38,7 +46,6 @@ class ViewShopViewModel @Inject constructor(
     val userId: StateFlow<String>
         get() = _userId
     private val _accessToken = MutableStateFlow("")
-    private val _dataLoaded = MutableStateFlow(false)
 
     private val _isExpanded = MutableStateFlow(false)
     val isExpanded: StateFlow<Boolean>
@@ -47,9 +54,6 @@ class ViewShopViewModel @Inject constructor(
     private val _screen = MutableStateFlow("")
     val screen: StateFlow<String>
         get() = _screen
-
-    val dataLoaded: StateFlow<Boolean>
-        get() = _dataLoaded
 
     private val _barberShop = MutableStateFlow(
         BarberShop(
@@ -112,13 +116,6 @@ class ViewShopViewModel @Inject constructor(
         }
     }
 
-    fun onEditShopClicked() {
-        _screen.value = Routes.EditOrCreateBarberShopScreen.route
-        viewModelScope.launch {
-            dataStorePreferences.setMode(Constants.EditMode)
-            _barberShop.value.barberShopId?.let { dataStorePreferences.setShopId(it) }
-        }
-    }
 
     private fun getReviews() {
         viewModelScope.launch {

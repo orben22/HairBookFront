@@ -1,13 +1,9 @@
 package com.example.hairbookfront.ui.mainActivity
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import com.example.hairbookfront.ui.navgraph.Routes
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
-import androidx.compose.runtime.State
 import androidx.lifecycle.viewModelScope
 import com.example.hairbookfront.data.datastore.DataStorePreferences
 import com.example.hairbookfront.util.Constants
@@ -16,6 +12,11 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
+/**
+ * ViewModel for the MainActivity.
+ *
+ * @property dataStorePreferences The datastore for storing preferences.
+ */
 @HiltViewModel
 class MainViewModel @Inject constructor(
     private val dataStorePreferences: DataStorePreferences
