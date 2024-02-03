@@ -1,6 +1,6 @@
 package com.example.hairbookfront.domain.repository
 
-import com.example.hairbookfront.data.remote.DataSources.HairBookDataSourceAuth
+import com.example.hairbookfront.data.remote.dataSources.HairBookDataSourceAuth
 import com.example.hairbookfront.domain.entities.BarberDTO
 import com.example.hairbookfront.domain.entities.BarberSignUpRequest
 import com.example.hairbookfront.domain.entities.CustomerDTO
@@ -10,13 +10,22 @@ import com.example.hairbookfront.util.ResourceState
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
-import timber.log.Timber
 import javax.inject.Inject
 
+/**
+ * Repository for the authentication related operations.
+ */
 class ApiRepositoryAuth @Inject constructor(
     private val hairBookDataSourceAuth: HairBookDataSourceAuth
 ) {
 
+    /**
+     * Logs in the user.
+     *
+     * @param email The email of the user.
+     * @param password The password of the user.
+     * @return A flow of [ResourceState] of [User].
+     */
     suspend fun login(
         email: String,
         password: String
@@ -34,6 +43,12 @@ class ApiRepositoryAuth @Inject constructor(
         }
     }
 
+    /**
+     * Signs up a customer.
+     *
+     * @param customerSignUpRequest The customer sign up request.
+     * @return A flow of [ResourceState] of [User].
+     */
     suspend fun signUpCustomer(
         customerSignUpRequest: CustomerSignUpRequest
     ): Flow<ResourceState<User>> {
@@ -55,6 +70,12 @@ class ApiRepositoryAuth @Inject constructor(
         }
     }
 
+    /**
+     * Signs up a barber.
+     *
+     * @param barberSignUpRequest The barber sign up request.
+     * @return A flow of [ResourceState] of [User].
+     */
     suspend fun signUpBarber(
         barberSignUpRequest: BarberSignUpRequest
     ): Flow<ResourceState<User>> {
@@ -76,6 +97,12 @@ class ApiRepositoryAuth @Inject constructor(
         }
     }
 
+    /**
+     * Signs out the user.
+     *
+     * @param accessToken The access token of the user.
+     * @return A flow of [ResourceState] of [String].
+     */
     suspend fun signOut(
         accessToken: String
     ): Flow<ResourceState<String>> {
@@ -92,6 +119,12 @@ class ApiRepositoryAuth @Inject constructor(
         }
     }
 
+    /**
+     * Gets the details of the barber.
+     *
+     * @param accessToken The access token of the user.
+     * @return A flow of [ResourceState] of [BarberDTO].
+     */
     suspend fun getDetailsBarber(
         accessToken: String
     ): Flow<ResourceState<BarberDTO>> {
@@ -108,6 +141,12 @@ class ApiRepositoryAuth @Inject constructor(
         }
     }
 
+    /**
+     * Gets the details of the customer.
+     *
+     * @param accessToken The access token of the user.
+     * @return A flow of [ResourceState] of [CustomerDTO].
+     */
     suspend fun getDetailsCustomer(
         accessToken: String
     ): Flow<ResourceState<CustomerDTO>> {

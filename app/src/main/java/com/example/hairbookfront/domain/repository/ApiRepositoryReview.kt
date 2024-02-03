@@ -1,6 +1,6 @@
 package com.example.hairbookfront.domain.repository
 
-import com.example.hairbookfront.data.remote.DataSources.HairBookDataSourceReview
+import com.example.hairbookfront.data.remote.dataSources.HairBookDataSourceReview
 import com.example.hairbookfront.domain.entities.Review
 import com.example.hairbookfront.util.ResourceState
 import kotlinx.coroutines.flow.Flow
@@ -12,6 +12,13 @@ class ApiRepositoryReview @Inject constructor(
     private val hairBookDataSourceReview: HairBookDataSourceReview
 ) {
 
+    /**
+     * Posts a review.
+     *
+     * @param accessToken The access token of the user.
+     * @param review The review to be posted.
+     * @return A flow of [ResourceState] of [Review].
+     */
     suspend fun postReview(
         accessToken: String,
         review: Review
@@ -29,6 +36,13 @@ class ApiRepositoryReview @Inject constructor(
         }
     }
 
+    /**
+     * Deletes a review.
+     *
+     * @param accessToken The access token of the user.
+     * @param reviewId The id of the review to be deleted.
+     * @return A flow of [ResourceState] of [String].
+     */
     suspend fun deleteReview(
         accessToken: String,
         reviewId: String
@@ -46,6 +60,14 @@ class ApiRepositoryReview @Inject constructor(
         }
     }
 
+    /**
+     * Updates a review.
+     *
+     * @param accessToken The access token of the user.
+     * @param reviewId The id of the review to be updated.
+     * @param review The review to be updated.
+     * @return A flow of [ResourceState] of [Review].
+     */
     suspend fun updateReview(
         accessToken: String,
         reviewId: String,
@@ -64,6 +86,12 @@ class ApiRepositoryReview @Inject constructor(
         }
     }
 
+    /**
+     * Gets all the reviews of the user.
+     *
+     * @param accessToken The access token of the user.
+     * @return A flow of [ResourceState] of [List] of [Review].
+     */
     suspend fun getMyReviews(
         accessToken: String
     ): Flow<ResourceState<List<Review>>> {
@@ -80,7 +108,14 @@ class ApiRepositoryReview @Inject constructor(
         }
     }
 
-    suspend fun getReviews(
+    /**
+     * Gets all the reviews of a barbershop.
+     *
+     * @param accessToken The access token of the user.
+     * @param barbershopId The id of the barbershop.
+     * @return A flow of [ResourceState] of [List] of [Review].
+     */
+    suspend fun getBarberShopReviews(
         accessToken: String,
         barbershopId: String
     ): Flow<ResourceState<List<Review>>> {
@@ -97,6 +132,13 @@ class ApiRepositoryReview @Inject constructor(
         }
     }
 
+    /**
+     * Gets a review by id.
+     *
+     * @param accessToken The access token of the user.
+     * @param reviewId The id of the review.
+     * @return A flow of [ResourceState] of [Review].
+     */
     suspend fun getReviewById(
         accessToken: String,
         reviewId: String

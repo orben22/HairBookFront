@@ -1,6 +1,6 @@
 package com.example.hairbookfront.domain.repository
 
-import com.example.hairbookfront.data.remote.DataSources.HairBookDataSourceBarber
+import com.example.hairbookfront.data.remote.dataSources.HairBookDataSourceBarber
 import com.example.hairbookfront.domain.entities.BarberDTO
 import com.example.hairbookfront.domain.entities.BarberShop
 import com.example.hairbookfront.domain.entities.Booking
@@ -12,10 +12,19 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
+/**
+ * Repository for the barber related operations.
+ */
 class ApiRepositoryBarber @Inject constructor(
     private val hairBookDataSourceBarber: HairBookDataSourceBarber
 ) {
 
+    /**
+     * Gets the barber shops of the user.
+     *
+     * @param accessToken The access token of the user.
+     * @return A flow of [ResourceState] of a list of [BarberShop].
+     */
     suspend fun getMyBarberShops(
         accessToken: String
     ): Flow<ResourceState<List<BarberShop>>> {
@@ -32,22 +41,13 @@ class ApiRepositoryBarber @Inject constructor(
         }
     }
 
-    suspend fun getBarberDetails(
-        accessToken: String
-    ): Flow<ResourceState<BarberDTO>> {
-        return flow {
-            emit(ResourceState.LOADING())
-            val response = hairBookDataSourceBarber.getBarberDetails(accessToken)
-            if (response.isSuccessful && response.body() != null) {
-                emit(ResourceState.SUCCESS(response.body()!!))
-            } else {
-                emit(ResourceState.ERROR("Error getting barber details"))
-            }
-        }.catch { e ->
-            emit(ResourceState.ERROR(e.localizedMessage ?: "Something went wrong with api"))
-        }
-    }
-
+    /**
+     * Creates a barber shop.
+     *
+     * @param accessToken The access token of the user.
+     * @param barberShop The barber shop to be created.
+     * @return A flow of [ResourceState] of [BarberShop].
+     */
     suspend fun createBarberShop(
         accessToken: String,
         barberShop: BarberShop
@@ -65,6 +65,13 @@ class ApiRepositoryBarber @Inject constructor(
         }
     }
 
+    /**
+     * Gets a barber shop by its id.
+     *
+     * @param accessToken The access token of the user.
+     * @param barberShopId The id of the barber shop.
+     * @return A flow of [ResourceState] of [BarberShop].
+     */
     suspend fun getBarberShopById(
         accessToken: String,
         barberShopId: String
@@ -82,6 +89,13 @@ class ApiRepositoryBarber @Inject constructor(
         }
     }
 
+    /**
+     * Deletes a barber shop.
+     *
+     * @param accessToken The access token of the user.
+     * @param barberShopId The id of the barber shop.
+     * @return A flow of [ResourceState] of [String].
+     */
     suspend fun deleteBarberShop(
         accessToken: String,
         barberShopId: String
@@ -99,6 +113,14 @@ class ApiRepositoryBarber @Inject constructor(
         }
     }
 
+    /**
+     * Updates a barber shop.
+     *
+     * @param accessToken The access token of the user.
+     * @param barberShopId The id of the barber shop.
+     * @param barberShop The updated barber shop details.
+     * @return A flow of [ResourceState] of [BarberShop].
+     */
     suspend fun updateBarberShop(
         accessToken: String,
         barberShopId: String,
@@ -118,6 +140,13 @@ class ApiRepositoryBarber @Inject constructor(
         }
     }
 
+    /**
+     * Creates a review.
+     *
+     * @param accessToken The access token of the user.
+     * @param review The review to be created.
+     * @return A flow of [ResourceState] of [Review].
+     */
     suspend fun getReviews(
         accessToken: String,
         barberShopId: String
@@ -133,10 +162,14 @@ class ApiRepositoryBarber @Inject constructor(
         }.catch { e ->
             emit(ResourceState.ERROR(e.localizedMessage ?: "Something went wrong with api"))
         }
-
-
     }
 
+    /**
+     * Gets the closest booking of the authenticated user.
+     *
+     * @param accessToken The authorization token of the user.
+     * @return A flow of [ResourceState] of [Booking].
+     */
     suspend fun getClosestBooking(
         accessToken: String,
         barberShopId: String
@@ -154,6 +187,12 @@ class ApiRepositoryBarber @Inject constructor(
         }
     }
 
+    /**
+     * Gets the bookings of the authenticated user.
+     *
+     * @param accessToken The authorization token of the user.
+     * @return A flow of [ResourceState] of a list of [Booking].
+     */
     suspend fun getMyBookings(
         accessToken: String,
         barberShopId: String
@@ -171,6 +210,14 @@ class ApiRepositoryBarber @Inject constructor(
         }
     }
 
+    /**
+     * Creates a service.
+     *
+     * @param accessToken The access token of the user.
+     * @param barberShopId The id of the barber shop.
+     * @param service The service to be created.
+     * @return A flow of [ResourceState] of [Service].
+     */
     suspend fun createService(
         accessToken: String,
         barberShopId: String,
@@ -190,6 +237,15 @@ class ApiRepositoryBarber @Inject constructor(
         }
     }
 
+    /**
+     * Updates a service.
+     *
+     * @param accessToken The access token of the user.
+     * @param barberShopId The id of the barber shop.
+     * @param serviceId The id of the service.
+     * @param service The updated service details.
+     * @return A flow of [ResourceState] of [Service].
+     */
     suspend fun updateService(
         accessToken: String,
         barberShopId: String,
@@ -214,6 +270,14 @@ class ApiRepositoryBarber @Inject constructor(
         }
     }
 
+    /**
+     * Deletes a service.
+     *
+     * @param accessToken The access token of the user.
+     * @param barberShopId The id of the barber shop.
+     * @param serviceId The id of the service.
+     * @return A flow of [ResourceState] of [String].
+     */
     suspend fun deleteService(
         accessToken: String,
         barberShopId: String,
@@ -233,6 +297,13 @@ class ApiRepositoryBarber @Inject constructor(
         }
     }
 
+    /**
+     * Gets the services of a barber shop.
+     *
+     * @param accessToken The access token of the user.
+     * @param barberShopId The id of the barber shop.
+     * @return A flow of [ResourceState] of a list of [Service].
+     */
     suspend fun getServices(
         accessToken: String,
         barberShopId: String
@@ -249,14 +320,23 @@ class ApiRepositoryBarber @Inject constructor(
             emit(ResourceState.ERROR(e.localizedMessage ?: "Something went wrong with api"))
         }
     }
+
+    /**
+     * Deletes a booking.
+     * @param accessToken The access token of the user.
+     * @param barberShopId The id of the barber shop the booking is on.
+     * @param bookingId The id of the booking to be deleted.
+     * @return A flow of [ResourceState] of [String].
+     */
     suspend fun deleteBooking(
         accessToken: String,
         barberShopId: String,
-        bookingId : String
+        bookingId: String
     ): Flow<ResourceState<String>> {
         return flow {
             emit(ResourceState.LOADING())
-            val response = hairBookDataSourceBarber.deleteBooking(accessToken, barberShopId, bookingId )
+            val response =
+                hairBookDataSourceBarber.deleteBooking(accessToken, barberShopId, bookingId)
             if (response.isSuccessful && response.body() != null) {
                 emit(ResourceState.SUCCESS(response.body()!!))
             } else {
@@ -267,6 +347,11 @@ class ApiRepositoryBarber @Inject constructor(
         }
     }
 
+    /**
+     * get the number of shops the barber have.
+     * @param accessToken The access token of the user.
+     * @return A flow of [ResourceState] of [Int].
+     */
     suspend fun getNumberOfShops(
         accessToken: String
     ): Flow<ResourceState<Int>> {

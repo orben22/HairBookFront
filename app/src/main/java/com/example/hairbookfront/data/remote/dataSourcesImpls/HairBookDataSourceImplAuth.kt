@@ -1,7 +1,7 @@
-package com.example.hairbookfront.data.remote.DataSourcesImpls
+package com.example.hairbookfront.data.remote.dataSourcesImpls
 
-import com.example.hairbookfront.data.remote.ApiServices.ApiServiceAuth
-import com.example.hairbookfront.data.remote.DataSources.HairBookDataSourceAuth
+import com.example.hairbookfront.data.remote.apiServices.ApiServiceAuth
+import com.example.hairbookfront.data.remote.dataSources.HairBookDataSourceAuth
 import com.example.hairbookfront.domain.entities.BarberDTO
 import com.example.hairbookfront.domain.entities.BarberSignUpRequest
 import com.example.hairbookfront.domain.entities.CustomerDTO
@@ -11,6 +11,10 @@ import com.example.hairbookfront.domain.entities.User
 import retrofit2.Response
 import javax.inject.Inject
 
+
+/**
+ * Implementation of the [HairBookDataSourceAuth] interface.
+ */
 class HairBookDataSourceImplAuth @Inject constructor(
     private val apiServiceAuth: ApiServiceAuth
 ) : HairBookDataSourceAuth {

@@ -1,7 +1,6 @@
 package com.example.hairbookfront.data.datastore
 
 import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.MutablePreferences
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.emptyPreferences
@@ -15,9 +14,14 @@ import com.example.hairbookfront.util.Constants
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
-import timber.log.Timber
 import javax.inject.Inject
 
+/**
+ * This class is responsible for managing the user's preferences using DataStore.
+ * It provides methods to set and get various user details like first name, last name, age, etc.
+ * It also provides methods to manage the application state like mode, role, etc.
+ * @property dataStore The DataStore instance used to store and retrieve preferences.
+ */
 class DataStorePreferences @Inject constructor(private val dataStore: DataStore<Preferences>) {
     companion object {
         const val DATA = "Data"
@@ -32,9 +36,8 @@ class DataStorePreferences @Inject constructor(private val dataStore: DataStore<
         private const val ACCESS_TOKEN = "AccessToken"
         private const val SHOP_ID = "ShopId"
         private const val MODE = "Mode"
-        private const val BOOKINGID_FOR_EDITING = "BookingIdForEditing"
-        private const val LAST_SCREEN = "LastScreen"
-        private const val REVIEWID_FOR_EDITING = "ReviewIdForEditing"
+        private const val BOOKING_ID_FOR_EDITING = "BookingIdForEditing"
+        private const val REVIEW_ID_FOR_EDITING = "ReviewIdForEditing"
         val firstName = stringPreferencesKey(FIRST_NAME)
         val lastName = stringPreferencesKey(LAST_NAME)
         val age = floatPreferencesKey(AGE)
@@ -46,32 +49,24 @@ class DataStorePreferences @Inject constructor(private val dataStore: DataStore<
         val email = stringPreferencesKey(EMAIL)
         val shopId = stringPreferencesKey(SHOP_ID)
         val mode = stringPreferencesKey(MODE)
-        val bookingIdForEditing = stringPreferencesKey(BOOKINGID_FOR_EDITING)
-        val lastScreen = stringPreferencesKey(LAST_SCREEN)
-        val reviewIdForEditing = stringPreferencesKey(REVIEWID_FOR_EDITING)
+        val bookingIdForEditing = stringPreferencesKey(BOOKING_ID_FOR_EDITING)
+        val reviewIdForEditing = stringPreferencesKey(REVIEW_ID_FOR_EDITING)
     }
 
-
-    suspend fun setLastScreen(screen: String) {
-        dataStore.edit { preferences ->
-            preferences[lastScreen] = screen
-        }
-    }
-
-    fun getLastScreen(): Flow<String> {
-        return dataStore.data.catch {
-            emit(emptyPreferences())
-        }.map { preferences ->
-            preferences[lastScreen] ?: ""
-        }
-    }
-
+    /**
+     * Sets the booking ID for editing.
+     * @param bookingId The booking ID to be set for editing.
+     */
     suspend fun setBookingIdForEditing(bookingId: String) {
         dataStore.edit { preferences ->
             preferences[bookingIdForEditing] = bookingId
         }
     }
 
+    /**
+     * Gets the booking ID for editing.
+     * @return A flow of the booking ID for editing.
+     */
     fun getBookingIdForEditing(): Flow<String> {
         return dataStore.data.catch {
             emit(emptyPreferences())
@@ -80,12 +75,20 @@ class DataStorePreferences @Inject constructor(private val dataStore: DataStore<
         }
     }
 
+    /**
+     * Sets the review ID for editing.
+     * @param reviewId The review ID to be set for editing.
+     */
     suspend fun setReviewIdForEditing(reviewId: String) {
         dataStore.edit { preferences ->
             preferences[reviewIdForEditing] = reviewId
         }
     }
 
+    /**
+     * Gets the review ID for editing.
+     * @return A flow of the review ID for editing.
+     */
     fun getReviewIdForEditing(): Flow<String> {
         return dataStore.data.catch {
             emit(emptyPreferences())
@@ -94,6 +97,11 @@ class DataStorePreferences @Inject constructor(private val dataStore: DataStore<
         }
     }
 
+
+    /**
+     * Gets the mode of the screen edit/create.
+     * @return A flow of the mode of the application.
+     */
     fun getMode(): Flow<String> {
         return dataStore.data.catch {
             emit(emptyPreferences())
@@ -102,12 +110,20 @@ class DataStorePreferences @Inject constructor(private val dataStore: DataStore<
         }
     }
 
+    /**
+     * Sets the mode of the screen edit/create.
+     * @param mode The mode to be set.
+     */
     suspend fun setMode(mode: String) {
         dataStore.edit { preferences ->
             preferences[DataStorePreferences.mode] = mode
         }
     }
 
+    /**
+     * Gets the shop ID.
+     * @return A flow of the shop ID.
+     */
     fun getShopId(): Flow<String> {
         return dataStore.data.catch {
             emit(emptyPreferences())
@@ -116,12 +132,21 @@ class DataStorePreferences @Inject constructor(private val dataStore: DataStore<
         }
     }
 
+    /**
+     * Sets the shop ID.
+     * @param id The shop ID to be set.
+     */
     suspend fun setShopId(id: String) {
         dataStore.edit { preferences ->
             preferences[shopId] = id
         }
     }
 
+
+    /**
+     * Gets the first name of the user.
+     * @return A flow of the first name of the user.
+     */
     fun getFirstName(): Flow<String> {
         return dataStore.data.catch {
             emit(emptyPreferences())
@@ -130,6 +155,10 @@ class DataStorePreferences @Inject constructor(private val dataStore: DataStore<
         }
     }
 
+    /**
+     * Gets the last name of the user.
+     * @return A flow of the last name of the user.
+     */
     fun getLastName(): Flow<String> {
         return dataStore.data.catch {
             emit(emptyPreferences())
@@ -138,6 +167,10 @@ class DataStorePreferences @Inject constructor(private val dataStore: DataStore<
         }
     }
 
+    /**
+     * Gets the age of the user.
+     * @return A flow of the age of the user.
+     */
     fun getAge(): Flow<Float> {
         return dataStore.data.catch {
             emit(emptyPreferences())
@@ -146,6 +179,10 @@ class DataStorePreferences @Inject constructor(private val dataStore: DataStore<
         }
     }
 
+    /**
+     * Gets the phone number of the user.
+     * @return A flow of the phone number of the user.
+     */
     fun getPhoneNumber(): Flow<String> {
         return dataStore.data.catch {
             emit(emptyPreferences())
@@ -154,6 +191,10 @@ class DataStorePreferences @Inject constructor(private val dataStore: DataStore<
         }
     }
 
+    /**
+     * Gets the years of experience of the user.
+     * @return A flow of the years of experience of the user.
+     */
     fun getYearsOfExperience(): Flow<Int> {
         return dataStore.data.catch {
             emit(emptyPreferences())
@@ -162,6 +203,10 @@ class DataStorePreferences @Inject constructor(private val dataStore: DataStore<
         }
     }
 
+    /**
+     * Gets the role of the user.
+     * @return A flow of the role of the user.
+     */
     fun getRole(): Flow<String> {
         return dataStore.data.catch {
             emit(emptyPreferences())
@@ -170,6 +215,10 @@ class DataStorePreferences @Inject constructor(private val dataStore: DataStore<
         }
     }
 
+    /**
+     * Gets the user ID.
+     * @return A flow of the user ID.
+     */
     fun getUserId(): Flow<String> {
         return dataStore.data.catch {
             emit(emptyPreferences())
@@ -178,6 +227,10 @@ class DataStorePreferences @Inject constructor(private val dataStore: DataStore<
         }
     }
 
+    /**
+     * Gets the access token.
+     * @return A flow of the access token.
+     */
     fun getAccessToken(): Flow<String> {
         return dataStore.data.catch {
             emit(emptyPreferences())
@@ -186,12 +239,19 @@ class DataStorePreferences @Inject constructor(private val dataStore: DataStore<
         }
     }
 
+    /**
+     * Clears the user's preferences. (used on logout)
+     */
     suspend fun clear() {
         dataStore.edit { preference ->
             preference.clear()
         }
     }
 
+    /**
+     * Gets the email of the user.
+     * @return A flow of the email of the user.
+     */
     fun getEmail(): Flow<String> {
         return dataStore.data.catch {
             emit(emptyPreferences())
@@ -200,6 +260,10 @@ class DataStorePreferences @Inject constructor(private val dataStore: DataStore<
         }
     }
 
+    /**
+     * Stores the user's details in the DataStore.
+     * @param user The user whose details are to be stored.
+     */
     suspend fun storeUserDetails(user: User) {
         dataStore.edit { preferences ->
             preferences[userId] = user.userId ?: ""
@@ -208,6 +272,10 @@ class DataStorePreferences @Inject constructor(private val dataStore: DataStore<
         }
     }
 
+    /**
+     * Stores the barber's details in the DataStore.
+     * @param barberDetails The barber whose details are to be stored.
+     */
     suspend fun storeBarberDetails(barberDetails: BarberDTO) {
         dataStore.edit { preferences ->
             preferences[firstName] = barberDetails.firstName
@@ -217,6 +285,10 @@ class DataStorePreferences @Inject constructor(private val dataStore: DataStore<
         }
     }
 
+    /**
+     * Stores the customer's details in the DataStore.
+     * @param customerDetails The customer whose details are to be stored.
+     */
     suspend fun storeCustomerDetails(customerDetails: CustomerDTO) {
         dataStore.edit { preferences ->
             preferences[firstName] = customerDetails.firstName

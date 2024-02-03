@@ -3,6 +3,9 @@ package com.example.hairbookfront.ui
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
+/**
+ * Dimensions and fonts used in the app.
+ */
 object Dimens {
 
 

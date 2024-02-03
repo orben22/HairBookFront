@@ -1,11 +1,13 @@
 package com.example.hairbookfront
 
 import android.app.Application
-import android.util.Log
 import com.example.hairbookfront.util.Constants.HAIR_BOOK_APPLICATION
 import dagger.hilt.android.HiltAndroidApp
 import timber.log.Timber
 
+/**
+ * The application class for the HairBook app.
+ */
 @HiltAndroidApp
 class HairBookApplication : Application() {
     override fun onCreate() {

@@ -1,11 +1,14 @@
-package com.example.hairbookfront.data.remote.DataSourcesImpls
+package com.example.hairbookfront.data.remote.dataSourcesImpls
 
-import com.example.hairbookfront.data.remote.ApiServices.ApiServiceReview
-import com.example.hairbookfront.data.remote.DataSources.HairBookDataSourceReview
+import com.example.hairbookfront.data.remote.apiServices.ApiServiceReview
+import com.example.hairbookfront.data.remote.dataSources.HairBookDataSourceReview
 import com.example.hairbookfront.domain.entities.Review
 import retrofit2.Response
 import javax.inject.Inject
 
+/**
+ * Implementation of the [HairBookDataSourceReview] interface.
+ */
 class HairBookDataSourceImplReview @Inject constructor(
     private val apiServiceReview: ApiServiceReview
 ) : HairBookDataSourceReview {

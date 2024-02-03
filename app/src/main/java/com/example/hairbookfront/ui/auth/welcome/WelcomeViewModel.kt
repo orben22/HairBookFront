@@ -23,7 +23,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class WelcomeViewModel @Inject constructor(
-    private val hairBookRepository: ApiRepositoryAuth,
+    private val hairBookRepositoryAuth: ApiRepositoryAuth,
     private val dataStorePreferences: DataStorePreferences,
     private val hairBookRepositoryBarber: ApiRepositoryBarber
 ) : ViewModel() {
@@ -129,7 +129,7 @@ class WelcomeViewModel @Inject constructor(
     fun login() {
         if (areCredentialsValid()) {
             viewModelScope.launch(Dispatchers.IO) {
-                hairBookRepository.login(email.value, password.value).collectLatest { response ->
+                hairBookRepositoryAuth.login(email.value, password.value).collectLatest { response ->
                     when (response) {
                         is ResourceState.SUCCESS -> handleLoginSuccess(response.data)
                         is ResourceState.ERROR -> handleLoginError(response.error)
@@ -161,7 +161,7 @@ class WelcomeViewModel @Inject constructor(
         _userDetails.emit(data)
         storeUserDetails()
         if (data.role == CustomerRole) {
-            hairBookRepository.getDetailsCustomer(data.accessToken!!).collect {
+            hairBookRepositoryAuth.getDetailsCustomer(data.accessToken!!).collect {
                 when (it) {
                     is ResourceState.SUCCESS -> {
                         dataStorePreferences.storeCustomerDetails(it.data)
@@ -173,7 +173,7 @@ class WelcomeViewModel @Inject constructor(
                 }
             }
         } else if (data.role == BarberRole) {
-            hairBookRepository.getDetailsBarber(data.accessToken!!).collect { response ->
+            hairBookRepositoryAuth.getDetailsBarber(data.accessToken!!).collect { response ->
                 when (response) {
                     is ResourceState.SUCCESS -> {
                         dataStorePreferences.storeBarberDetails(response.data)

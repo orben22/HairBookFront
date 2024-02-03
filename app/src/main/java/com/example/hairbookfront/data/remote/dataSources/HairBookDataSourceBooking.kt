@@ -1,4 +1,4 @@
-package com.example.hairbookfront.data.remote.DataSources
+package com.example.hairbookfront.data.remote.dataSources
 
 import com.example.hairbookfront.domain.entities.Booking
 import com.example.hairbookfront.domain.entities.Service

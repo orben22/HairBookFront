@@ -1,13 +1,15 @@
-package com.example.hairbookfront.data.remote.DataSourcesImpls
+package com.example.hairbookfront.data.remote.dataSourcesImpls
 
-import com.example.hairbookfront.data.remote.ApiServices.ApiServiceBooking
-import com.example.hairbookfront.data.remote.DataSources.HairBookDataSourceBooking
+import com.example.hairbookfront.data.remote.apiServices.ApiServiceBooking
+import com.example.hairbookfront.data.remote.dataSources.HairBookDataSourceBooking
 import com.example.hairbookfront.domain.entities.Booking
 import com.example.hairbookfront.domain.entities.Service
 import retrofit2.Response
-import timber.log.Timber
 import javax.inject.Inject
 
+/**
+ * Implementation of the [HairBookDataSourceBooking] interface.
+ */
 class HairBookDataSourceImplBooking @Inject constructor(
     private val apiServiceBooking: ApiServiceBooking
 ) : HairBookDataSourceBooking {

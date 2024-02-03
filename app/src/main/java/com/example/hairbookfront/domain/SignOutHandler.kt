@@ -8,12 +8,24 @@ import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton
 
+/**
+ * Handles the sign out operations.
+ *
+ * @property dataStorePreferences The datastore for storing preferences.
+ * @property apiRepository The repository for authentication related operations.
+ */
 @Singleton
 class SignOutHandler @Inject constructor(
     private val dataStorePreferences: DataStorePreferences,
     private val apiRepository: ApiRepositoryAuth,
 ) {
 
+    /**
+     * Signs out the user.
+     *
+     * @param accessToken The access token of the user.
+     * @return A boolean indicating whether the sign out was successful.
+     */
     suspend fun signOut(accessToken: String): Boolean {
         var signOutSuccessful = false
         apiRepository.signOut(accessToken).collectLatest { response ->

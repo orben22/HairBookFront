@@ -1,13 +1,15 @@
-package com.example.hairbookfront.data.remote.DataSourcesImpls
+package com.example.hairbookfront.data.remote.dataSourcesImpls
 
-import com.example.hairbookfront.data.remote.ApiServices.ApiServiceCustomer
-import com.example.hairbookfront.data.remote.DataSources.HairBookDataSourceCustomer
+import com.example.hairbookfront.data.remote.apiServices.ApiServiceCustomer
+import com.example.hairbookfront.data.remote.dataSources.HairBookDataSourceCustomer
 import com.example.hairbookfront.domain.entities.BarberShop
 import com.example.hairbookfront.domain.entities.CustomerDTO
-import com.example.hairbookfront.domain.entities.Review
 import retrofit2.Response
 import javax.inject.Inject
 
+/**
+ * Implementation of the [HairBookDataSourceCustomer] interface.
+ */
 class HairBookDataSourceImplCustomer @Inject constructor(
     private val apiServiceCustomer: ApiServiceCustomer
 ) : HairBookDataSourceCustomer {
@@ -18,11 +20,5 @@ class HairBookDataSourceImplCustomer @Inject constructor(
     override suspend fun getShopById(accessToken: String, barbershopId: String): Response<BarberShop> {
         return apiServiceCustomer.getShopById("Bearer $accessToken", barbershopId)
     }
-
-    override suspend fun getDetailsCustomer(accessToken: String): Response<CustomerDTO> {
-        return apiServiceCustomer.getDetailsCustomer(accessToken)
-    }
-
-
 
 }

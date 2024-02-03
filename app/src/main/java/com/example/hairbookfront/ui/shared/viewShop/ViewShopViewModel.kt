@@ -124,7 +124,7 @@ class ViewShopViewModel @Inject constructor(
         viewModelScope.launch {
             _shopId.emit(dataStorePreferences.getShopId().first())
             _accessToken.emit(dataStorePreferences.getAccessToken().first())
-            hairBookRepositoryReview.getReviews(_accessToken.value, _shopId.value)
+            hairBookRepositoryReview.getBarberShopReviews(_accessToken.value, _shopId.value)
                 .collectLatest { resourceState ->
                     when (resourceState) {
                         is ResourceState.SUCCESS -> {
