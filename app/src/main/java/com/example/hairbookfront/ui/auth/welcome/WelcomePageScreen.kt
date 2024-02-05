@@ -43,16 +43,11 @@ fun WelcomePageScreen(
     val showOrHidePassword by viewModel.showOrHidePassword.collectAsStateWithLifecycle()
     val showDialog by viewModel.showDialog.collectAsStateWithLifecycle()
     val dialogText by viewModel.dialogText.collectAsStateWithLifecycle()
-    val signUpScreen by viewModel.signUpScreen.collectAsStateWithLifecycle()
-    val homeScreen by viewModel.homeScreen.collectAsStateWithLifecycle()
-    LaunchedEffect(homeScreen) {
-        if (homeScreen != "") {
-            navController?.navigate(homeScreen)
-        }
-    }
-    LaunchedEffect(signUpScreen) {
-        if (signUpScreen != "") {
-            navController?.navigate(signUpScreen)
+    val screen by viewModel.screen.collectAsStateWithLifecycle()
+    LaunchedEffect(screen) {
+        if (screen != "") {
+            viewModel.clearScreen()
+            navController?.navigate(screen)
         }
     }
     LaunchedEffect(Unit) {

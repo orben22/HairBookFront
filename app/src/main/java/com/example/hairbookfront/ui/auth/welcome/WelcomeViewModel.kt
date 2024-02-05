@@ -72,16 +72,15 @@ class WelcomeViewModel @Inject constructor(
     private val _userDetails: MutableStateFlow<User?> =
         MutableStateFlow(null)
 
-    private val _signUpScreen = MutableStateFlow("")
-    val signUpScreen: StateFlow<String>
-        get() = _signUpScreen
-
-    private val _homeScreen = MutableStateFlow("")
-    val homeScreen: StateFlow<String>
-        get() = _homeScreen
+    private val _screen = MutableStateFlow("")
+    val screen: StateFlow<String>
+        get() = _screen
 
     private val _numberOfShops = MutableStateFlow(0)
 
+    fun clearScreen(){
+        _screen.value = ""
+    }
     fun emailChanged(email: String) {
         _email.value = email
     }
@@ -99,12 +98,12 @@ class WelcomeViewModel @Inject constructor(
     }
 
     fun signUpBarberClicked() {
-        _signUpScreen.value = Routes.SignupBarberScreen.route
+        _screen.value = Routes.SignupBarberScreen.route
         _showDialog.value = false
     }
 
     fun signUpCustomerClicked() {
-        _signUpScreen.value = Routes.SignupCustomerScreen.route
+        _screen.value = Routes.SignupCustomerScreen.route
         _showDialog.value = false
     }
 
@@ -168,7 +167,7 @@ class WelcomeViewModel @Inject constructor(
                 when (it) {
                     is ResourceState.SUCCESS -> {
                         dataStorePreferences.storeCustomerDetails(it.data)
-                        _homeScreen.value = Routes.CustomerHomeScreen.route
+                        _screen.value = Routes.CustomerHomeScreen.route
                     }
 
                     is ResourceState.ERROR -> sendMessage(it.error)
@@ -185,10 +184,10 @@ class WelcomeViewModel @Inject constructor(
                                 is ResourceState.SUCCESS -> {
                                     _numberOfShops.emit(it.data)
                                     if (_numberOfShops.value == 0)
-                                        _homeScreen.value =
+                                        _screen.value =
                                             Routes.EditOrCreateBarberShopScreen.route
                                     else
-                                        _homeScreen.value = Routes.BarberDetailsScreen.route
+                                        _screen.value = Routes.BarberDetailsScreen.route
                                 }
                                 is ResourceState.ERROR -> sendMessage(it.error)
                                 else -> {}

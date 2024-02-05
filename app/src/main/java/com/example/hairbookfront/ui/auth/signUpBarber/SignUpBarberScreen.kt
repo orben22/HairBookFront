@@ -5,13 +5,13 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.AccountCircle
 import androidx.compose.material.icons.outlined.Build
 import androidx.compose.material.icons.outlined.Email
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -27,6 +27,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.example.hairbookfront.ui.common.TextFieldComponent
 import com.example.hairbookfront.ui.common.ClickableText
 import com.example.hairbookfront.ui.common.ButtonComponent
@@ -38,7 +39,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun SignUpBarberScreen(
     viewModel: SignUpBarberViewModel = hiltViewModel(),
-    navController: NavHostController? = null
+    navController: NavHostController = rememberNavController()
 ) {
     val context = LocalContext.current
     val firstName by viewModel.firstName.collectAsStateWithLifecycle()
@@ -53,11 +54,18 @@ fun SignUpBarberScreen(
     val password by viewModel.password.collectAsStateWithLifecycle()
     val passwordError by viewModel.passwordError.collectAsStateWithLifecycle()
     val showOrHidePassword by viewModel.showOrHidePassword.collectAsStateWithLifecycle()
-    val homeScreen by viewModel.homeScreen.collectAsStateWithLifecycle()
+    val screen by viewModel.screen.collectAsStateWithLifecycle()
+    val lastScreen by viewModel.lastScreen.collectAsStateWithLifecycle()
 
-    LaunchedEffect(homeScreen) {
-        if (homeScreen != "") {
-            navController?.navigate(homeScreen)
+    LaunchedEffect(screen) {
+        if (screen != "") {
+            viewModel.clearScreen()
+            navController.navigate(screen)
+        }
+    }
+    LaunchedEffect(lastScreen) {
+        if (lastScreen) {
+            navController.popBackStack()
         }
     }
     LaunchedEffect(Unit) {
@@ -72,13 +80,18 @@ fun SignUpBarberScreen(
             }
     }
 
-    Surface(color = MaterialTheme.colorScheme.surface) {
+    Scaffold(
+        topBar = {
+            TopAppBarComponent(text = "Barber Sign Up",
+                onClickBackArrow = viewModel::onBackClicked,
+                dropDownMenu = false)
+        })
+        { innerPadding ->
         Column(
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier.padding(innerPadding).fillMaxSize(),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            TopAppBarComponent(text = "Barber Sign Up")
             TextFieldComponent(
                 value = firstName,
                 placeholderText = "First Name",
@@ -142,7 +155,7 @@ fun SignUpBarberScreen(
                 )
                 ClickableText(
                     text = " Sign In",
-                    onClick = { navController?.navigate(Routes.WelcomeScreen.route) },
+                    onClick = { navController.navigate(Routes.WelcomeScreen.route) },
                     color = Color.Cyan,
                     fontSize = 20
                 )

@@ -87,9 +87,21 @@ class SignUpCustomerViewModel @Inject constructor(
     private val _toastMessage = MutableSharedFlow<String>()
     val toastMessage = _toastMessage.asSharedFlow()
 
-    private val _homeScreen = MutableStateFlow("")
-    val homeScreen: StateFlow<String>
-        get() = _homeScreen
+    private val _screen = MutableStateFlow("")
+    val screen: StateFlow<String>
+        get() = _screen
+
+    private val _lastScreen = MutableStateFlow(false)
+    val lastScreen: StateFlow<Boolean>
+        get() = _lastScreen
+
+    fun onBackClicked() {
+        _lastScreen.value = true
+    }
+
+    fun clearScreen(){
+        _screen.value = ""
+    }
 
     fun firstNameChanged(firstName: String) {
         _firstName.value = firstName
@@ -255,7 +267,7 @@ class SignUpCustomerViewModel @Inject constructor(
                 is ResourceState.SUCCESS -> {
                     sendMessage("Welcome ${it.data.firstName}")
                     dataStorePreferences.storeCustomerDetails(it.data)
-                    _homeScreen.value = Routes.CustomerHomeScreen.route
+                    _screen.value = Routes.CustomerHomeScreen.route
                 }
 
                 is ResourceState.ERROR -> sendMessage(it.error)

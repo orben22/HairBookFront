@@ -33,12 +33,17 @@ class SignUpBarberViewModel @Inject constructor(
     private val dataStorePreferences: DataStorePreferences,
 ) : ViewModel() {
 
+    private val _lastScreen = MutableStateFlow(false)
+    val lastScreen: StateFlow<Boolean>
+        get() = _lastScreen
+
     private val _userDetails: MutableStateFlow<User?> =
         MutableStateFlow(null)
 
-    private val _homeScreen = MutableStateFlow("")
-    val homeScreen: StateFlow<String>
-        get() = _homeScreen
+    private val _screen = MutableStateFlow("")
+    val screen: StateFlow<String>
+        get() = _screen
+
     private val _firstName = MutableStateFlow("")
     val firstName: StateFlow<String>
         get() = _firstName
@@ -88,6 +93,10 @@ class SignUpBarberViewModel @Inject constructor(
     val toastMessage = _toastMessage.asSharedFlow()
 
     // functions
+
+    fun onBackClicked() {
+        _lastScreen.value = true
+    }
     fun firstNameChanged(firstName: String) {
         _firstName.value = firstName
     }
@@ -156,6 +165,10 @@ class SignUpBarberViewModel @Inject constructor(
         viewModelScope.launch {
             _toastMessage.emit(message)
         }
+    }
+
+    fun clearScreen(){
+        _screen.value = ""
     }
 
 
@@ -237,7 +250,7 @@ class SignUpBarberViewModel @Inject constructor(
                 is ResourceState.SUCCESS -> {
                     dataStorePreferences.storeBarberDetails(it.data)
                     sendMessage("Welcome ${it.data.firstName}")
-                    _homeScreen.value = Routes.EditOrCreateBarberShopScreen.route
+                    _screen.value = Routes.EditOrCreateBarberShopScreen.route
                 }
 
                 is ResourceState.ERROR -> sendMessage(it.error)
