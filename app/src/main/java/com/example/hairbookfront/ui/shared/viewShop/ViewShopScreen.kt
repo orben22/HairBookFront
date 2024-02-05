@@ -26,6 +26,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.example.hairbookfront.theme.HairBookFrontTheme
 import com.example.hairbookfront.ui.common.BottomAppBarComponent
 import com.example.hairbookfront.ui.common.DialogComponent
@@ -39,9 +40,11 @@ import java.time.format.DateTimeFormatter
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun ViewShopScreen(
-    viewModel: ViewShopViewModel = hiltViewModel(), navController: NavHostController? = null
+    viewModel: ViewShopViewModel = hiltViewModel(),
+    navController: NavHostController = rememberNavController()
 ) {
     val barberShop by viewModel.barberShop.collectAsStateWithLifecycle()
+    val lastScreen by viewModel.lastScreen.collectAsStateWithLifecycle()
     val screen by viewModel.screen.collectAsStateWithLifecycle()
     val expanded by viewModel.isExpanded.collectAsStateWithLifecycle()
     val role by viewModel.role.collectAsStateWithLifecycle()
@@ -61,7 +64,12 @@ fun ViewShopScreen(
     val userId by viewModel.userId.collectAsStateWithLifecycle()
     LaunchedEffect(screen) {
         if (screen != "") {
-            navController?.navigate(screen)
+            navController.navigate(screen)
+        }
+    }
+    LaunchedEffect(lastScreen) {
+        if (lastScreen) {
+            navController.popBackStack()
         }
     }
     Scaffold(topBar = {
@@ -70,7 +78,8 @@ fun ViewShopScreen(
             onDismissRequest = viewModel::dismissMenu,
             expanded = expanded,
             expandFunction = viewModel::expandedFun,
-            onClickMenus = listOf(viewModel::profileClicked, viewModel::signOut)
+            onClickMenus = listOf(viewModel::profileClicked, viewModel::signOut),
+            onClickBackArrow = viewModel::onBackClicked
         )
     }, bottomBar = {
         if (role == Constants.CustomerRole) {
@@ -87,7 +96,7 @@ fun ViewShopScreen(
         } else {
             BottomAppBarComponent(
                 onClickFunctions = listOf(viewModel::viewHistory, viewModel::editShop),
-                textToIcon = listOf("Booking History", "Edit Shop"),
+                textToIcon = listOf("My Bookings", "Edit Shop"),
                 numberOfIcons = 2,
                 icons = listOf(
                     Icons.Filled.List,Icons.Filled.Edit

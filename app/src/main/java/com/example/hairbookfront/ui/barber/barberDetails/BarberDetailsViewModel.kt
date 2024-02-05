@@ -49,6 +49,10 @@ class BarberDetailsViewModel @Inject constructor(
     val screen: StateFlow<String>
         get() = _screen
 
+    private val _lastScreen = MutableStateFlow(false)
+    val lastScreen: StateFlow<Boolean>
+        get() = _lastScreen
+
     private val _firstName = MutableStateFlow("")
     val firstName: StateFlow<String>
         get() = _firstName
@@ -96,6 +100,10 @@ class BarberDetailsViewModel @Inject constructor(
         }
     }
 
+    fun onBackClicked() {
+        _lastScreen.value = true
+    }
+
     fun onBarberShopClicked(barberShop: BarberShop) {
         viewModelScope.launch {
             dataStorePreferences.setShopId(barberShop.barberShopId!!)
@@ -107,7 +115,7 @@ class BarberDetailsViewModel @Inject constructor(
         _screen.value = Routes.EditOrCreateBarberShopScreen.route
     }
 
-    fun onBookingHistoryClicked() {
+    fun onMyBookingClicked() {
         _screen.value = Routes.MyBookingsScreen.route
     }
 
