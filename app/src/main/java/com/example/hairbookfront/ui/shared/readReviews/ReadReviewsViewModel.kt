@@ -4,16 +4,23 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.hairbookfront.data.datastore.DataStorePreferences
 import com.example.hairbookfront.domain.SignOutHandler
+import com.example.hairbookfront.domain.entities.Review
 import com.example.hairbookfront.domain.repository.ApiRepositoryBarber
 import com.example.hairbookfront.domain.repository.ApiRepositoryReview
 import com.example.hairbookfront.ui.navgraph.Routes
 import com.example.hairbookfront.util.Constants
+import com.example.hairbookfront.util.ResourceState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 
 /**
@@ -32,6 +39,8 @@ class ReadReviewsViewModel @Inject constructor(
     private val dataStorePreferences: DataStorePreferences,
 ) : ViewModel() {
 
+
+
     private val _role = MutableStateFlow("")
     private val _accessToken = MutableStateFlow("")
     val accessToken: StateFlow<String>
@@ -45,10 +54,17 @@ class ReadReviewsViewModel @Inject constructor(
     val screen: StateFlow<String>
         get() = _screen
 
+    private val _reviews = MutableStateFlow<List<Review>>(listOf())
+
+    val reviews: StateFlow<List<Review>>
+        get() = _reviews
+
+
     init {
         viewModelScope.launch(Dispatchers.IO) {
             _role.value = dataStorePreferences.getRole().first()
         }
+        getReviews()
     }
 
     fun profileClicked() {
@@ -70,6 +86,29 @@ class ReadReviewsViewModel @Inject constructor(
         viewModelScope.launch {
             signOutHandler.signOut(_accessToken.value)
             _screen.emit(Routes.WelcomeScreen.route)
+        }
+    }
+
+    private fun getReviews() {
+        viewModelScope.launch {
+            _accessToken.emit(dataStorePreferences.getAccessToken().first())
+            hairBookRepositoryReview.getMyReviews(_accessToken.value)
+                .collectLatest { resourceState ->
+                    when (resourceState) {
+                        is ResourceState.SUCCESS -> {
+                            Timber.d("Reviews: ${resourceState.data}")
+                            _reviews.emit(resourceState.data)
+                        }
+
+                        is ResourceState.ERROR -> {
+                            Timber.d(resourceState.error)
+                        }
+
+                        is ResourceState.LOADING -> {
+                            Timber.d("Loading")
+                        }
+                    }
+                }
         }
     }
 }
