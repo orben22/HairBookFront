@@ -33,7 +33,6 @@ fun EditOrCreateReviewScreen(
 
     val context = LocalContext.current
     val screen by viewModel.screen.collectAsStateWithLifecycle()
-    val expanded by viewModel.isExpanded.collectAsStateWithLifecycle()
     val mode by viewModel.mode.collectAsStateWithLifecycle()
     val review by viewModel.review.collectAsStateWithLifecycle()
     val rating by viewModel.rating.collectAsStateWithLifecycle()
@@ -45,7 +44,7 @@ fun EditOrCreateReviewScreen(
     LaunchedEffect(screen) {
         if (screen != "") {
             viewModel.clearScreen()
-            navController.navigate(screen)
+            navController.popBackStack()
         }
     }
     LaunchedEffect(lastScreen) {
@@ -70,11 +69,7 @@ fun EditOrCreateReviewScreen(
         topBar = {
             TopAppBarComponent(
                 text = "$mode Review",
-                onDismissRequest = viewModel::dismissMenu,
-                expanded = expanded,
-                expandFunction = viewModel::expandedFun,
-                onClickMenus = listOf(viewModel::profileClicked, viewModel::signOut),
-                onClickBackArrow = viewModel::onBackClicked
+                dropDownMenu = false
             )
         },
         content = { innerPadding ->

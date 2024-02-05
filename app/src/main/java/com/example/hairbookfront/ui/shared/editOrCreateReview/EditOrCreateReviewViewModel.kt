@@ -78,9 +78,6 @@ class EditOrCreateReviewViewModel @Inject constructor(
     private val _shopId = MutableStateFlow("")
     val shopId: StateFlow<String>
         get() = _shopId
-    private val _isExpanded = MutableStateFlow(false)
-    val isExpanded: StateFlow<Boolean>
-        get() = _isExpanded
 
     private val _screen = MutableStateFlow("")
     val screen: StateFlow<String>
@@ -109,17 +106,6 @@ class EditOrCreateReviewViewModel @Inject constructor(
     }
     fun onBackClicked() {
         _lastScreen.value = true
-    }
-    fun profileClicked() {
-        if (_role.value == Constants.BarberRole)
-            _screen.value = Routes.BarberDetailsScreen.route
-        else
-            _screen.value = Routes.CustomerDetailsScreen.route
-    }
-
-
-    fun expandedFun() {
-        _isExpanded.value = !_isExpanded.value
     }
 
     fun onReviewChange(newReview: String) {
@@ -262,18 +248,6 @@ class EditOrCreateReviewViewModel @Inject constructor(
             }
         }
     }
-
-    fun dismissMenu() {
-        _isExpanded.value = false
-    }
-
-    fun signOut() {
-        viewModelScope.launch {
-            signOutHandler.signOut(_accessToken.value)
-            _screen.emit(Routes.WelcomeScreen.route)
-        }
-    }
-
 
     private fun sendMessage(message: String) {
         viewModelScope.launch {

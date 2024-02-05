@@ -35,10 +35,6 @@ class EditOrCreateBarberShopViewModel @Inject constructor(
     private val signOutHandler: SignOutHandler
 ) : ViewModel() {
 
-    private val _isExpanded = MutableStateFlow(false)
-    val isExpanded: StateFlow<Boolean>
-        get() = _isExpanded
-
     private val _shopId = MutableStateFlow("")
     private val _mode = MutableStateFlow("")
     val mode: StateFlow<String>
@@ -146,23 +142,6 @@ class EditOrCreateBarberShopViewModel @Inject constructor(
         _lastScreen.value = true
     }
 
-    fun signOut() {
-        viewModelScope.launch {
-            signOutHandler.signOut(_accessToken.value)
-            _screen.emit(Routes.WelcomeScreen.route)
-        }
-    }
-
-    fun expandedFun() {
-        _isExpanded.value = !_isExpanded.value
-    }
-
-    fun dismissMenu() {
-        _isExpanded.value = false
-    }
-    fun profileClicked() {
-            _screen.value = Routes.BarberDetailsScreen.route
-    }
     private suspend fun getBarberShop() {
         hairBookRepositoryBarber.getBarberShopById(_accessToken.value, _shopId.value)
             .collectLatest { response ->

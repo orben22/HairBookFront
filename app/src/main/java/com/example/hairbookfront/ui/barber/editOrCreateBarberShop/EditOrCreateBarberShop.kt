@@ -62,7 +62,6 @@ fun EditOrCreateBarberShopScreen(
     viewModel: EditOrCreateBarberShopViewModel = hiltViewModel(),
     navController: NavHostController = rememberNavController()
 ) {
-    val expanded by viewModel.isExpanded.collectAsStateWithLifecycle()
     val context = LocalContext.current
     val screen by viewModel.screen.collectAsStateWithLifecycle()
     val lastScreen by viewModel.lastScreen.collectAsStateWithLifecycle()
@@ -155,11 +154,7 @@ fun EditOrCreateBarberShopScreen(
     Scaffold(topBar = {
         TopAppBarComponent(
             text = "$mode Barber Shop",
-            onDismissRequest = viewModel::dismissMenu,
-            expanded = expanded,
-            expandFunction = viewModel::expandedFun,
-            onClickMenus = listOf(viewModel::profileClicked, viewModel::signOut),
-            onClickBackArrow = viewModel::onBackClicked
+            dropDownMenu = false
         )
     }, floatingActionButton = {
         FloatingActionButton(

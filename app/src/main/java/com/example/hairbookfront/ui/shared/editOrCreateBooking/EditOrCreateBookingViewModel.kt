@@ -56,10 +56,6 @@ class EditOrCreateBookingViewModel @Inject constructor(
     val accessToken: StateFlow<String>
         get() = _accessToken
 
-    private val _isExpanded = MutableStateFlow(false)
-    val isExpanded: StateFlow<Boolean>
-        get() = _isExpanded
-
     private val _screen = MutableStateFlow("")
     val screen: StateFlow<String>
         get() = _screen
@@ -377,28 +373,6 @@ class EditOrCreateBookingViewModel @Inject constructor(
             date = date.plusDays(1)
         }
         return disabledDates
-    }
-
-    fun expandedFun() {
-        _isExpanded.value = !_isExpanded.value
-    }
-
-    fun dismissMenu() {
-        _isExpanded.value = false
-    }
-
-    fun signOut() {
-        viewModelScope.launch {
-            signOutHandler.signOut(_accessToken.value)
-            _screen.emit(Routes.WelcomeScreen.route)
-        }
-    }
-
-    fun profileClicked() {
-        if (_role.value == Constants.BarberRole)
-            _screen.value = Routes.BarberDetailsScreen.route
-        else
-            _screen.value = Routes.CustomerDetailsScreen.route
     }
 
     private fun sendMessage(message: String) {

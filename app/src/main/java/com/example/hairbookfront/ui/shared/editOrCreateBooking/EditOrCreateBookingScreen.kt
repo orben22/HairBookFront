@@ -44,7 +44,6 @@ fun EditOrCreateBookingScreen(
     val selectedTimeSlot by viewModel.selectedTimeSlot.collectAsState()
     val calendarState = rememberSheetState()
     val screen by viewModel.screen.collectAsStateWithLifecycle()
-    val expanded by viewModel.isExpanded.collectAsStateWithLifecycle()
     val shop by viewModel.shop.collectAsState()
     val services by viewModel.services.collectAsStateWithLifecycle()
     val availability by viewModel.availableBookingByDay.collectAsStateWithLifecycle()
@@ -53,7 +52,7 @@ fun EditOrCreateBookingScreen(
     LaunchedEffect(screen) {
         if (screen != "") {
             viewModel.clearScreen()
-            navController.navigate(screen)
+            navController.popBackStack()
         }
     }
     LaunchedEffect(lastScreen) {
@@ -82,11 +81,7 @@ fun EditOrCreateBookingScreen(
         topBar = {
             TopAppBarComponent(
                 text = "$mode Booking",
-                onDismissRequest = viewModel::dismissMenu,
-                expanded = expanded,
-                expandFunction = viewModel::expandedFun,
-                onClickMenus = listOf(viewModel::profileClicked, viewModel::signOut),
-                onClickBackArrow = viewModel::onBackClicked
+                dropDownMenu = false
             )
         },
     ) { innerPadding ->
