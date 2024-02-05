@@ -86,43 +86,63 @@ class MyBookingsViewModel @Inject constructor(
         }
     }
 
-    fun deleteBookings(booking: Booking) {
-        viewModelScope.launch {
-            Timber.d("adsfgaksdjfgdsaklf" + booking.toString())
-            if (role.value == Constants.BarberRole) {
-                booking.bookingId?.let {
-                    hairBookRepositoryBarber.deleteBooking(
-                        accessToken.value, booking.barberShopId,
-                        it
-                    )
-                }
-            } else {
-                booking.bookingId?.let { bookingId ->
-                    hairBookRepositoryBooking.deleteBooking(
-                        accessToken.value,
-                        bookingId
-                    ).collectLatest {
-                        when (it) {
-                            is ResourceState.LOADING -> {
-                                Timber.d("Loading")
-                            }
+    suspend fun deleteBookingsBarber(booking: Booking) {
+        booking.bookingId?.let {
+            hairBookRepositoryBarber.deleteBooking(
+                accessToken.value, booking.barberShopId, it).collectLatest {response->
+                when (response) {
+                    is ResourceState.LOADING -> {
+                        Timber.d("Loading")
+                    }
 
-                            is ResourceState.SUCCESS -> {
-                                Timber.d("Success")
-                                _bookings.emit(_bookings.value.filter { booking1 ->
-                                    booking1.bookingId != booking.bookingId
-                                })
-                            }
-
-                            is ResourceState.ERROR -> {
-                                Timber.d("Error")
-                            }
-                        }
+                    is ResourceState.SUCCESS -> {
+                        Timber.d("Success")
+                        _bookings.emit(_bookings.value.filter { booking1 ->
+                            booking1.bookingId != booking.bookingId
+                        })
+                    }
+                    is ResourceState.ERROR -> {
+                        Timber.d("Error")
                     }
                 }
             }
         }
     }
+
+    suspend fun deleteBookingsCustomer(booking: Booking) {
+        booking.bookingId?.let { bookingId ->
+            hairBookRepositoryBooking.deleteBooking(
+                accessToken.value,
+                bookingId
+            ).collectLatest {response->
+                when (response) {
+                    is ResourceState.LOADING -> {
+                        Timber.d("Loading")
+                    }
+
+                    is ResourceState.SUCCESS -> {
+                        Timber.d("Success")
+                        _bookings.emit(_bookings.value.filter { booking1 ->
+                            booking1.bookingId != booking.bookingId
+                        })
+                    }
+                    is ResourceState.ERROR -> {
+                        Timber.d("Error")
+                    }
+                }
+            }
+        }
+    }
+    fun deleteBookings(booking: Booking) {
+        viewModelScope.launch {
+            if (role.value == Constants.BarberRole) {
+                deleteBookingsBarber(booking)
+            } else {
+                deleteBookingsCustomer(booking)
+            }
+        }
+    }
+
 
     fun editBookings(booking: Booking) {
         viewModelScope.launch {
