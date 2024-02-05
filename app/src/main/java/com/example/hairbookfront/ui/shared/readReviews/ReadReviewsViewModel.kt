@@ -39,9 +39,16 @@ class ReadReviewsViewModel @Inject constructor(
     private val dataStorePreferences: DataStorePreferences,
 ) : ViewModel() {
 
-
+    private val _reviewToDelete = MutableStateFlow("")
 
     private val _role = MutableStateFlow("")
+    val role: StateFlow<String>
+        get() = _role
+
+    private val _userId = MutableStateFlow("")
+    val userId: StateFlow<String>
+        get() = _userId
+
     private val _accessToken = MutableStateFlow("")
     val accessToken: StateFlow<String>
         get() = _accessToken
@@ -66,6 +73,23 @@ class ReadReviewsViewModel @Inject constructor(
         }
         getReviews()
     }
+
+    fun editReview(reviewId: String) {
+        viewModelScope.launch {
+            dataStorePreferences.setMode(Constants.EditMode)
+            dataStorePreferences.setReviewIdForEditing(reviewId)
+            _screen.emit(Routes.EditOrCreateReviewScreen.route)
+        }
+    }
+    private val showOrHideDeleteDialog = MutableStateFlow(false)
+    val showOrHideDeleteDialogState: StateFlow<Boolean>
+        get() = showOrHideDeleteDialog
+    fun showOrHideDeleteDialog(reviewId: String) {
+        _reviewToDelete.value = reviewId
+        showOrHideDeleteDialog.value = !showOrHideDeleteDialog.value
+    }
+
+
 
     fun profileClicked() {
         if (_role.value == Constants.BarberRole)

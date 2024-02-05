@@ -64,6 +64,18 @@ class CustomerHomeViewModel @Inject constructor(
     val screen: StateFlow<String>
         get() = _screen
 
+    fun viewMyBookings() {
+        viewModelScope.launch {
+            _screen.emit(Routes.MyBookingsScreen.route)
+        }
+    }
+
+    fun viewMyReviews() {
+        viewModelScope.launch {
+            _screen.emit(Routes.ReadReviewScreen.route)
+        }
+    }
+
     fun onSearchTextChanged(text: String) {
         _searchText.value = text
     }

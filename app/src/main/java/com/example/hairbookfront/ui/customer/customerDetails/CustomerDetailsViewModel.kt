@@ -69,6 +69,18 @@ class CustomerDetailsViewModel @Inject constructor(
     val showOrHideDeleteDialogState: StateFlow<Boolean>
         get() = showOrHideDeleteDialog
 
+    fun viewMyBookings() {
+        viewModelScope.launch {
+            _screen.emit(Routes.MyBookingsScreen.route)
+        }
+    }
+
+    fun viewMyReviews() {
+        viewModelScope.launch {
+            _screen.emit(Routes.ReadReviewScreen.route)
+        }
+    }
+
     fun showOrHideDeleteDialog() {
         showOrHideDeleteDialog.value = !showOrHideDeleteDialog.value
     }

@@ -2,10 +2,13 @@ package com.example.hairbookfront.ui.shared.readReviews
 
 import android.content.res.Configuration
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
@@ -22,6 +25,9 @@ fun ReadReviewsScreen(
 ) {
     val screen by viewModel.screen.collectAsStateWithLifecycle()
     val expanded by viewModel.isExpanded.collectAsStateWithLifecycle()
+    val reviews by viewModel.reviews.collectAsStateWithLifecycle()
+    val userId by viewModel.userId.collectAsStateWithLifecycle()
+    val role by viewModel.role.collectAsStateWithLifecycle()
     LaunchedEffect(screen) {
         if (screen != "") {
             Timber.d("navigating....$screen")
@@ -39,7 +45,21 @@ fun ReadReviewsScreen(
                 viewModel::signOut
             )
         )
-        ReviewsList(reviews = listOf(review1, review2, review3, review4, review5, review6), editable = listOf(true, false, true, false, true, false))
+        if (reviews.isNotEmpty()) {
+//            val editableList = reviews.map { true }
+            ReviewsList(
+                reviews = reviews, editable = listOf(true), role = role,
+                onClickFunctions = listOf(
+                    viewModel::editReview,
+                    viewModel::showOrHideDeleteDialog
+                )
+            )
+        }
+        else {
+            Text(text= "No reviews found",
+                modifier = androidx.compose.ui.Modifier.padding(16.dp)
+            )
+        }
     }
 }
 

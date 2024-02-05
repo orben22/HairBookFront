@@ -5,6 +5,8 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
@@ -47,8 +49,14 @@ fun CustomerHomeScreen(
                 expandFunction = viewModel::expandedFun,
                 onClickMenus = listOf(viewModel::profileClicked, viewModel::signOut)
             )
+        },bottomBar = {
+            BottomAppBarComponent(
+                textToIcon = listOf("My Bookings", "My Reviews"),
+                icons = listOf(Icons.Default.List, Icons.Default.Edit),
+                onClickFunctions = listOf(viewModel::viewMyBookings,
+                    viewModel::viewMyReviews)
+            )
         },
-        bottomBar = { BottomAppBarComponent() },
         content = { innerPadding ->
             Column(
                 modifier = Modifier

@@ -196,7 +196,7 @@ class ViewShopViewModel @Inject constructor(
         }
     }
 
-    fun viewHistory() {
+    fun viewMyBookings() {
         viewModelScope.launch {
             _screen.emit(Routes.MyBookingsScreen.route)
         }
