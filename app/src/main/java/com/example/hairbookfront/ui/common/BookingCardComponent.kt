@@ -26,6 +26,7 @@ import androidx.compose.ui.unit.dp
 import com.example.hairbookfront.domain.entities.BarberShop
 import com.example.hairbookfront.domain.entities.Booking
 import com.example.hairbookfront.domain.entities.Service
+import com.example.hairbookfront.ui.Dimens
 
 
 @Composable
@@ -59,12 +60,15 @@ fun BookingCardComponent(
     optionFunctions: List<(Booking) -> Unit>
 ) {
     ElevatedCard(
+        elevation = CardDefaults.cardElevation(
+            defaultElevation = Dimens.smallPadding1
+        ),
         modifier = Modifier
             .fillMaxWidth()
             .clip(MaterialTheme.shapes.medium)
             .padding(16.dp),
         colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.onPrimaryContainer,
+            containerColor = Color(0xFF00B0FF),
         ),
     ) {
         Column(
@@ -74,11 +78,7 @@ fun BookingCardComponent(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            Text(
-                text = "Booking Details:",
-                style = MaterialTheme.typography.bodySmall,
-                color = Color.Black
-            )
+
             Spacer(modifier = Modifier.height(8.dp))
             Text(text = "Shop Name: ${booking.barberShopName}", color = Color.Black)
             if (isCustomer) {

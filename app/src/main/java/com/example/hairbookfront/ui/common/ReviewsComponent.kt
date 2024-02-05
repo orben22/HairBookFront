@@ -14,6 +14,7 @@ import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -23,6 +24,7 @@ import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
@@ -89,9 +91,12 @@ fun ReviewItem(
     role: String = Constants.CustomerRole,
     isError: Boolean = false
 ) {
-    OutlinedCard(
+    ElevatedCard(
+        elevation = CardDefaults.cardElevation(
+            defaultElevation = Dimens.smallPadding1
+        ),
         colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surface
+            containerColor = Color(0xFF00B0FF),
         ),
         modifier = Modifier
             .fillMaxWidth()
@@ -102,10 +107,12 @@ fun ReviewItem(
                 text = "From: $fullName",
                 fontWeight = FontWeight.Bold,
                 fontSize = Dimens.fontMedium,
+                color = Color.Black
             )
             Spacer(modifier = Modifier.height(Dimens.smallPadding1))
             if (isEditing) {
-                Text("Review:")
+                Text("Review:",
+                    color = Color.Black)
                 TextField(
                     value = review,
                     onValueChange = onReviewChange,
@@ -116,7 +123,8 @@ fun ReviewItem(
                     horizontalArrangement = Arrangement.End,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text("Rating:")
+                    Text("Rating:",
+                        color = Color.Black)
                     TextField(
                         value = rating,
                         onValueChange = onRatingChange,
@@ -131,6 +139,7 @@ fun ReviewItem(
                 Text(
                     text = review,
                     fontSize = Dimens.fontMedium,
+                    color = Color.Black
                 )
                 Spacer(modifier = Modifier.height(Dimens.smallPadding1))
                 Row(
@@ -141,6 +150,7 @@ fun ReviewItem(
                         text = "Time: $timestamp",
                         fontSize = Dimens.fontSmall,
                         fontWeight = FontWeight.Bold,
+                        color = Color.Black
                     )
                     RatingComponent(rating = rating.toFloat())
                 }

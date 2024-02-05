@@ -88,7 +88,7 @@ interface ApiServiceBooking {
      * @param barberShopId The id of the barber shop.
      * @return A response containing a list of bookings.
      */
-    @GET("booking/get-service-by-id")
+    @GET("shared/get-service-by-id")
     suspend fun getServiceBookings(
         @Header("Authorization") authToken: String,
         @Query("serviceId") serviceId: String,

@@ -35,4 +35,6 @@ interface HairBookDataSourceBarber {
     suspend fun deleteBooking(accessToken: String, barberShopId: String,bookingId : String): Response<String>
 
     suspend fun getNumberOfShops(accessToken: String): Response<Int>
+
+    suspend fun getBarberBookings(accessToken: String): Response<List<Booking>>
 }

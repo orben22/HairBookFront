@@ -119,4 +119,8 @@ class HairBookDataSourceImplBarber @Inject constructor(
     override suspend fun getNumberOfShops(accessToken: String): Response<Int> {
         return apiServiceBarber.getNumberOfShops("Bearer $accessToken")
     }
+
+    override suspend fun getBarberBookings(accessToken: String): Response<List<Booking>> {
+        return apiServiceBarber.getBarberBookings("Bearer $accessToken")
+    }
 }

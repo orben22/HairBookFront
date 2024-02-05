@@ -127,6 +127,7 @@ class MyBookingsViewModel @Inject constructor(
     fun editBookings(booking: Booking) {
         viewModelScope.launch {
             dataStorePreferences.setMode(Constants.EditMode)
+            dataStorePreferences.setShopId(booking.barberShopId)
             booking.bookingId?.let { dataStorePreferences.setBookingIdForEditing(it) }
             _screen.emit(Routes.EditOrCreateBookingScreen.route)
         }
@@ -137,34 +138,6 @@ class MyBookingsViewModel @Inject constructor(
             _screen.value = Routes.BarberDetailsScreen.route
         else
             _screen.value = Routes.CustomerDetailsScreen.route
-    }
-
-    init {
-        viewModelScope.launch {
-            _accessToken.emit(dataStorePreferences.getAccessToken().first())
-            dataStorePreferences.getRole().collectLatest { role ->
-                _role.emit(role)
-                hairBookRepositoryBooking.getUserBookings(accessToken.value)
-                    .collectLatest { response ->
-                        when (response) {
-                            is ResourceState.LOADING -> {
-                                Timber.d("Loading")
-                            }
-
-                            is ResourceState.SUCCESS -> {
-                                response.data.forEach { booking ->
-                                    getServiceDetails(booking.serviceId)
-                                }
-                                _bookings.emit(response.data)
-                            }
-
-                            is ResourceState.ERROR -> {
-                                Timber.d("Error")
-                            }
-                        }
-                    }
-            }
-        }
     }
 
     private fun getServiceDetails(serviceId: String?) {
@@ -189,6 +162,65 @@ class MyBookingsViewModel @Inject constructor(
                             }
                         }
                     }
+            }
+        }
+    }
+    private fun getCustomerBookings() {
+        viewModelScope.launch {
+            hairBookRepositoryBooking.getUserBookings(_accessToken.value)
+                .collectLatest { response ->
+                    Timber.d("res: $response")
+                    when (response) {
+                        is ResourceState.LOADING -> {
+                        }
+
+                        is ResourceState.SUCCESS -> {
+                            _bookings.emit(response.data)
+                            response.data.forEach { booking ->
+                                getServiceDetails(booking.serviceId)
+                            }
+                        }
+
+                        is ResourceState.ERROR -> {
+                        }
+                    }
+                }
+        }
+    }
+
+    private fun getBarberBookings() {
+        viewModelScope.launch {
+            hairBookRepositoryBarber.getBarberBookings(_accessToken.value)
+                .collectLatest { response ->
+                    Timber.d("res: $response")
+                    when (response) {
+                        is ResourceState.LOADING -> {
+                        }
+
+                        is ResourceState.SUCCESS -> {
+                            _bookings.emit(response.data)
+                            response.data.forEach { booking ->
+                                getServiceDetails(booking.serviceId)
+                            }
+                        }
+
+                        is ResourceState.ERROR -> {
+                        }
+                    }
+                }
+        }
+    }
+
+    init {
+        viewModelScope.launch {
+            _accessToken.emit(dataStorePreferences.getAccessToken().first())
+            dataStorePreferences.getRole().collectLatest {role ->
+                _role.emit(role)
+                if (role == Constants.BarberRole) {
+                    getBarberBookings()
+                } else {
+                    getCustomerBookings()
+                }
             }
         }
     }

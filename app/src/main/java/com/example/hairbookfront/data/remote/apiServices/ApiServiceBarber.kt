@@ -206,4 +206,10 @@ interface ApiServiceBarber {
     suspend fun getNumberOfShops(
         @Header("Authorization") authToken: String
     ): Response<Int>
+
+    @GET("barber/get-all-bookings")
+    suspend fun getBarberBookings(
+        @Header("Authorization") authToken: String
+    ): Response<List<Booking>>
+
 }

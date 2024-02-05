@@ -18,6 +18,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import com.example.hairbookfront.domain.entities.BarberShop
 import com.example.hairbookfront.ui.Dimens
@@ -51,6 +52,9 @@ fun BarberShopItem(
         elevation = CardDefaults.cardElevation(
             defaultElevation = Dimens.smallPadding1
         ),
+        colors = CardDefaults.cardColors(
+            containerColor = Color(0xFF00B0FF),
+        ),
         modifier = Modifier
             .fillMaxWidth()
             .padding(
@@ -69,7 +73,7 @@ fun BarberShopItem(
             text = barberShop.barberShopName,
             fontWeight = FontWeight.Bold,
             fontSize = Dimens.fontLarge,
-            color = MaterialTheme.colorScheme.onPrimary
+            color = Color.Black
         )
         Text(
             modifier = Modifier.padding(
@@ -78,7 +82,7 @@ fun BarberShopItem(
             ),
             text = barberShop.description,
             fontSize = Dimens.fontSmall,
-            color = MaterialTheme.colorScheme.onPrimary
+            color = Color.Black
         )
         Text(
             modifier = Modifier.padding(
@@ -88,17 +92,17 @@ fun BarberShopItem(
             text = "Location: ${barberShop.location}",
             fontSize = Dimens.fontMedium,
             fontWeight = FontWeight.Bold,
-            color = MaterialTheme.colorScheme.onPrimary
+            color = Color.Black
         )
         Text(
             modifier = Modifier.padding(
                 top = Dimens.smallPadding1,
                 start = Dimens.smallPadding3, bottom = Dimens.smallPadding1
             ),
-            text = "Barber: ${barberShop.barberShopName}",
+            text = "Barber: ${barberShop.barberName}",
             fontSize = Dimens.fontMedium,
             fontWeight = FontWeight.Bold,
-            color = MaterialTheme.colorScheme.onPrimary
+            color = Color.Black
         )
         if (editable) {
             Row(
