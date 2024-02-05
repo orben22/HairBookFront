@@ -49,9 +49,6 @@ fun MyBookingsScreen(
                 )
             )
         },
-        bottomBar = {
-            BottomAppBarComponent()
-        }
     ) { innerPadding ->
         Column(modifier = Modifier.padding(innerPadding)) {
             if (role == Constants.BarberRole) {

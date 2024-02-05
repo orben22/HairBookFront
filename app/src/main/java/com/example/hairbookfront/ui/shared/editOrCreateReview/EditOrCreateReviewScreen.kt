@@ -19,6 +19,7 @@ import androidx.navigation.NavController
 import com.example.hairbookfront.ui.common.ButtonComponent
 import com.example.hairbookfront.ui.common.ReviewItem
 import com.example.hairbookfront.ui.common.TopAppBarComponent
+import com.example.hairbookfront.util.Constants
 import timber.log.Timber
 
 
@@ -38,6 +39,7 @@ fun EditOrCreateReviewScreen(
     val firstName by viewModel.firstName.collectAsStateWithLifecycle()
     val lastName by viewModel.lastName.collectAsStateWithLifecycle()
     val isError by viewModel.isError.collectAsStateWithLifecycle()
+    val role by viewModel.role.collectAsStateWithLifecycle()
     LaunchedEffect(screen) {
         if (screen != "") {
             Timber.d("navigating....$screen")
@@ -64,7 +66,7 @@ fun EditOrCreateReviewScreen(
                 onDismissRequest = viewModel::dismissMenu,
                 expanded = expanded,
                 expandFunction = viewModel::expandedFun,
-                onClickMenus = listOf(viewModel::signOut, {})
+                onClickMenus = listOf(viewModel::profileClicked, viewModel::signOut)
             )
         },
         content = { innerPadding ->

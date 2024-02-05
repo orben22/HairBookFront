@@ -42,6 +42,9 @@ class EditOrCreateReviewViewModel @Inject constructor(
 ) : ViewModel() {
 
     private val _role = MutableStateFlow("")
+    val role: StateFlow<String>
+        get() = _role
+
     private val _sentReview = MutableStateFlow(
         Review(
             reviewId = null,
@@ -96,6 +99,14 @@ class EditOrCreateReviewViewModel @Inject constructor(
 
     private val _toastMessage = MutableSharedFlow<String>()
     val toastMessage = _toastMessage.asSharedFlow()
+
+    fun profileClicked() {
+        if (_role.value == Constants.BarberRole)
+            _screen.value = Routes.BarberDetailsScreen.route
+        else
+            _screen.value = Routes.CustomerDetailsScreen.route
+    }
+
 
     fun expandedFun() {
         _isExpanded.value = !_isExpanded.value

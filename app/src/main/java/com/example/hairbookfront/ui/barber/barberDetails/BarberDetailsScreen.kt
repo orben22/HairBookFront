@@ -6,7 +6,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -23,19 +23,19 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.example.hairbookfront.ui.Dimens.distanceFromLeft
 import com.example.hairbookfront.ui.Dimens.distanceFromBottom
 import com.example.hairbookfront.ui.common.BarberShopList
 import com.example.hairbookfront.ui.common.BottomAppBarComponent
 import com.example.hairbookfront.ui.common.DialogComponent
 import com.example.hairbookfront.ui.common.TopAppBarComponent
-import timber.log.Timber
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BarberDetailsScreen(
     viewModel: BarberDetailsViewModel = hiltViewModel(),
-    navController: NavHostController? = null
+    navController: NavHostController = rememberNavController()
 ) {
 
     val yearsOfExperience by viewModel.getYearsOfExperience()
@@ -43,13 +43,19 @@ fun BarberDetailsScreen(
     val firstname by viewModel.getFirstName().collectAsState(initial = "")
     val lastname by viewModel.getLastName().collectAsState(initial = "")
     val email by viewModel.getEmail().collectAsState(initial = "")
-    val myShops by viewModel.myshops.collectAsStateWithLifecycle()
+    val myShops by viewModel.myShops.collectAsStateWithLifecycle()
     val screen by viewModel.screen.collectAsStateWithLifecycle()
     val expanded by viewModel.isExpanded.collectAsStateWithLifecycle()
     val showOrHideDeleteDialog by viewModel.showOrHideDeleteDialog.collectAsStateWithLifecycle()
+    val lastScreen by viewModel.lastScreen.collectAsStateWithLifecycle()
     LaunchedEffect(screen) {
         if (screen != "") {
             navController?.navigate(screen)
+        }
+    }
+    LaunchedEffect(lastScreen) {
+        if (lastScreen) {
+            navController?.popBackStack()
         }
     }
     Scaffold(
@@ -60,18 +66,19 @@ fun BarberDetailsScreen(
                 expanded = expanded,
                 expandFunction = viewModel::expandedFun,
                 suggestions = listOf("Sign Out"),
-                onClickMenus = listOf(viewModel::signOut)
+                onClickMenus = listOf(viewModel::signOut),
+                onClickBackArrow = viewModel::onBackClicked
             )
         },
         bottomBar = {
             BottomAppBarComponent(
-                textToIcon = listOf("Booking History", "Create barber shop"),
+                textToIcon = listOf("My Bookings", "Create your new BarberShop"),
                 icons = listOf(
-                    Icons.Filled.Star,
+                    Icons.Filled.List,
                     Icons.Filled.ShoppingCart
                 ),
                 onClickFunctions = listOf(
-                    viewModel::onBookingHistoryClicked,
+                    viewModel::onMyBookingClicked,
                     viewModel::onCreateBarberShopClicked
                 )
             )
