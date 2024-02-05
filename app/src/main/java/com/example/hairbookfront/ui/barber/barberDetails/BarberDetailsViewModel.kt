@@ -99,7 +99,9 @@ class BarberDetailsViewModel @Inject constructor(
             _screen.emit(Routes.WelcomeScreen.route)
         }
     }
-
+    fun clearScreen(){
+        _screen.value = ""
+    }
     fun onBackClicked() {
         _lastScreen.value = true
     }

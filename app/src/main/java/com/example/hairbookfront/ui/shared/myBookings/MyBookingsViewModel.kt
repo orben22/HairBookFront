@@ -54,6 +54,10 @@ class MyBookingsViewModel @Inject constructor(
     val screen: StateFlow<String>
         get() = _screen
 
+    private val _lastScreen = MutableStateFlow(false)
+    val lastScreen: StateFlow<Boolean>
+        get() = _lastScreen
+
     private val _bookings = MutableStateFlow(listOf<Booking>())
     val bookings: StateFlow<List<Booking>>
         get() = _bookings
@@ -61,6 +65,12 @@ class MyBookingsViewModel @Inject constructor(
     val services: StateFlow<List<Service>>
         get() = _services
 
+    fun clearScreen(){
+        _screen.value = ""
+    }
+    fun onBackClicked() {
+        _lastScreen.value = true
+    }
     fun expandedFun() {
         _isExpanded.value = !_isExpanded.value
     }

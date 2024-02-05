@@ -63,6 +63,7 @@ fun ViewShopScreen(
     val userId by viewModel.userId.collectAsStateWithLifecycle()
     LaunchedEffect(screen) {
         if (screen != "") {
+            viewModel.clearScreen()
             navController.navigate(screen)
         }
     }

@@ -22,6 +22,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.example.hairbookfront.ui.common.ButtonComponent
 import com.example.hairbookfront.ui.common.DatePickerComponent
 import com.example.hairbookfront.ui.common.ServiceCard
@@ -35,7 +36,7 @@ import timber.log.Timber
 @Composable
 fun EditOrCreateBookingScreen(
     viewModel: EditOrCreateBookingViewModel = hiltViewModel(),
-    navController: NavController? = null,
+    navController: NavController = rememberNavController()
 ) {
     val context = LocalContext.current
     val selectedService by viewModel.selectedService.collectAsStateWithLifecycle()
@@ -48,9 +49,16 @@ fun EditOrCreateBookingScreen(
     val services by viewModel.services.collectAsStateWithLifecycle()
     val availability by viewModel.availableBookingByDay.collectAsStateWithLifecycle()
     val mode by viewModel.mode.collectAsStateWithLifecycle()
+    val lastScreen by viewModel.lastScreen.collectAsStateWithLifecycle()
     LaunchedEffect(screen) {
         if (screen != "") {
-            navController?.navigate(screen)
+            viewModel.clearScreen()
+            navController.navigate(screen)
+        }
+    }
+    LaunchedEffect(lastScreen) {
+        if (lastScreen) {
+            navController.popBackStack()
         }
     }
 
@@ -77,7 +85,8 @@ fun EditOrCreateBookingScreen(
                 onDismissRequest = viewModel::dismissMenu,
                 expanded = expanded,
                 expandFunction = viewModel::expandedFun,
-                onClickMenus = listOf(viewModel::profileClicked, viewModel::signOut)
+                onClickMenus = listOf(viewModel::profileClicked, viewModel::signOut),
+                onClickBackArrow = viewModel::onBackClicked
             )
         },
     ) { innerPadding ->

@@ -1,6 +1,7 @@
 package com.example.hairbookfront.ui.customer.customerHome
 
 import android.content.res.Configuration
+import androidx.activity.OnBackPressedDispatcher
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -18,6 +19,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.example.hairbookfront.ui.common.TextFieldComponent
 import com.example.hairbookfront.ui.common.BarberShopList
 import com.example.hairbookfront.ui.common.TopAppBarComponent
@@ -28,16 +30,25 @@ import timber.log.Timber
 @Composable
 fun CustomerHomeScreen(
     viewModel: CustomerHomeViewModel = hiltViewModel(),
-    navController: NavHostController? = null
+    navController: NavHostController = rememberNavController()
+
 ) {
     val searchText by viewModel.searchText.collectAsStateWithLifecycle()
     val barberShops by viewModel.barberShops.collectAsStateWithLifecycle()
     val screen by viewModel.screen.collectAsStateWithLifecycle()
     val expanded by viewModel.isExpanded.collectAsStateWithLifecycle()
+    val lastScreen by viewModel.lastScreen.collectAsStateWithLifecycle()
+
+
     LaunchedEffect(screen) {
         if (screen != "") {
-            Timber.d("navigating....")
-            navController?.navigate(screen)
+            viewModel.clearScreen()
+            navController.navigate(screen)
+        }
+    }
+    LaunchedEffect(lastScreen) {
+        if (lastScreen) {
+            navController.popBackStack()
         }
     }
     Scaffold(

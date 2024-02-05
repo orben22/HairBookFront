@@ -16,6 +16,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.example.hairbookfront.ui.common.ButtonComponent
 import com.example.hairbookfront.ui.common.ReviewItem
 import com.example.hairbookfront.ui.common.TopAppBarComponent
@@ -27,7 +28,7 @@ import timber.log.Timber
 @Composable
 fun EditOrCreateReviewScreen(
     viewModel: EditOrCreateReviewViewModel = hiltViewModel(),
-    navController: NavController? = null,
+    navController: NavController = rememberNavController()
 ) {
 
     val context = LocalContext.current
@@ -40,10 +41,16 @@ fun EditOrCreateReviewScreen(
     val lastName by viewModel.lastName.collectAsStateWithLifecycle()
     val isError by viewModel.isError.collectAsStateWithLifecycle()
     val role by viewModel.role.collectAsStateWithLifecycle()
+    val lastScreen by viewModel.lastScreen.collectAsStateWithLifecycle()
     LaunchedEffect(screen) {
         if (screen != "") {
-            Timber.d("navigating....$screen")
-            navController?.navigate(screen)
+            viewModel.clearScreen()
+            navController.navigate(screen)
+        }
+    }
+    LaunchedEffect(lastScreen) {
+        if (lastScreen) {
+            navController.popBackStack()
         }
     }
 
@@ -66,7 +73,8 @@ fun EditOrCreateReviewScreen(
                 onDismissRequest = viewModel::dismissMenu,
                 expanded = expanded,
                 expandFunction = viewModel::expandedFun,
-                onClickMenus = listOf(viewModel::profileClicked, viewModel::signOut)
+                onClickMenus = listOf(viewModel::profileClicked, viewModel::signOut),
+                onClickBackArrow = viewModel::onBackClicked
             )
         },
         content = { innerPadding ->

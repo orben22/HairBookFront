@@ -50,12 +50,13 @@ fun BarberDetailsScreen(
     val lastScreen by viewModel.lastScreen.collectAsStateWithLifecycle()
     LaunchedEffect(screen) {
         if (screen != "") {
-            navController?.navigate(screen)
+            viewModel.clearScreen()
+            navController.navigate(screen)
         }
     }
     LaunchedEffect(lastScreen) {
         if (lastScreen) {
-            navController?.popBackStack()
+            navController.popBackStack()
         }
     }
     Scaffold(

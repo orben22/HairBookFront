@@ -64,6 +64,9 @@ class CustomerHomeViewModel @Inject constructor(
     val screen: StateFlow<String>
         get() = _screen
 
+    private val _lastScreen = MutableStateFlow(false)
+    val lastScreen: StateFlow<Boolean>
+        get() = _lastScreen
     fun viewMyBookings() {
         viewModelScope.launch {
             _screen.emit(Routes.MyBookingsScreen.route)
@@ -74,6 +77,13 @@ class CustomerHomeViewModel @Inject constructor(
         viewModelScope.launch {
             _screen.emit(Routes.ReadReviewScreen.route)
         }
+    }
+
+    fun clearScreen(){
+        _screen.value = ""
+    }
+    fun onBackClicked() {
+        _lastScreen.value = true
     }
 
     fun onSearchTextChanged(text: String) {

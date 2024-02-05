@@ -93,6 +93,9 @@ class ViewShopViewModel @Inject constructor(
     val showOrHideDeleteDialogState: StateFlow<Boolean>
         get() = showOrHideDeleteDialog
 
+    fun clearScreen(){
+        _screen.value = ""
+    }
     fun onBackClicked() {
         _lastScreen.value = true
     }

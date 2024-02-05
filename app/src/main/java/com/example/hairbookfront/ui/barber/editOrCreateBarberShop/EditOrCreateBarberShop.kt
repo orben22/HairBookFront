@@ -41,6 +41,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.example.hairbookfront.ui.Dimens
 import com.example.hairbookfront.ui.common.TextFieldComponent
 import com.example.hairbookfront.ui.common.TopAppBarComponent
@@ -59,26 +60,13 @@ import java.time.LocalTime
 @Composable
 fun EditOrCreateBarberShopScreen(
     viewModel: EditOrCreateBarberShopViewModel = hiltViewModel(),
-    navController: NavHostController? = null
+    navController: NavHostController = rememberNavController()
 ) {
-
+    val expanded by viewModel.isExpanded.collectAsStateWithLifecycle()
     val context = LocalContext.current
-    LaunchedEffect(Unit) {
-        viewModel.toastMessage.collect { message ->
-            Toast.makeText(
-                context,
-                message,
-                Toast.LENGTH_SHORT,
-            ).show()
-        }
-    }
-    val homeScreen by viewModel.homeScreen.collectAsStateWithLifecycle()
+    val screen by viewModel.screen.collectAsStateWithLifecycle()
+    val lastScreen by viewModel.lastScreen.collectAsStateWithLifecycle()
     val mode by viewModel.mode.collectAsStateWithLifecycle()
-    if (homeScreen.isNotEmpty()) {
-        navController?.navigate(homeScreen) {
-            popUpTo("createBarberShopScreen") { inclusive = true }
-        }
-    }
     val barberShopName by viewModel.barberShopName.collectAsStateWithLifecycle()
     val barberShopError by viewModel.barberShopNameError.collectAsStateWithLifecycle()
     val description by viewModel.barberShopDescription.collectAsStateWithLifecycle()
@@ -144,8 +132,35 @@ fun EditOrCreateBarberShopScreen(
             })
         }
     }
+    LaunchedEffect(Unit) {
+        viewModel.toastMessage.collect { message ->
+            Toast.makeText(
+                context,
+                message,
+                Toast.LENGTH_SHORT,
+            ).show()
+        }
+    }
+    LaunchedEffect(screen) {
+        if (screen != "") {
+            viewModel.clearScreen()
+            navController.navigate(screen)
+        }
+    }
+    LaunchedEffect(lastScreen) {
+        if (lastScreen) {
+            navController.popBackStack()
+        }
+    }
     Scaffold(topBar = {
-        TopAppBarComponent(text = "$mode BarberShop")
+        TopAppBarComponent(
+            text = "$mode Barber Shop",
+            onDismissRequest = viewModel::dismissMenu,
+            expanded = expanded,
+            expandFunction = viewModel::expandedFun,
+            onClickMenus = listOf(viewModel::profileClicked, viewModel::signOut),
+            onClickBackArrow = viewModel::onBackClicked
+        )
     }, floatingActionButton = {
         FloatingActionButton(
             onClick = { viewModel.isValidInput() },

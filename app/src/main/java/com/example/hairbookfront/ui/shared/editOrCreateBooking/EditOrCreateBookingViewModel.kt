@@ -64,6 +64,10 @@ class EditOrCreateBookingViewModel @Inject constructor(
     val screen: StateFlow<String>
         get() = _screen
 
+    private val _lastScreen = MutableStateFlow(false)
+    val lastScreen: StateFlow<Boolean>
+        get() = _lastScreen
+
     private val _selectedService = MutableStateFlow<Service?>(null)
     val selectedService: StateFlow<Service?>
         get() = _selectedService
@@ -96,6 +100,12 @@ class EditOrCreateBookingViewModel @Inject constructor(
     private val _toastMessage = MutableSharedFlow<String>()
     val toastMessage = _toastMessage.asSharedFlow()
 
+    fun clearScreen(){
+        _screen.value = ""
+    }
+    fun onBackClicked() {
+        _lastScreen.value = true
+    }
     fun onServiceSelected(service: Service) {
         _selectedService.value = service
     }

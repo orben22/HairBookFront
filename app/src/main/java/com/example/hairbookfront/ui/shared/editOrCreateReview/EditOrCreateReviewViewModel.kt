@@ -86,6 +86,10 @@ class EditOrCreateReviewViewModel @Inject constructor(
     val screen: StateFlow<String>
         get() = _screen
 
+    private val _lastScreen = MutableStateFlow(false)
+    val lastScreen: StateFlow<Boolean>
+        get() = _lastScreen
+
 
     private val _review = MutableStateFlow("")
     val review: StateFlow<String>
@@ -100,6 +104,12 @@ class EditOrCreateReviewViewModel @Inject constructor(
     private val _toastMessage = MutableSharedFlow<String>()
     val toastMessage = _toastMessage.asSharedFlow()
 
+    fun clearScreen(){
+        _screen.value = ""
+    }
+    fun onBackClicked() {
+        _lastScreen.value = true
+    }
     fun profileClicked() {
         if (_role.value == Constants.BarberRole)
             _screen.value = Routes.BarberDetailsScreen.route

@@ -17,6 +17,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.example.hairbookfront.ui.common.DialogComponent
 import com.example.hairbookfront.ui.common.TopAppBarComponent
 import com.example.hairbookfront.ui.common.BookingCardComponent
@@ -26,7 +27,7 @@ import timber.log.Timber
 @Composable
 fun CustomerDetailsScreen(
     viewModel: CustomerDetailsViewModel = hiltViewModel(),
-    navController: NavController? = null,
+    navController: NavController = rememberNavController()
 ) {
     val age by viewModel.getAge()
         .collectAsState(initial = 0)
@@ -39,10 +40,16 @@ fun CustomerDetailsScreen(
     val screen by viewModel.screen.collectAsStateWithLifecycle()
     val expanded by viewModel.isExpanded.collectAsStateWithLifecycle()
     val serviceDetails by viewModel.serviceDetails.collectAsStateWithLifecycle()
+    val lastScreen by viewModel.lastScreen.collectAsStateWithLifecycle()
     LaunchedEffect(screen) {
         if (screen != "") {
-            Timber.d("navigating....")
-            navController?.navigate(screen)
+            viewModel.clearScreen()
+            navController.navigate(screen)
+        }
+    }
+    LaunchedEffect(lastScreen) {
+        if (lastScreen) {
+            navController.popBackStack()
         }
     }
     Scaffold(
@@ -53,7 +60,8 @@ fun CustomerDetailsScreen(
                 expanded = expanded,
                 suggestions = listOf("Sign Out"),
                 expandFunction = viewModel::expandedFun,
-                onClickMenus = listOf(viewModel::signOut)
+                onClickMenus = listOf(viewModel::signOut),
+                onClickBackArrow = viewModel::onBackClicked
             )
         },
         bottomBar = {

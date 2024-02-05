@@ -12,6 +12,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.example.hairbookfront.domain.entities.Review
 import com.example.hairbookfront.theme.HairBookFrontTheme
 import com.example.hairbookfront.ui.common.ReviewsList
@@ -21,17 +22,22 @@ import timber.log.Timber
 @Composable
 fun ReadReviewsScreen(
     viewModel: ReadReviewsViewModel = hiltViewModel(),
-    navController: NavController? = null,
+    navController: NavController = rememberNavController()
 ) {
     val screen by viewModel.screen.collectAsStateWithLifecycle()
     val expanded by viewModel.isExpanded.collectAsStateWithLifecycle()
     val reviews by viewModel.reviews.collectAsStateWithLifecycle()
-    val userId by viewModel.userId.collectAsStateWithLifecycle()
     val role by viewModel.role.collectAsStateWithLifecycle()
+    val lastScreen by viewModel.lastScreen.collectAsStateWithLifecycle()
     LaunchedEffect(screen) {
         if (screen != "") {
-            Timber.d("navigating....$screen")
-            navController?.navigate(screen)
+            viewModel.clearScreen()
+            navController.navigate(screen)
+        }
+    }
+    LaunchedEffect(lastScreen) {
+        if (lastScreen) {
+            navController.popBackStack()
         }
     }
     Column {
@@ -43,7 +49,8 @@ fun ReadReviewsScreen(
             onClickMenus = listOf(
                 viewModel::profileClicked,
                 viewModel::signOut
-            )
+            ),
+            onClickBackArrow = viewModel::onBackClicked
         )
         if (reviews.isNotEmpty()) {
 //            val editableList = reviews.map { true }
@@ -62,71 +69,6 @@ fun ReadReviewsScreen(
         }
     }
 }
-
-val review1 = Review(
-    reviewId = "1",
-    firstName = "firstName",
-    lastName = "lastName",
-    review = "review",
-    rating = 3f,
-    timestamp = "timestamp",
-    userId = "userId",
-    barberShopId = "barberShopId"
-)
-val review2 = Review(
-    reviewId = "1",
-    firstName = "firstName",
-    lastName = "lastName",
-    review = "review",
-    rating = 4f,
-    timestamp = "timestamp",
-    userId = "userId",
-    barberShopId = "barberShopId"
-)
-
-val review3 = Review(
-    reviewId = "1",
-    firstName = "firstName",
-    lastName = "lastName",
-    review = "review",
-    rating = 5f,
-    timestamp = "timestamp",
-    userId = "userId",
-    barberShopId = "barberShopId"
-)
-
-val review4 = Review(
-    reviewId = "1",
-    firstName = "firstName",
-    lastName = "lastName",
-    review = "review",
-    rating = 2f,
-    timestamp = "timestamp",
-    userId = "userId",
-    barberShopId = "barberShopId"
-)
-
-val review5 = Review(
-    reviewId = "1",
-    firstName = "firstName",
-    lastName = "lastName",
-    review = "review",
-    rating = 2.6f,
-    timestamp = "timestamp",
-    userId = "userId",
-    barberShopId = "barberShopId"
-)
-
-val review6 = Review(
-    reviewId = "1",
-    firstName = "firstName",
-    lastName = "lastName",
-    review = "review",
-    rating = 2.1f,
-    timestamp = "timestamp",
-    userId = "userId",
-    barberShopId = "barberShopId"
-)
 
 @Preview(showBackground = true, showSystemUi = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
