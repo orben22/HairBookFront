@@ -201,6 +201,10 @@ class EditOrCreateReviewViewModel @Inject constructor(
     }
 
     init {
+        refreshData()
+    }
+
+    fun refreshData() {
         getInfo()
     }
 
@@ -243,6 +247,7 @@ class EditOrCreateReviewViewModel @Inject constructor(
             _userId.emit(dataStorePreferences.getUserId().first())
             _role.emit(dataStorePreferences.getRole().first())
             _mode.emit(dataStorePreferences.getMode().first())
+            Timber.d("userId ${_userId.value}")
             if (_mode.value == Constants.EditMode) {
                 getReviewById()
             }

@@ -119,6 +119,10 @@ class CustomerHomeViewModel @Inject constructor(
     }
 
     init {
+        refreshData()
+    }
+
+    fun refreshData() {
         viewModelScope.launch {
             dataStorePreferences.getAccessToken().collectLatest { accessToken ->
                 _accessToken.emit(accessToken)

@@ -116,6 +116,10 @@ class EditOrCreateBookingViewModel @Inject constructor(
     }
 
     init {
+        refreshData()
+    }
+
+    fun refreshData() {
         viewModelScope.launch {
             _accessToken.emit(dataStorePreferences.getAccessToken().first())
             _barberShopId.emit(dataStorePreferences.getShopId().first())

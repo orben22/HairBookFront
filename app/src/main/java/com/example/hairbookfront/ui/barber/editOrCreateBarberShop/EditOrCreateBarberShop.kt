@@ -41,6 +41,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.hairbookfront.ui.Dimens
 import com.example.hairbookfront.ui.common.TextFieldComponent
@@ -150,6 +151,11 @@ fun EditOrCreateBarberShopScreen(
         if (lastScreen) {
             navController.popBackStack()
         }
+    }
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentRoute = navBackStackEntry?.destination?.route
+    LaunchedEffect(currentRoute) {
+        viewModel.refreshData()
     }
     Scaffold(topBar = {
         TopAppBarComponent(

@@ -155,7 +155,7 @@ class CustomerDetailsViewModel @Inject constructor(
         getClosestBooking()
     }
 
-    private fun getClosestBooking() {
+    fun getClosestBooking() {
         viewModelScope.launch {
             _accessToken.value = dataStorePreferences.getAccessToken().first()
             apiRepositoryBooking.getClosestBooking(_accessToken.value).collect { response ->

@@ -109,6 +109,10 @@ class ViewShopViewModel @Inject constructor(
     }
 
     init {
+        refreshData()
+    }
+
+    fun refreshData() {
         viewModelScope.launch {
             _role.emit(dataStorePreferences.getRole().first())
             _userId.emit(dataStorePreferences.getUserId().first())

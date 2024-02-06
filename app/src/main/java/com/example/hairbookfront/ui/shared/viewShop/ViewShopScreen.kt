@@ -25,6 +25,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.hairbookfront.theme.HairBookFrontTheme
 import com.example.hairbookfront.ui.common.BottomAppBarComponent
@@ -33,6 +34,7 @@ import com.example.hairbookfront.ui.common.RatingComponent
 import com.example.hairbookfront.ui.common.ReviewsList
 import com.example.hairbookfront.ui.common.TopAppBarComponent
 import com.example.hairbookfront.util.Constants
+import timber.log.Timber
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 
@@ -71,6 +73,11 @@ fun ViewShopScreen(
         if (lastScreen) {
             navController.popBackStack()
         }
+    }
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentRoute = navBackStackEntry?.destination?.route
+    LaunchedEffect(currentRoute) {
+        viewModel.refreshData()
     }
     Scaffold(topBar = {
         TopAppBarComponent(
@@ -144,6 +151,10 @@ fun ViewShopScreen(
             item {
                 Text(text = "Reviews", style = MaterialTheme.typography.headlineMedium)
                 if (reviews.isNotEmpty()) {
+                    for (review in reviews) {
+                        Timber.d("Review by user: ${review.userId}")
+                    }
+                    Timber.d("User id: $userId")
                     val editableList = reviews.map { it.userId == userId }
                     ReviewsList(
                         reviews = reviews, editable = editableList, role = role,

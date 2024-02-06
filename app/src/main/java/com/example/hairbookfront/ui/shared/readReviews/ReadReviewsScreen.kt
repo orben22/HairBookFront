@@ -12,9 +12,11 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.hairbookfront.domain.entities.Review
 import com.example.hairbookfront.theme.HairBookFrontTheme
+import com.example.hairbookfront.ui.common.DialogComponent
 import com.example.hairbookfront.ui.common.ReviewsList
 import com.example.hairbookfront.ui.common.TopAppBarComponent
 import timber.log.Timber
@@ -29,6 +31,7 @@ fun ReadReviewsScreen(
     val reviews by viewModel.reviews.collectAsStateWithLifecycle()
     val role by viewModel.role.collectAsStateWithLifecycle()
     val lastScreen by viewModel.lastScreen.collectAsStateWithLifecycle()
+    val showOrHideDeleteDialog by viewModel.showOrHideDeleteDialog.collectAsStateWithLifecycle()
     LaunchedEffect(screen) {
         if (screen != "") {
             viewModel.clearScreen()
@@ -39,6 +42,11 @@ fun ReadReviewsScreen(
         if (lastScreen) {
             navController.popBackStack()
         }
+    }
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentRoute = navBackStackEntry?.destination?.route
+    LaunchedEffect(currentRoute) {
+        viewModel.refreshData()
     }
     Column {
         TopAppBarComponent(
@@ -67,6 +75,14 @@ fun ReadReviewsScreen(
                 modifier = androidx.compose.ui.Modifier.padding(16.dp)
             )
         }
+    }
+    if (showOrHideDeleteDialog) {
+        DialogComponent(
+            dialogTitle = "Delete confirmation",
+            dialogText = "Are you sure you want to delete this review?",
+            confirmFunctions = listOf(viewModel::deleteReview, viewModel::onDismissRequest),
+            onDismissRequest = viewModel::onDismissRequest
+        )
     }
 }
 

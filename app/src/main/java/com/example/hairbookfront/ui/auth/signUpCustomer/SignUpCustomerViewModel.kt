@@ -99,7 +99,7 @@ class SignUpCustomerViewModel @Inject constructor(
         _lastScreen.value = true
     }
 
-    fun clearScreen(){
+    fun clearScreen() {
         _screen.value = ""
     }
 
@@ -146,14 +146,14 @@ class SignUpCustomerViewModel @Inject constructor(
     }
 
     private fun isFirstNameValid(): Boolean {
-        val nameRegex = "^[a-zA-Z]+\$"
+        val nameRegex = "^[a-zA-Z\\s]+\$"
         val pattern = Pattern.compile(nameRegex)
         val matcher = pattern.matcher(_firstName.value)
         return matcher.matches()
     }
 
     private fun isLastNameValid(): Boolean {
-        val nameRegex = "^[a-zA-Z]+\$"
+        val nameRegex = "^[a-zA-Z\\s]+$"
         val pattern = Pattern.compile(nameRegex)
         val matcher = pattern.matcher(_lastName.value)
         return matcher.matches()
@@ -189,11 +189,14 @@ class SignUpCustomerViewModel @Inject constructor(
             sendMessage("First name cannot be empty")
             _firstNameError.value = true
         }
-
+        if (lastName.value.isEmpty()) {
+            sendMessage("Last name cannot be empty")
+            _lastNameError.value = true
+        }
         if (isLastNameValid())
             _lastNameError.value = false
         else {
-            sendMessage("Last name cannot be empty")
+            sendMessage("Last name is invalid. Please enter a valid name.")
             _lastNameError.value = true
         }
         if (isAgeValid())

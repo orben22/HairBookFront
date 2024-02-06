@@ -12,13 +12,10 @@ import com.example.hairbookfront.util.Constants
 import com.example.hairbookfront.util.ResourceState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
@@ -72,15 +69,20 @@ class ReadReviewsViewModel @Inject constructor(
 
 
     init {
+        refreshData()
+    }
+
+    fun refreshData() {
         viewModelScope.launch(Dispatchers.IO) {
             _role.value = dataStorePreferences.getRole().first()
         }
         getReviews()
     }
 
-    fun clearScreen(){
+    fun clearScreen() {
         _screen.value = ""
     }
+
     fun onBackClicked() {
         _lastScreen.value = true
     }
@@ -92,12 +94,15 @@ class ReadReviewsViewModel @Inject constructor(
             _screen.emit(Routes.EditOrCreateReviewScreen.route)
         }
     }
-    private val showOrHideDeleteDialog = MutableStateFlow(false)
+
+    private val _showOrHideDeleteDialog = MutableStateFlow(false)
+    val showOrHideDeleteDialog: StateFlow<Boolean>
+        get() = _showOrHideDeleteDialog
+
     fun showOrHideDeleteDialog(reviewId: String) {
         _reviewToDelete.value = reviewId
-        showOrHideDeleteDialog.value = !showOrHideDeleteDialog.value
+        _showOrHideDeleteDialog.value = !_showOrHideDeleteDialog.value
     }
-
 
 
     fun profileClicked() {
@@ -139,6 +144,30 @@ class ReadReviewsViewModel @Inject constructor(
 
                         is ResourceState.LOADING -> {
                             Timber.d("Loading")
+                        }
+                    }
+                }
+        }
+    }
+
+    fun onDismissRequest() {
+        _showOrHideDeleteDialog.value = false
+    }
+
+    fun deleteReview() {
+        viewModelScope.launch {
+            hairBookRepositoryReview.deleteReview(_accessToken.value, _reviewToDelete.value)
+                .collectLatest { response ->
+                    Timber.d("res: $response")
+                    when (response) {
+                        is ResourceState.LOADING -> {
+                        }
+                        is ResourceState.SUCCESS -> {
+                            _showOrHideDeleteDialog.emit(false)
+                            getReviews()
+                        }
+
+                        is ResourceState.ERROR -> {
                         }
                     }
                 }

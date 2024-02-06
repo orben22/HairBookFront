@@ -232,9 +232,13 @@ class MyBookingsViewModel @Inject constructor(
     }
 
     init {
+        refreshData()
+    }
+
+    fun refreshData() {
         viewModelScope.launch {
             _accessToken.emit(dataStorePreferences.getAccessToken().first())
-            dataStorePreferences.getRole().collectLatest {role ->
+            dataStorePreferences.getRole().collectLatest { role ->
                 _role.emit(role)
                 if (role == Constants.BarberRole) {
                     getBarberBookings()

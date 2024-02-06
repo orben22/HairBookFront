@@ -17,6 +17,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.hairbookfront.ui.common.DialogComponent
 import com.example.hairbookfront.ui.common.TopAppBarComponent
@@ -51,6 +52,11 @@ fun CustomerDetailsScreen(
         if (lastScreen) {
             navController.popBackStack()
         }
+    }
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentRoute = navBackStackEntry?.destination?.route
+    LaunchedEffect(currentRoute) {
+        viewModel.getClosestBooking()
     }
     Scaffold(
         topBar = {

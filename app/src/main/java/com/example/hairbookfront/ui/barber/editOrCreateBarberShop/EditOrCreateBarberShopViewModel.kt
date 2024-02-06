@@ -125,6 +125,10 @@ class EditOrCreateBarberShopViewModel @Inject constructor(
     val toastMessage = _toastMessage.asSharedFlow()
 
     init {
+        refreshData()
+    }
+
+    fun refreshData() {
         viewModelScope.launch {
             _accessToken.emit(dataStorePreferences.getAccessToken().first())
             _mode.emit(dataStorePreferences.getMode().first())
@@ -135,9 +139,10 @@ class EditOrCreateBarberShopViewModel @Inject constructor(
         }
     }
 
-    fun clearScreen(){
+    fun clearScreen() {
         _screen.value = ""
     }
+
     fun onBackClicked() {
         _lastScreen.value = true
     }
@@ -412,7 +417,7 @@ class EditOrCreateBarberShopViewModel @Inject constructor(
         val serviceName = _serviceName.value
         val servicePrice = _servicePrice.value
         val serviceDuration = _serviceDuration.value
-        val barberShopId = "1"
+        val barberShopId = _shopId.value
         val serviceId = serviceIdCounter.value++.toString()
         val service = Service(
             serviceName = serviceName,
@@ -590,7 +595,7 @@ class EditOrCreateBarberShopViewModel @Inject constructor(
                     }
 
                     is ResourceState.SUCCESS -> {
-                        postOrUpdateServices()
+                        updateService()
                     }
 
                     is ResourceState.ERROR -> {
@@ -600,40 +605,19 @@ class EditOrCreateBarberShopViewModel @Inject constructor(
             }
     }
 
-    private suspend fun postOrUpdateServices() {
+    private suspend fun updateService(){
         for (service in _services.value) {
-            if (service.serviceId == null) {
-                hairBookRepositoryBarber.createService(_accessToken.value, _shopId.value, service)
-                    .collectLatest {
-                        when (it) {
+            service.serviceId?.let {serviceId->
+                hairBookRepositoryBarber.updateService(_accessToken.value, _shopId.value,
+                    serviceId, service)
+                    .collectLatest {response->
+                        when (response) {
                             is ResourceState.LOADING -> {
                                 Timber.d("Loading")
                             }
 
                             is ResourceState.SUCCESS -> {
-                                Timber.d("Success")
-                            }
-
-                            is ResourceState.ERROR -> {
-                                Timber.d("Error")
-                            }
-                        }
-                    }
-            } else {
-                hairBookRepositoryBarber.updateService(
-                    _accessToken.value,
-                    _shopId.value,
-                    service.serviceId,
-                    service
-                )
-                    .collectLatest {
-                        when (it) {
-                            is ResourceState.LOADING -> {
-                                Timber.d("Loading")
-                            }
-
-                            is ResourceState.SUCCESS -> {
-                                Timber.d("Success")
+                                Timber.d("Added service: ${response.data}")
                             }
 
                             is ResourceState.ERROR -> {
@@ -642,7 +626,27 @@ class EditOrCreateBarberShopViewModel @Inject constructor(
                         }
                     }
             }
+        }
+        _screen.emit(Routes.BarberDetailsScreen.route)
+    }
+    private suspend fun postServices() {
+        for (service in _services.value) {
+                hairBookRepositoryBarber.createService(_accessToken.value, _shopId.value, service)
+                    .collectLatest {
+                        when (it) {
+                            is ResourceState.LOADING -> {
+                                Timber.d("Loading")
+                            }
 
+                            is ResourceState.SUCCESS -> {
+                                Timber.d("Added service: ${it.data}")
+                            }
+
+                            is ResourceState.ERROR -> {
+                                Timber.d("Error")
+                            }
+                        }
+                    }
         }
         _screen.emit(Routes.BarberDetailsScreen.route)
     }
@@ -657,7 +661,7 @@ class EditOrCreateBarberShopViewModel @Inject constructor(
 
                     is ResourceState.SUCCESS -> {
                         _shopId.emit(it.data.barberShopId.toString())
-                        postOrUpdateServices()
+                        postServices()
                         Timber.d("Success")
                     }
 

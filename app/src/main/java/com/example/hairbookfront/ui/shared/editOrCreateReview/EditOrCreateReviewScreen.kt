@@ -16,6 +16,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.hairbookfront.ui.common.ButtonComponent
 import com.example.hairbookfront.ui.common.ReviewItem
@@ -63,6 +64,12 @@ fun EditOrCreateReviewScreen(
                     Toast.LENGTH_SHORT,
                 ).show()
             }
+    }
+
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentRoute = navBackStackEntry?.destination?.route
+    LaunchedEffect(currentRoute) {
+        viewModel.refreshData()
     }
 
     Scaffold(
