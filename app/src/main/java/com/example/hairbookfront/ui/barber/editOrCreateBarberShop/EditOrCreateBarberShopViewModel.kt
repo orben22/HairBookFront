@@ -364,7 +364,7 @@ class EditOrCreateBarberShopViewModel @Inject constructor(
     val servicePrice: StateFlow<String>
         get() = _servicePrice
 
-    private val _serviceDuration = MutableStateFlow("")
+    private val _serviceDuration = MutableStateFlow("30")
     val serviceDuration: StateFlow<String>
         get() = _serviceDuration
 

@@ -1,5 +1,6 @@
 package com.example.hairbookfront.ui.common
 
+import android.provider.CalendarContract
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -14,11 +15,13 @@ import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TooltipDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 
@@ -59,7 +62,8 @@ fun BottomAppBarComponent(
                 if (floatingIcon != null) {
                     FloatingActionButton(
                         onClick = onClickFloating,
-                        modifier = Modifier.padding(end = 10.dp)
+                        modifier = Modifier.padding(end = 10.dp),
+                        containerColor = Color(0xFF00B0FF),
                     ) {
                         Icon(floatingIcon, null)
                     }
