@@ -180,12 +180,12 @@ class SignUpBarberViewModel @Inject constructor(
             _firstNameError.value = true
         }
 
-        if (isLastNameValid())
-            _lastNameError.value = false
-        else {
-            sendMessage("Last name cannot be empty")
-            _lastNameError.value = true
-        }
+//        if (isLastNameValid())
+//            _lastNameError.value = false
+//        else {
+//            sendMessage("Last name cannot be empty")
+//            _lastNameError.value = true
+//        }
         if (isValidYearsOfExperience())
             _yearsOfExperienceError.value = false
         else {

@@ -193,12 +193,12 @@ class SignUpCustomerViewModel @Inject constructor(
             sendMessage("Last name cannot be empty")
             _lastNameError.value = true
         }
-        if (isLastNameValid())
-            _lastNameError.value = false
-        else {
-            sendMessage("Last name is invalid. Please enter a valid name.")
-            _lastNameError.value = true
-        }
+//        if (isLastNameValid())
+//            _lastNameError.value = false
+//        else {
+//            sendMessage("Last name is invalid. Please enter a valid name.")
+//            _lastNameError.value = true
+//        }
         if (isAgeValid())
             _ageError.value = false
         else {
