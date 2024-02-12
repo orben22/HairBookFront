@@ -48,8 +48,8 @@ fun ReviewsList(
     role: String = Constants.CustomerRole,
     isError: Boolean = false,
 ) {
-    LazyColumn() {
-        items(reviews) { review ->
+    Column() {
+        for (review in reviews) {
             ReviewItem(
                 fullName = review.firstName + " " + review.lastName,
                 review = review.review,
@@ -67,6 +67,7 @@ fun ReviewsList(
         }
     }
 }
+
 
 @Composable
 fun ReviewItem(
