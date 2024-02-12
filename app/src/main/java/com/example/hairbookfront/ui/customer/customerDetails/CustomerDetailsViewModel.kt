@@ -141,6 +141,7 @@ class CustomerDetailsViewModel @Inject constructor(
 
                             is ResourceState.SUCCESS -> {
                                 showOrHideDeleteDialog.emit(false)
+                                _closestBooking.value=null
                             }
 
                             is ResourceState.ERROR -> {
