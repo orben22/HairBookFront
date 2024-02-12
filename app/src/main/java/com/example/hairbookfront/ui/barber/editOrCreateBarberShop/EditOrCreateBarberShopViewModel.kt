@@ -430,7 +430,7 @@ class EditOrCreateBarberShopViewModel @Inject constructor(
         _services.value = _services.value.toMutableList().apply { add(service) }
         _serviceName.value = ""
         _servicePrice.value = ""
-        _serviceDuration.value = ""
+        _serviceDuration.value = "30"
         _showDialog.value = false
     }
 

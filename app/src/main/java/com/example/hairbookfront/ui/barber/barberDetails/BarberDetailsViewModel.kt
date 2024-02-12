@@ -140,7 +140,7 @@ class BarberDetailsViewModel @Inject constructor(
 
     fun deleteShop() {
         viewModelScope.launch {
-            apiRepositoryBarber.deleteBarberShop(_shopToDelete.value, _accessToken.value)
+            apiRepositoryBarber.deleteBarberShop(_accessToken.value, _shopToDelete.value)
                 .collectLatest { response ->
                     when (response) {
                         is ResourceState.LOADING -> {
@@ -149,6 +149,8 @@ class BarberDetailsViewModel @Inject constructor(
 
                         is ResourceState.SUCCESS -> {
                             Timber.d("Success")
+                            _showOrHideDeleteDialog.value = false
+                            _myShops.value=_myShops.value.filter { it.barberShopId != _shopToDelete.value }
                             getMyShops()
                         }
 

@@ -62,9 +62,9 @@ class ReadReviewsViewModel @Inject constructor(
     val lastScreen: StateFlow<Boolean>
         get() = _lastScreen
 
-    private val _reviews = MutableStateFlow<List<Review>>(listOf())
+    private val _reviews = MutableStateFlow<List<Review>?>(listOf())
 
-    val reviews: StateFlow<List<Review>>
+    val reviews: StateFlow<List<Review>?>
         get() = _reviews
 
 
@@ -162,8 +162,11 @@ class ReadReviewsViewModel @Inject constructor(
                     when (response) {
                         is ResourceState.LOADING -> {
                         }
+
                         is ResourceState.SUCCESS -> {
                             _showOrHideDeleteDialog.emit(false)
+                            _reviews.value =
+                                _reviews.value?.filter { it.reviewId != _reviewToDelete.value }
                             getReviews()
                         }
 

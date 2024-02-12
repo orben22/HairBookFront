@@ -8,6 +8,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
@@ -34,7 +36,7 @@ import com.example.hairbookfront.util.Constants
 
 @Composable
 fun ReviewsList(
-    reviews: List<Review>?,
+    reviews: List<Review>,
     editable: List<Boolean>,
     onClickFunctions: List<(String) -> Unit> = listOf(
         { _ -> },
@@ -46,29 +48,22 @@ fun ReviewsList(
     role: String = Constants.CustomerRole,
     isError: Boolean = false,
 ) {
-    reviews?.let {
-        val pairedList = reviews.zip(editable)
-        val sortedList =
-            pairedList.sortedWith(compareByDescending<Pair<Review, Boolean>> { it.second }.thenBy { it.first.timestamp })
-        val sortedReviews = sortedList.map { it.first }
-        val sortedEditable = sortedList.map { it.second }
-        Column {
-            for (i in sortedReviews.indices) {
-                ReviewItem(
-                    fullName = sortedReviews[i].firstName + " " + sortedReviews[i].lastName,
-                    review = sortedReviews[i].review,
-                    rating = sortedReviews[i].rating.toString(),
-                    timestamp = sortedReviews[i].timestamp,
-                    reviewId =  sortedReviews[i].reviewId!!,
-                    editable = sortedEditable[i],
-                    onClickFunctions = onClickFunctions,
-                    isEditing = isEditing,
-                    onReviewChange = onReviewChange,
-                    onRatingChange = onRatingChange,
-                    role = role,
-                    isError = isError,
-                )
-            }
+    LazyColumn() {
+        items(reviews) { review ->
+            ReviewItem(
+                fullName = review.firstName + " " + review.lastName,
+                review = review.review,
+                rating = review.rating.toString(),
+                timestamp = review.timestamp,
+                reviewId = review.reviewId!!,
+                editable = editable[reviews.indexOf(review)],
+                onClickFunctions = onClickFunctions,
+                isEditing = isEditing,
+                onReviewChange = onReviewChange,
+                onRatingChange = onRatingChange,
+                role = role,
+                isError = isError,
+            )
         }
     }
 }
@@ -111,8 +106,10 @@ fun ReviewItem(
             )
             Spacer(modifier = Modifier.height(Dimens.smallPadding1))
             if (isEditing) {
-                Text("Review:",
-                    color = Color.Black)
+                Text(
+                    "Review:",
+                    color = Color.Black
+                )
                 TextField(
                     value = review,
                     onValueChange = onReviewChange,
@@ -123,8 +120,10 @@ fun ReviewItem(
                     horizontalArrangement = Arrangement.End,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text("Rating:",
-                        color = Color.Black)
+                    Text(
+                        "Rating:",
+                        color = Color.Black
+                    )
                     TextField(
                         value = rating,
                         onValueChange = onRatingChange,

@@ -23,16 +23,12 @@ import com.example.hairbookfront.domain.entities.Service
 fun AddServiceDialog(
     showDialog: Boolean,
     onAddService: () -> Unit,
-    barberShopId: String,
     serviceName: String,
     onServiceNameChange: (String) -> Unit,
     serviceNameError: Boolean = false,
     servicePrice: String,
     servicePriceError: Boolean = false,
     onServicePriceChange: (String) -> Unit,
-    serviceDuration: String,
-    serviceDurationError: Boolean = false,
-    onServiceDurationChange: (String) -> Unit,
     onDismiss: () -> Unit
 ) {
     if (showDialog) {
@@ -67,16 +63,6 @@ fun AddServiceDialog(
                         icon = null,
                         onValueChange = { onServicePriceChange(it) },
                         isError = servicePriceError,
-                        keyboardOptions = KeyboardOptions.Default.copy(
-                            keyboardType = KeyboardType.Number
-                        )
-                    )
-                    TextFieldComponent(
-                        value = serviceDuration,
-                        placeholderText = "Duration",
-                        icon = null,
-                        onValueChange = { onServiceDurationChange(it) },
-                        isError = serviceDurationError,
                         keyboardOptions = KeyboardOptions.Default.copy(
                             keyboardType = KeyboardType.Number
                         )

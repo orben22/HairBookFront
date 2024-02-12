@@ -164,6 +164,7 @@ fun EditOrCreateBarberShopScreen(
         )
     }, floatingActionButton = {
         FloatingActionButton(
+            containerColor = Color(0xFF00B0FF),
             onClick = { viewModel.isValidInput() },
         ) {
             Icon(Icons.Filled.Add, "Floating action button.")
@@ -308,16 +309,12 @@ fun EditOrCreateBarberShopScreen(
                     onAddService = {
                         viewModel.validateServiceInput()
                     },
-                    barberShopId = "",
                     serviceName = serviceName,
                     onServiceNameChange = viewModel::setServiceName,
                     serviceNameError = serviceNameError,
                     servicePrice = servicePrice,
                     onServicePriceChange = viewModel::setServicePrice,
                     servicePriceError = servicePriceError,
-                    serviceDuration = serviceDuration,
-                    onServiceDurationChange = viewModel::setServiceDuration,
-                    serviceDurationError = serviceDurationError,
                     onDismiss = viewModel::onDismiss
                 )
                 val editingService by viewModel.editingService.collectAsState()

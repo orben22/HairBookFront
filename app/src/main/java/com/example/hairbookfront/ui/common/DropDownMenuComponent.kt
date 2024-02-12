@@ -11,7 +11,7 @@ import androidx.compose.runtime.*
 
 @Composable
 fun DropDownMenuComponent(
-    suggestions: List<String> = listOf("Sign Out", "About"),
+    suggestions: List<String> = listOf("Profile", "Sign Out"),
     expanded: Boolean = false,
     expandFunction: (() -> Unit) = {},
     onDismissRequest: (() -> Unit) = {},
