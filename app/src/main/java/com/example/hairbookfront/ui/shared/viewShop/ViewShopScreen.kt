@@ -3,7 +3,9 @@ package com.example.hairbookfront.ui.shared.viewShop
 import android.content.res.Configuration
 import android.os.Build
 import androidx.annotation.RequiresApi
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -18,15 +20,22 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.core.graphics.drawable.toBitmap
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.example.hairbookfront.HairBookApplication
 import com.example.hairbookfront.theme.HairBookFrontTheme
 import com.example.hairbookfront.ui.common.BottomAppBarComponent
 import com.example.hairbookfront.ui.common.DialogComponent
@@ -63,6 +72,12 @@ fun ViewShopScreen(
         barberShop.saturdayHours
     )
     val userId by viewModel.userId.collectAsStateWithLifecycle()
+    val context = LocalContext.current
+    val myApp = context.applicationContext as HairBookApplication
+    val randomBackground = remember { myApp.getRandomBackground() }
+    val drawable = context.resources.getDrawable(randomBackground, null)
+    val bitmap = drawable.toBitmap()
+    val imageBitmap = bitmap.asImageBitmap()
     LaunchedEffect(screen) {
         if (screen != "") {
             viewModel.clearScreen()
@@ -111,6 +126,12 @@ fun ViewShopScreen(
             )
         }
     }) { innerPadding ->
+        Image(
+            bitmap = imageBitmap,
+            contentDescription = null,
+            modifier = Modifier.fillMaxSize().alpha(0.4f),
+            contentScale = ContentScale.Crop // This will make the image scale to fill the entire screen
+        )
         LazyColumn(
             modifier = Modifier
                 .padding(innerPadding)
