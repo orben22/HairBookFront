@@ -1,5 +1,6 @@
 package com.example.hairbookfront.ui.customer.customerDetails
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
@@ -10,15 +11,22 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.core.graphics.drawable.toBitmap
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.example.hairbookfront.HairBookApplication
 import com.example.hairbookfront.ui.common.DialogComponent
 import com.example.hairbookfront.ui.common.TopAppBarComponent
 import com.example.hairbookfront.ui.common.BookingCardComponent
@@ -42,6 +50,13 @@ fun CustomerDetailsScreen(
     val expanded by viewModel.isExpanded.collectAsStateWithLifecycle()
     val serviceDetails by viewModel.serviceDetails.collectAsStateWithLifecycle()
     val lastScreen by viewModel.lastScreen.collectAsStateWithLifecycle()
+    val context = LocalContext.current
+    val myApp = context.applicationContext as HairBookApplication
+    val randomBackground = remember { myApp.getRandomBackground() }
+    val drawable = context.resources.getDrawable(randomBackground, null)
+    val bitmap = drawable.toBitmap()
+    val imageBitmap = bitmap.asImageBitmap()
+
     LaunchedEffect(screen) {
         if (screen != "") {
             viewModel.clearScreen()
@@ -79,6 +94,12 @@ fun CustomerDetailsScreen(
             )
         },
         content = { innerPadding ->
+            Image(
+                bitmap = imageBitmap,
+                contentDescription = null,
+                modifier = Modifier.fillMaxSize().alpha(0.4f),
+                contentScale = ContentScale.Crop // This will make the image scale to fill the entire screen
+            )
             Column(
                 modifier = Modifier
                     .padding(innerPadding),
