@@ -21,6 +21,7 @@ import androidx.compose.material3.TooltipDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
@@ -62,8 +63,8 @@ fun BottomAppBarComponent(
                 if (floatingIcon != null) {
                     FloatingActionButton(
                         onClick = onClickFloating,
-                        modifier = Modifier.padding(end = 10.dp),
-                        containerColor = Color(0xFF00B0FF),
+                        modifier = Modifier.padding(end = 10.dp).alpha(0.8f),
+                        containerColor = Color(0xFFF3CC90),
                     ) {
                         Icon(floatingIcon, null)
                     }

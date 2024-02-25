@@ -19,6 +19,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.core.graphics.drawable.toBitmap
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -113,6 +114,7 @@ fun CustomerDetailsScreen(
                         .align(Alignment.Start),
 
                     text = "Full Name: $firstname $lastname",
+                    fontWeight = FontWeight.Bold,
                     style = MaterialTheme.typography.bodyMedium,
                     color = Color.Black
                 )
@@ -121,6 +123,7 @@ fun CustomerDetailsScreen(
                         .padding(start = 10.dp)
                         .align(Alignment.Start),
                     text = "Email: $email",
+                    fontWeight = FontWeight.Bold,
                     style = MaterialTheme.typography.bodyMedium,
                     color = Color.Black
 
@@ -131,6 +134,7 @@ fun CustomerDetailsScreen(
                         .padding(start = 10.dp)
                         .align(Alignment.Start),
                     text = "Age: $age",
+                    fontWeight = FontWeight.Bold,
                     style = MaterialTheme.typography.bodyMedium,
                     color = Color.Black
                 )
@@ -140,6 +144,7 @@ fun CustomerDetailsScreen(
                         .padding(start = 10.dp)
                         .align(Alignment.Start),
                     text = "Phone Number: $phoneNumber",
+                    fontWeight = FontWeight.Bold,
                     style = MaterialTheme.typography.bodyMedium,
                     color = Color.Black
                 )
@@ -152,6 +157,7 @@ fun CustomerDetailsScreen(
                             .padding(start = 10.dp)
                             .align(Alignment.CenterHorizontally),
                         text = "Upcoming Booking:",
+                        fontWeight = FontWeight.Bold,
                         style = MaterialTheme.typography.bodyMedium,
                         color = Color.Black
                     )
@@ -166,6 +172,7 @@ fun CustomerDetailsScreen(
                             .padding(start = 10.dp)
                             .align(Alignment.CenterHorizontally),
                         text = "No upcoming bookings",
+                        fontWeight = FontWeight.Bold,
                         style = MaterialTheme.typography.bodyMedium,
                         color = Color.Black
                     )

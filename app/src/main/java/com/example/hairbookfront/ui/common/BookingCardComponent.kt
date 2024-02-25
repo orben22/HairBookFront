@@ -23,6 +23,7 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.hairbookfront.domain.entities.BarberShop
 import com.example.hairbookfront.domain.entities.Booking
@@ -81,14 +82,14 @@ fun BookingCardComponent(
         ) {
 
             Spacer(modifier = Modifier.height(8.dp))
-            Text(text = "Shop Name: ${booking.barberShopName}", color = Color.Black)
+            Text(text = "Shop Name: ${booking.barberShopName}", color = Color.Black, fontWeight = FontWeight.Bold)
             if (isCustomer) {
-                Text(text = "Barber Name: ${booking.barberName} ", color = Color.Black)
-            } else Text(text = "Customer Name: ${booking.customerName}")
-            Text(text = "Service: ${service.serviceName}", color = Color.Black)
-            Text(text = "Price: ${service.price}", color = Color.Black)
-            Text(text = "Duration: ${service.duration}", color = Color.Black)
-            Text(text = "Date: ${booking.date}", color = Color.Black)
+                Text(text = "Barber Name: ${booking.barberName} ", color = Color.Black, fontWeight = FontWeight.Bold)
+            } else Text(text = "Customer Name: ${booking.customerName}", fontWeight = FontWeight.Bold)
+            Text(text = "Service: ${service.serviceName}", color = Color.Black, fontWeight = FontWeight.Bold)
+            Text(text = "Price: ${service.price}", color = Color.Black, fontWeight = FontWeight.Bold)
+            Text(text = "Duration: ${service.duration}", color = Color.Black, fontWeight = FontWeight.Bold)
+            Text(text = "Date: ${booking.date}", color = Color.Black, fontWeight = FontWeight.Bold)
             Spacer(modifier = Modifier.height(16.dp))
             Row(
                 modifier = Modifier

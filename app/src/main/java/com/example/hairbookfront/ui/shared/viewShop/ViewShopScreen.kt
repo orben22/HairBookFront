@@ -152,7 +152,7 @@ fun ViewShopScreen(
                     style = MaterialTheme.typography.bodySmall
                 )
                 Spacer(modifier = Modifier.height(16.dp))
-                Text(text = barberShop.description, style = MaterialTheme.typography.bodySmall)
+                Text(text = barberShop.description, style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.Bold)
                 Spacer(modifier = Modifier.height(16.dp))
                 Text(fontWeight = FontWeight.Bold,
                     text = "Phone Number: ${barberShop.phoneNumber}",
