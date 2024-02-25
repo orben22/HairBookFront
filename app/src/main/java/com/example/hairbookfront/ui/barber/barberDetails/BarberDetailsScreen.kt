@@ -62,8 +62,6 @@ fun BarberDetailsScreen(
     val context = LocalContext.current
     val myApp = context.applicationContext as HairBookApplication
     val randomBackground = remember { myApp.getRandomBackground() }
-
-
     val drawable = context.resources.getDrawable(randomBackground, null)
     val bitmap = drawable.toBitmap()
     val imageBitmap = bitmap.asImageBitmap()
