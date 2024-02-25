@@ -18,6 +18,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import com.example.hairbookfront.domain.entities.BarberShop
@@ -53,7 +54,7 @@ fun BarberShopItem(
             defaultElevation = Dimens.smallPadding1
         ),
         colors = CardDefaults.cardColors(
-            containerColor = Color(0xFF00B0FF),
+            containerColor = Color(0xFFF3CC90),
         ),
         modifier = Modifier
             .fillMaxWidth()
@@ -63,7 +64,7 @@ fun BarberShopItem(
                 start = Dimens.smallPadding3,
                 end = Dimens.smallPadding3
             )
-            .clickable { onBarberShopClick(barberShop) }
+            .clickable { onBarberShopClick(barberShop) }.alpha(0.7f)
     ) {
         Text(
             modifier = Modifier.padding(
@@ -81,7 +82,8 @@ fun BarberShopItem(
                 start = Dimens.smallPadding3
             ),
             text = barberShop.description,
-            fontSize = Dimens.fontSmall,
+            fontWeight = FontWeight.Bold,
+            fontSize = Dimens.fontMedium,
             color = Color.Black
         )
         Text(
