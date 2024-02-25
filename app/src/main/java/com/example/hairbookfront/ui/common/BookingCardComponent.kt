@@ -19,6 +19,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -64,11 +65,11 @@ fun BookingCardComponent(
             defaultElevation = Dimens.smallPadding1
         ),
         modifier = Modifier
-            .fillMaxWidth()
+            .fillMaxWidth().alpha(0.7f)
             .clip(MaterialTheme.shapes.medium)
             .padding(16.dp),
         colors = CardDefaults.cardColors(
-            containerColor = Color(0xFF00B0FF),
+            containerColor = Color(0xFFF3CC90),
         ),
     ) {
         Column(

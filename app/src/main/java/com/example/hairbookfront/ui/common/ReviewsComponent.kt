@@ -26,6 +26,7 @@ import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
@@ -92,11 +93,11 @@ fun ReviewItem(
             defaultElevation = Dimens.smallPadding1
         ),
         colors = CardDefaults.cardColors(
-            containerColor = Color(0xFF00B0FF),
+            containerColor = Color(0xFFF3CC90),
         ),
         modifier = Modifier
             .fillMaxWidth()
-            .padding(Dimens.mediumPadding1)
+            .padding(Dimens.mediumPadding1).alpha(0.7f)
     ) {
         Column(modifier = Modifier.padding(Dimens.mediumPadding1)) {
             Text(

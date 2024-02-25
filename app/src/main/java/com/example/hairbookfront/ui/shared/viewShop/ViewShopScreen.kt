@@ -27,6 +27,7 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.graphics.drawable.toBitmap
@@ -141,19 +142,19 @@ fun ViewShopScreen(
         ) {
             item {
                 Spacer(modifier = Modifier.height(16.dp))
-                Text(
+                Text(fontWeight = FontWeight.Bold,
                     text = barberShop.barberShopName,
                     style = MaterialTheme.typography.headlineLarge
                 )
                 Spacer(modifier = Modifier.height(16.dp))
-                Text(
+                Text(fontWeight = FontWeight.Bold,
                     text = "Address: ${barberShop.location}",
                     style = MaterialTheme.typography.bodySmall
                 )
                 Spacer(modifier = Modifier.height(16.dp))
                 Text(text = barberShop.description, style = MaterialTheme.typography.bodySmall)
                 Spacer(modifier = Modifier.height(16.dp))
-                Text(
+                Text(fontWeight = FontWeight.Bold,
                     text = "Phone Number: ${barberShop.phoneNumber}",
                     style = MaterialTheme.typography.bodySmall
                 )
