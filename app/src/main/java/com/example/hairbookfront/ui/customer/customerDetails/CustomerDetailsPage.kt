@@ -28,6 +28,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.hairbookfront.HairBookApplication
+import com.example.hairbookfront.ui.Dimens
 import com.example.hairbookfront.ui.common.DialogComponent
 import com.example.hairbookfront.ui.common.TopAppBarComponent
 import com.example.hairbookfront.ui.common.BookingCardComponent
@@ -103,8 +104,15 @@ fun CustomerDetailsScreen(
             )
             Column(
                 modifier = Modifier
-                    .padding(innerPadding),
-                horizontalAlignment = Alignment.CenterHorizontally,
+                    .padding(innerPadding)
+                    .padding(
+                        start = Dimens.distanceFromLeft,
+                        end = Dimens.distanceFromLeft,
+                        top = Dimens.distanceFromBottom,
+                        bottom = Dimens.distanceFromBottom
+                    )
+                    .fillMaxWidth(),
+                horizontalAlignment = Alignment.Start,
                 verticalArrangement = Arrangement.Center
             ) {
                 // User Information

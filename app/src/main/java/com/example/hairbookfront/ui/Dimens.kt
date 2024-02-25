@@ -9,7 +9,7 @@ import androidx.compose.ui.unit.sp
 object Dimens {
 
 
-    val distanceFromLeft = 20.dp
+    val distanceFromLeft = 30.dp
     val distanceFromBottom = 20.dp
 
     val buttonSize = 300.dp
