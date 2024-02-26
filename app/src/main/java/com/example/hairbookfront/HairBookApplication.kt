@@ -18,10 +18,8 @@ class HairBookApplication : Application() {
     }
         val backgrounds = arrayOf(
             R.drawable.background1,
-            R.drawable.background2,
             R.drawable.background3,
             R.drawable.background4,
-            R.drawable.background5,
             R.drawable.background6,
             R.drawable.background7,
             R.drawable.background8,
@@ -35,7 +33,6 @@ class HairBookApplication : Application() {
             R.drawable.background16,
             R.drawable.background17,
             R.drawable.background18,
-            R.drawable.background19,
             R.drawable.background20,
             R.drawable.background21,
             R.drawable.background22
