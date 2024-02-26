@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
@@ -24,6 +25,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.example.hairbookfront.domain.entities.BarberShop
 import com.example.hairbookfront.domain.entities.Booking
@@ -37,7 +39,7 @@ fun BookingsList(
     bookings: List<Booking>?,
     services: List<Service>?,
     numberOfOptions: Int = 2,
-    optionsIcons: List<ImageVector> = listOf(Icons.Filled.Edit,Icons.Filled.Delete),
+    optionsIcons: List<ImageVector> = listOf(Icons.Filled.Edit, Icons.Filled.Delete),
     optionFunctions: List<(Booking) -> Unit>
 ) {
     bookings?.let {
@@ -45,7 +47,14 @@ fun BookingsList(
             items(bookings) { booking ->
                 val service = services?.find { it.serviceId == booking.serviceId }
                 service?.let {
-                    BookingCardComponent(isCustomer = isCustomer, booking = booking, service = it, numberOfOptions = numberOfOptions, optionsIcons = optionsIcons, optionFunctions = optionFunctions)
+                    BookingCardComponent(
+                        isCustomer = isCustomer,
+                        booking = booking,
+                        service = it,
+                        numberOfOptions = numberOfOptions,
+                        optionsIcons = optionsIcons,
+                        optionFunctions = optionFunctions
+                    )
                 }
             }
         }
@@ -58,7 +67,7 @@ fun BookingCardComponent(
     booking: Booking,
     service: Service,
     numberOfOptions: Int = 2,
-    optionsIcons: List<ImageVector> = listOf(Icons.Filled.Edit,Icons.Filled.Delete),
+    optionsIcons: List<ImageVector> = listOf(Icons.Filled.Edit, Icons.Filled.Delete),
     optionFunctions: List<(Booking) -> Unit>
 ) {
     ElevatedCard(
@@ -66,45 +75,77 @@ fun BookingCardComponent(
             defaultElevation = Dimens.smallPadding1
         ),
         modifier = Modifier
-            .fillMaxWidth().alpha(0.7f)
+            .fillMaxWidth()
+            .alpha(0.7f)
             .clip(MaterialTheme.shapes.medium)
             .padding(16.dp),
         colors = CardDefaults.cardColors(
             containerColor = Color(0xFFF3CC90),
         ),
     ) {
-        Column(
+        Spacer(modifier = Modifier.height(8.dp))
+        Text(
+            text = "Shop Name: ${booking.barberShopName}",
+            color = Color.Black,
+            fontWeight = FontWeight.Bold,
+            textAlign = TextAlign.Center, // Add this line
+            modifier = Modifier.fillMaxWidth() // Add this line
+        )
+        if (isCustomer) {
+            Text(
+                text = "Barber Name: ${booking.barberName} ",
+                color = Color.Black,
+                fontWeight = FontWeight.Bold,
+                textAlign = TextAlign.Center,
+                modifier = Modifier.fillMaxWidth()
+            )
+        } else Text(
+            text = "Customer Name: ${booking.customerName}",
+            fontWeight = FontWeight.Bold,
+            textAlign = TextAlign.Center,
+            modifier = Modifier.fillMaxWidth()
+        )
+        Text(
+            text = "Service: ${service.serviceName}",
+            color = Color.Black,
+            fontWeight = FontWeight.Bold,
+            textAlign = TextAlign.Center,
+            modifier = Modifier.fillMaxWidth()
+        )
+        Text(
+            text = "Price: ${service.price}", color = Color.Black, fontWeight = FontWeight.Bold,
+            textAlign = TextAlign.Center,
+            modifier = Modifier.fillMaxWidth()
+        )
+        Text(
+            text = "Duration: ${service.duration}",
+            color = Color.Black,
+            fontWeight = FontWeight.Bold,
+            textAlign = TextAlign.Center,
+            modifier = Modifier.fillMaxWidth()
+        )
+        Text(
+            text = "Date: ${booking.date}", color = Color.Black, fontWeight = FontWeight.Bold,
+            textAlign = TextAlign.Center,
+            modifier = Modifier.fillMaxWidth()
+        )
+        Spacer(modifier = Modifier.height(16.dp))
+        Row(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
+                .padding(top = 8.dp),
+            horizontalArrangement = Arrangement.SpaceBetween
         ) {
-
-            Spacer(modifier = Modifier.height(8.dp))
-            Text(text = "Shop Name: ${booking.barberShopName}", color = Color.Black, fontWeight = FontWeight.Bold)
-            if (isCustomer) {
-                Text(text = "Barber Name: ${booking.barberName} ", color = Color.Black, fontWeight = FontWeight.Bold)
-            } else Text(text = "Customer Name: ${booking.customerName}", fontWeight = FontWeight.Bold)
-            Text(text = "Service: ${service.serviceName}", color = Color.Black, fontWeight = FontWeight.Bold)
-            Text(text = "Price: ${service.price}", color = Color.Black, fontWeight = FontWeight.Bold)
-            Text(text = "Duration: ${service.duration}", color = Color.Black, fontWeight = FontWeight.Bold)
-            Text(text = "Date: ${booking.date}", color = Color.Black, fontWeight = FontWeight.Bold)
-            Spacer(modifier = Modifier.height(16.dp))
-            Row(
-                modifier = Modifier
-                    .padding(top = 8.dp),
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                for (i in 1..numberOfOptions) {
-                    ButtonComponent(
-                        text = "",
-                        icon = optionsIcons[i - 1],
-                        onClick = {
-                            optionFunctions[i - 1](booking)
-                        }
-                    )
-                }
+            for (i in 1..numberOfOptions) {
+                ButtonComponent(
+                    modifier = Modifier
+                        .width(50.dp)
+                        .weight(1f),
+                    text = "",
+                    icon = optionsIcons[i - 1],
+                    onClick = {
+                        optionFunctions[i - 1](booking)
+                    }
+                )
             }
         }
     }

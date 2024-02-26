@@ -18,6 +18,7 @@ import com.maxkeppeker.sheets.core.models.base.rememberSheetState
 import com.maxkeppeler.sheets.calendar.CalendarDialog
 import com.maxkeppeler.sheets.calendar.models.CalendarConfig
 import com.maxkeppeler.sheets.calendar.models.CalendarSelection
+import com.maxkeppeler.sheets.calendar.models.CalendarStyle
 import com.maxkeppeler.sheets.calendar.models.CalendarTimeline
 import java.time.DayOfWeek
 import java.time.LocalDate
@@ -32,7 +33,8 @@ fun DatePickerComponent(
     calendarState: SheetState = rememberSheetState(),
     onDateSelected: (String) -> Unit = {},
 ) {
-    CalendarDialog(state = calendarState,
+    CalendarDialog(
+        state = calendarState,
 
         config = CalendarConfig(
             monthSelection = true,
@@ -44,5 +46,8 @@ fun DatePickerComponent(
             val formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy")
             val formattedDate = selectedDate.format(formatter)
             onDateSelected(formattedDate)
-        })
+        },
+
+        )
+
 }

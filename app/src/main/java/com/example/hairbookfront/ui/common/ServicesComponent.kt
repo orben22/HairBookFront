@@ -16,6 +16,8 @@ import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -25,10 +27,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.example.hairbookfront.domain.entities.Service
+import com.example.hairbookfront.ui.Dimens
 import com.example.hairbookfront.util.Constants
 
 @Composable
@@ -36,9 +40,9 @@ fun ServiceCard(
     service: Service,
     isSelected: Boolean,
     onServiceClick: (Service) -> Unit,
-    serviceName: String="",
-    servicePrice: String="",
-    serviceDuration: String="",
+    serviceName: String = "",
+    servicePrice: String = "",
+    serviceDuration: String = "",
     isEditable: Boolean = false,
     onServiceNameChange: (String) -> Unit = {},
     onPriceChange: (String) -> Unit = {},
@@ -49,9 +53,10 @@ fun ServiceCard(
     onAcceptClick: (Service) -> Unit = {},
     onDiscardClick: () -> Unit = {}
 ) {
-    Card(
+    ElevatedCard(
         modifier = Modifier
             .fillMaxWidth()
+            .alpha(0.7f)
             .padding(8.dp)
             .clickable { onServiceClick(service) }
             .border(
@@ -59,6 +64,12 @@ fun ServiceCard(
                 color = if (isSelected) Color.Blue else Color.Transparent,
                 shape = MaterialTheme.shapes.medium
             ),
+        elevation = CardDefaults.cardElevation(
+            defaultElevation = Dimens.smallPadding1
+        ),
+        colors = CardDefaults.cardColors(
+            containerColor = Color(0xFFF3CC90),
+        ),
     ) {
         Column(
             modifier = Modifier

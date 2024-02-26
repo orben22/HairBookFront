@@ -51,6 +51,9 @@ fun CustomerHomeScreen(
     val myApp = context.applicationContext as HairBookApplication
     val randomBackground = remember { myApp.getRandomBackground() }
     val drawable = context.resources.getDrawable(randomBackground, null)
+    val drawableName = context.resources.getResourceEntryName(randomBackground)
+    println("Drawable Name: $drawableName")
+
     val bitmap = drawable.toBitmap()
     val imageBitmap = bitmap.asImageBitmap()
 

@@ -23,6 +23,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -97,7 +98,8 @@ fun ReviewItem(
         ),
         modifier = Modifier
             .fillMaxWidth()
-            .padding(Dimens.mediumPadding1).alpha(0.7f)
+            .padding(Dimens.mediumPadding1)
+            .alpha(0.7f)
     ) {
         Column(modifier = Modifier.padding(Dimens.mediumPadding1)) {
             Text(
@@ -115,7 +117,11 @@ fun ReviewItem(
                 TextField(
                     value = review,
                     onValueChange = onReviewChange,
-                    modifier = Modifier.padding(Dimens.smallPadding1)
+                    modifier = Modifier.padding(Dimens.smallPadding1),
+                    colors = TextFieldDefaults.colors(
+                        unfocusedContainerColor = Color(0xFFF3CC90),
+                        focusedContainerColor = Color(0xFFF3CC90),
+                    ),
                 )
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -133,7 +139,11 @@ fun ReviewItem(
                         modifier = Modifier
                             .width(80.dp)
                             .padding(Dimens.smallPadding1),
-                        isError = isError
+                        isError = isError,
+                        colors = TextFieldDefaults.colors(
+                            unfocusedContainerColor = Color(0xFFF3CC90),
+                            focusedContainerColor = Color(0xFFF3CC90),
+                        ),
                     )
                 }
             } else {

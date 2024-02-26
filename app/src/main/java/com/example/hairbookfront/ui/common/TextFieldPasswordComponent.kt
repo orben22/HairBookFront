@@ -7,8 +7,10 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -50,5 +52,9 @@ fun TextFieldPasswordComponent(
             }
         },
         isError = isError,
+        colors = TextFieldDefaults.colors(
+            unfocusedContainerColor = Color(0xFFF3CC90),
+            focusedContainerColor = Color(0xFFF3CC90),
+        ),
     )
 }

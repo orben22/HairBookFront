@@ -72,7 +72,7 @@ fun WelcomePageScreen(
             ) {
                 Spacer(modifier = Modifier.height(largePadding3))
                 Image(
-                    painter = painterResource(id = R.drawable.ic_launcher_round),
+                    painter = painterResource(id = R.drawable.icon),
                     contentDescription = null,
                     modifier = Modifier
                         .size(200.dp)
@@ -119,7 +119,7 @@ fun WelcomePageScreen(
                     ClickableText(
                         text = " Sign Up",
                         onClick = { viewModel.showOrHideDialog() },
-                        color = Color.Cyan,
+                        color = Color(0xFFF0AC43),
                         fontSize = 20
                     )
                 }

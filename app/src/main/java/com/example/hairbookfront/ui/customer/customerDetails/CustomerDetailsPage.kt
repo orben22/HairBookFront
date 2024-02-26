@@ -100,7 +100,7 @@ fun CustomerDetailsScreen(
                 bitmap = imageBitmap,
                 contentDescription = null,
                 modifier = Modifier.fillMaxSize().alpha(0.4f),
-                contentScale = ContentScale.Crop // This will make the image scale to fill the entire screen
+                contentScale = ContentScale.Crop
             )
             Column(
                 modifier = Modifier

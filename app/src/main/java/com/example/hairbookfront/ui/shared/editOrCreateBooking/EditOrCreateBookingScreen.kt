@@ -100,7 +100,8 @@ fun EditOrCreateBookingScreen(
         topBar = {
             TopAppBarComponent(
                 text = "$mode Booking",
-                dropDownMenu = false
+                dropDownMenu = false,
+                onClickBackArrow = viewModel::onBackClicked
             )
         },
     ) { innerPadding ->
@@ -108,7 +109,7 @@ fun EditOrCreateBookingScreen(
             bitmap = imageBitmap,
             contentDescription = null,
             modifier = Modifier.fillMaxSize().alpha(0.4f),
-            contentScale = ContentScale.Crop // This will make the image scale to fill the entire screen
+            contentScale = ContentScale.Crop
         )
         LazyColumn(
             modifier = Modifier.padding(innerPadding),
@@ -129,7 +130,6 @@ fun EditOrCreateBookingScreen(
                     )
                 }
             }
-
             item {
                 Button(onClick = { calendarState.show() }) {
                     Icon(Icons.Default.DateRange, contentDescription = "Calendar Icon")

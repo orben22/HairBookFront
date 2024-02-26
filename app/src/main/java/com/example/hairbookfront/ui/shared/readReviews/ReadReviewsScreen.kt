@@ -85,35 +85,39 @@ fun ReadReviewsScreen(
         Image(
             bitmap = imageBitmap,
             contentDescription = null,
-            modifier = Modifier.fillMaxSize().alpha(0.4f),
+            modifier = Modifier
+                .fillMaxSize()
+                .alpha(0.4f),
             contentScale = ContentScale.Crop // This will make the image scale to fill the entire screen
         )
-        Column(
+        LazyColumn(
             modifier = Modifier.padding(innerPadding)
         ) {
-            if (reviews != null) {
-                Timber.d("Reviews: ${reviews!!.size}")
-                if (role == Constants.CustomerRole) {
-                    val editable= reviews!!.map { true }
-                    ReviewsList(
-                        reviews = reviews!!, editable = editable, role = role,
-                        onClickFunctions = listOf(
-                            viewModel::editReview,
-                            viewModel::showOrHideDeleteDialog
+            item {
+                if (reviews != null) {
+                    Timber.d("Reviews: ${reviews!!.size}")
+                    if (role == Constants.CustomerRole) {
+                        val editable = reviews!!.map { true }
+                        ReviewsList(
+                            reviews = reviews!!, editable = editable, role = role,
+                            onClickFunctions = listOf(
+                                viewModel::editReview,
+                                viewModel::showOrHideDeleteDialog
+                            )
                         )
-                    )
+                    } else {
+                        val editable = reviews!!.map { false }
+                        ReviewsList(
+                            reviews = reviews!!, editable = editable, role = role,
+                            onClickFunctions = listOf(viewModel::showOrHideDeleteDialog)
+                        )
+                    }
                 } else {
-                    val editable= reviews!!.map { false }
-                    ReviewsList(
-                        reviews = reviews!!, editable = editable, role = role,
-                        onClickFunctions = listOf(viewModel::showOrHideDeleteDialog)
+                    Text(
+                        text = "No reviews found",
+                        modifier = androidx.compose.ui.Modifier.padding(16.dp)
                     )
                 }
-            } else {
-                Text(
-                    text = "No reviews found",
-                    modifier = androidx.compose.ui.Modifier.padding(16.dp)
-                )
             }
         }
         if (showOrHideDeleteDialog) {
