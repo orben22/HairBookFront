@@ -89,14 +89,17 @@ fun EditOrCreateReviewScreen(
         topBar = {
             TopAppBarComponent(
                 text = "$mode Review",
-                dropDownMenu = false
+                dropDownMenu = false,
+                onClickBackArrow = viewModel::onBackClicked,
             )
         },
         content = { innerPadding ->
             Image(
                 bitmap = imageBitmap,
                 contentDescription = null,
-                modifier = Modifier.fillMaxSize().alpha(0.4f),
+                modifier = Modifier
+                    .fillMaxSize()
+                    .alpha(0.4f),
                 contentScale = ContentScale.Crop // This will make the image scale to fill the entire screen
             )
             Column(
