@@ -20,7 +20,6 @@ class HairBookApplication : Application() {
             R.drawable.background1,
             R.drawable.background3,
             R.drawable.background4,
-            R.drawable.background5,
             R.drawable.background6,
             R.drawable.background7,
             R.drawable.background8,
